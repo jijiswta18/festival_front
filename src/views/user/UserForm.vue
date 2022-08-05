@@ -1,0 +1,300 @@
+<template>
+    <div>
+        <v-card class="mx-auto">
+            <v-toolbar flat>
+                <v-toolbar-title>สร้างผู้ใช้งาน</v-toolbar-title>
+            </v-toolbar>
+            <v-divider></v-divider>
+            <v-form
+                ref="form"
+                v-model="valid"
+                lazy-validation
+            >
+                <v-card-text >
+                    <v-row align="center">
+                        <v-col
+                            cols="12"
+                            sm="6"
+                        >
+                            <v-text-field
+                                v-model="username"
+                                :rules="usernameRules"
+                                label="รหัสผู้ใช้งาน"
+                                dense
+                                outlined
+                                clearable
+                            ></v-text-field>
+                        </v-col>
+        
+                        <v-col
+                            cols="12"
+                            sm="6"
+                        >
+                            <v-text-field
+                                dense
+                                outlined
+                                clearable
+                                v-model="password"
+                                label="รหัสผ่าน"
+                                :rules="passwordRules"
+                                :type="show1 ? 'text' : 'password'"
+                                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                @click:append="show1 = !show1"
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
+
+                    <v-row align="center">
+                        <v-col
+                            cols="12"
+                            sm="6"
+                        >
+                            <v-text-field
+                                v-model="name"
+                                :rules="nameRules"
+                                label="ชื่อ"
+                                dense
+                                outlined
+                                clearable
+                                thai_engLanguage
+                                maxlength="30"
+                            ></v-text-field>
+                        </v-col>
+
+                        <v-col
+                            cols="12"
+                            sm="6"
+                        >
+                            <v-text-field
+                                v-model="lastname"
+                                :rules="lastnameRules"
+                                label="นามสกุล"
+                                dense
+                                outlined
+                                clearable
+                                thai_engLanguage
+                                maxlength="30"
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
+
+                     <v-row align="center">
+                        <v-col
+                            cols="12"
+                            sm="6"
+                        >
+                            <v-text-field
+                                v-model="position"
+                                :rules="positionRules"
+                                label="ตำเเหน่ง"
+                                dense
+                                outlined
+                                clearable
+                                thai_engLanguage
+                            ></v-text-field>
+                        </v-col>
+
+                        <v-col
+                            cols="12"
+                            sm="6"
+                        >
+                            <v-select
+                                v-model="divisions"
+                                :items="selectDivisions"
+                                :rules="rules.divisionsRules"
+                                item-text="value"
+                                item-value="id"
+                                label="หน่วยงาน"
+                                dense
+                                outlined
+                            ></v-select>
+                        </v-col>
+                    </v-row>
+
+                     <v-row>
+                        <v-col
+                            cols="12"
+                            sm="6"
+                        >
+                            <v-select
+                            v-model="roles"
+                            :items="selectRoles"
+                            :rules="rules.rolesRules"
+                            item-text="value"
+                            item-value="id"
+                            label="ประเภทสิทธิ์การใช้งาน"
+                            dense
+                            outlined
+                            ></v-select>
+                        </v-col>
+
+                         <v-col
+                            cols="12"
+                            sm="6"
+                        >
+                            <v-select
+                            v-model="state"
+                            :items="selectState"
+                            :rules="rules.stateRules"
+                            item-text="value"
+                            item-value="id"
+                            label="สถานะการใช้งาน"
+                            dense
+                            outlined
+                            ></v-select>
+                        </v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col
+                            cols="12"
+                            sm="6"
+                        >
+                        <v-textarea
+                            outlined
+                             dense
+                            name="input-7-4"
+                            label="หมายเหตุ"
+                            v-model="detail"
+                            ></v-textarea>
+                        </v-col>
+                    </v-row>
+
+                </v-card-text>
+                <v-toolbar flat class="box-button">
+                    <v-btn
+                        class="btn btn-submit mr-2"
+                        text
+                        @click="saveUser"
+                    >
+                        บันทึก
+                    </v-btn>
+                        <v-btn
+                        class="btn btn-cancel"
+                        text
+                        @click="cancel"
+                    >
+                        ยกเลิก
+                    </v-btn>
+                </v-toolbar>
+
+            </v-form>
+        </v-card>
+    </div> 
+</template>
+<script>
+    import axios from "axios";
+    import Swal from 'sweetalert2'
+    import store from '../../store/index.js';
+    export default {
+         props: ['item'],
+        data: () => ({
+            show1: false,
+            valid: true,
+            check_title :  true,
+            username: '',
+            password: '',
+            name: '',
+            lastname: '',
+            position: '',
+            detail: '',
+            userId: store.getters.user.id,
+            roles: { value: '', id: null },
+            selectRoles: [
+                { value: 'ผู้ดูเเลระบบ', id: 'admin' },
+                { value: 'ผู้ใช้งานระดับสูง', id: 'vip' },
+            ],
+            divisions: { value: '', id: null },
+            selectDivisions: [
+                { value: 'ศทส', id: 1 },
+                { value: 'สล', id: 2 },
+            ],
+            state: { value: '', id: null },
+            selectState: [
+                { value: 'ใช้งาน', id: 1 },
+                { value: 'ไม่ใช้งาน', id: 0 },
+            ],
+
+            usernameRules: [
+                v => !!v || 'กรุณากรอกข้อมูล',
+            ],
+            passwordRules: [
+                v => !!v || 'กรุณากรอกข้อมูล',
+                v => v.length >= 8 || 'Min 8 characters',
+            ],
+            nameRules: [
+                v => !!v || 'กรุณากรอกข้อมูล',
+                v =>/^[a-zA-Zก-ฮะ-์\s]+$/.test(v) ||` ห้ามกรอกอักขระพิเศษ เเละตัวเลข`
+            ],
+            lastnameRules: [
+                v => !!v || 'กรุณากรอกข้อมูล',
+                v =>/^[a-zA-Zก-ฮะ-์\s]+$/.test(v) ||` ห้ามกรอกอักขระพิเศษ เเละตัวเลข`
+            ],
+            positionRules: [
+                v => !!v || 'กรุณากรอกข้อมูล',
+                v =>/^[a-zA-Zก-ฮะ-์\s]+$/.test(v) ||` ห้ามกรอกอักขระพิเศษ เเละตัวเลข`
+            ],
+            rules:{
+                // divisionsRules: [(v) =>  v.length>0 || "เลือกประเภทหน่วยงาน"],
+                rolesRules: [(v) =>  v.length>0 || "เลือกประเภทสิทธิ์การใช้งาน"],
+                // stateRules: [(v) =>  v.length>0 || "เลือกสถานะการใช้งาน"],
+            }
+               
+            
+        }),
+        created(){},
+        methods: {
+            formTitle () {
+                return this.editedIndex === -1 ? 'สร้างเทศกาล' : 'แก้ไขเทศกาล'
+            },
+            async saveUser(){
+                
+                if(this.$refs.form.validate()){
+                    let fd = {
+                        "userId"    : this.userId,
+                        "username"  : this.username,
+                        "password"  : this.password,
+                        "name"      : this.name,
+                        "lastname"  : this.lastname,
+                        "position"  : this.position,
+                        "divisions" : this.divisions,
+                        "roles"     : this.roles,
+                        "state"     : this.state,
+                        "detail"    : this.detail,
+                    }
+                    try {
+
+                        let path = await `/api/createUser`
+                        let res = await axios.post(`${path}`, fd)
+                        console.log(res);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'บันทึกสำเร็จ',
+                            text: 'ระบบได้ทำการบันทึกข้อมูลของคุณแล้ว'
+                        }).then( function(){
+                            window.location.href = '/user';
+                        });
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'บันทึกไม่สำเร็จ',
+                            text: 'มีข้อผิดพลาดที่ไม่คาดคิดเกิดขึ้น โปรดลองใหม่อีกครั้ง'
+                        })
+                        console.log('error :' + error)
+                    }
+                } else{
+                    this.$refs.form.validate()
+                }
+            },
+            cancel(){
+                 this.$router.push('/user')
+            }
+        }
+    }
+
+</script>
+<style>
+    .box-button .v-toolbar__content{
+        justify-content: center;
+    }
+</style>
