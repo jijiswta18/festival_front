@@ -90,7 +90,7 @@
               </v-list-item>
             </v-list>
           </v-menu>
-            <router-link to="/festival/form">
+            <router-link to="/festival">
                 <i class="fa-solid fa-arrow-up-right-from-square f-24"></i>
             </router-link>
           

@@ -5,6 +5,7 @@
     sort-by="calories"
     class="elevation-1"
   >
+
     <template v-slot:top>
       <v-toolbar flat>
         <v-toolbar-title>รายการเทศกาล</v-toolbar-title>
@@ -34,7 +35,6 @@
                 <v-card-title class="title-festival">
                 <span class="text-h5">{{ formTitle }}</span>
                 </v-card-title>
-              
                 <v-card-text>
                   <v-form
                     ref="form"
@@ -196,15 +196,16 @@
                             <v-file-input
                               id="file"
                               accept="image/png, image/jpeg, image/bmp"
-                              placeholder="เเนบรูปเทศกาล"
                               prepend-icon="mdi-camera"
                               label="เเนบรูปเทศกาล"
-                              :rules="filesRules"
                               v-model="editedItem.files"
+                              
                             ></v-file-input>
 
-                            <div class="preview">
+                            <div v-if="url" class="preview">
                               <img :src="url" />
+                              <!-- <p>{{editedItem.files}}</p> -->
+                              
                             </div>    
                           </v-col>
 
@@ -216,9 +217,51 @@
                               v-model="editedItem.files_bg"
                             ></v-file-input>
 
-                            <div class="preview">
-                              <!-- <img :src="url" /> -->
+                            <div v-if="urlBg" class="preview">
+                              <!-- <img :src="getImgUrl(editedItem.files_bg)" > -->
+                              <img :src="urlBg" />
                             </div>    
+                          </v-col>
+                        </v-row>
+
+                        <v-row>
+                          <v-col cols="6">
+                            <v-file-input
+                              id="file"
+                              accept="image/png, image/jpeg, image/bmp"
+                              prepend-icon="mdi-camera"
+                              label="เเนบรูปปุ่มลงนาม"
+                              v-model="editedItem.files_btn"
+                            ></v-file-input>
+
+                            <div v-if="urlBtn" class="preview">
+                              <img :src="urlBtn" />
+                            </div>    
+                          </v-col>
+
+                          <v-col cols="6">
+                            <!-- <v-color-picker 
+                              v-model="color"
+                              mode="hexa"
+                              flat 
+                            ></v-color-picker> -->
+
+                            <v-text-field v-model="color" hide-details class="ma-0 pa-0" solo>
+                              <template v-slot:append>
+                                <v-menu v-model="color_menu" top nudge-bottom="105" nudge-left="16" :close-on-content-click="false">
+                                  <template v-slot:activator="{ on }">
+                                    <div :style="swatchStyle" v-on="on" />
+                                  </template>
+                                  <v-card>
+                                 
+                                    <v-card-text class="pa-0">
+                                      <v-color-picker   mode="hexa" v-model="color" show-swatches />
+                                    </v-card-text>
+                                  </v-card>
+                                </v-menu>
+                              </template>
+                            </v-text-field>
+
                           </v-col>
                         </v-row>
 
@@ -278,7 +321,6 @@
     </template>
 
     <template v-slot:[`item.actions`]="{ item }">
-
       <v-icon
         small
         class="mr-2"
@@ -312,6 +354,7 @@
         //   sortable: false,
         //   value: 'number',
         // },
+
         { text: 'ชื่อเทศกาล', value: 'name' },
         { text: 'วันที่เริ่มต้น', value: 'start_date' },
         { text: 'วันที่สิ้นสุด', value: 'end_date' },
@@ -335,26 +378,25 @@
       test: '',
       files: null,
       files_bg: null,
+      files_btn: null,
+      color: '#1976D2FF',
       menu: false,
       menu2: false,
       menu3: false,
       menu4: false,
+      color_menu: false,
       userId: store.getters.user.id,
       datas: [],
       editedIndex: -1,
       valid: true,
       img_path : '',
+      bg_path : '',
       editedItem: {},
       defaultItem: {},
       nameRules: [
         v => !!v || 'Name is required',
       ],
-      filesRules: [
-        v => !v || v.size < 2000000 || 'Avatar size should be less than 2 MB!',
-        v => !!v || 'Name is required',
-
-      ],
-     
+      
       selectRules: [
         v =>  !!v && v.length> 0 || "Item is required in select 2"
       ],
@@ -389,6 +431,27 @@
       url() {
         return  this.editedItem.files ? URL.createObjectURL(this.editedItem.files) : this.img_path;
       },
+      urlBg() {
+        return  this.editedItem.files_bg ? URL.createObjectURL(this.editedItem.files_bg) : this.bg_path;
+      },
+      urlBtn() {
+        return  this.editedItem.files_btn ? URL.createObjectURL(this.editedItem.files_btn) : this.btn_path;
+      },
+    
+      swatchStyle() {
+        const { color, color_menu } = this
+        // console.log(color);
+        // console.log(menu);
+        return {
+          backgroundColor: color,
+          cursor: 'pointer',
+          height: '30px',
+          width: '30px',
+          borderRadius: color_menu ? '50%' : '4px',
+          transition: 'border-radius 200ms ease-in-out'
+        }
+    }
+
     },
 
     watch: {
@@ -425,6 +488,9 @@
         this.editedItem.start_time  = await moment(item.start_date).format('HH:mm')
         this.editedItem.end_time    = await moment(item.end_date).format('HH:mm')
         this.img_path               = await `${axios.defaults.baseURL}/uploads/${item.file_name}`;
+        this.bg_path                = await `${axios.defaults.baseURL}/uploads/${item.file_bg_name}`;
+        this.btn_path               = await `${axios.defaults.baseURL}/uploads/${item.file_btn_name}`;
+        this.color                  = await item.color
         this.dialog                 = await true
         this.editedIndex            = 1
       },
@@ -507,41 +573,82 @@
         }
       },
       async submit () {  
+    
         if(this.$refs.form.validate()){
-          console.log('1111');
+          
 
+          // แก้ไข
           if(this.editedIndex > -1){
 
-            let arr_file = this.editedItem.files.name.split(".");
-            let filename = `${'fid_'+this.editedItem.id+'.'+arr_file[1]}`
-            
-            let fd_edit = {
-              "fid"         : this.editedItem.id,
-              "user_id"     : this.userId,
-              "name"        : this.editedItem.name,
-              "start_date"  : `${moment(this.editedItem.start_date).format('YYYY-MM-DD') + ' ' + this.editedItem.start_time}`,
-              "end_date"    : `${moment(this.editedItem.end_date).format('YYYY-MM-DD') + ' ' + this.editedItem.end_time}`,
-              "file_name"   : filename,
-              "file_type"   : this.editedItem.files.type,
-              "file_size"   : this.editedItem.files.size,
-              "status"       : this.editedItem.status
+            if(this.editedItem.files){
+              var filename = this.splitFile(this.editedItem.files, 'imgfid_')
             }
 
+            if(this.editedItem.files_bg){
+              var filename2 = this.splitFile(this.editedItem.files_bg, 'bgfid_')
+            }
+
+            if(this.editedItem.files_btn){
+              var filename3 = this.splitFile(this.editedItem.files_btn, 'btnfid_')
+            }
+            
+           
+            // const arr_file      =  this.editedItem.files.name.split(".");
+            // const filename    = `${'imgfid_'+this.editedItem.id+'.'+arr_file[1]}`  
+
+            // let arr_file2     = await this.editedItem.files_bg.name.split(".");
+            // let arr_file3     = await this.editedItem.files_btn.name.split(".");
+          
+          
+            // let filename2  = `${'bgfid_'+this.editedItem.id+'.'+arr_file2[1]}`
+            // let filename3  = `${'btnfid_'+this.editedItem.id+'.'+arr_file3[1]}`
+            
+            let fd_edit = {
+              "fid"           : this.editedItem.id,
+              "user_id"       : this.userId,
+              "name"          : this.editedItem.name,
+              "color"         : this.color,
+              "start_date"    : `${moment(this.editedItem.start_date).format('YYYY-MM-DD') + ' ' + this.editedItem.start_time}`,
+              "end_date"      : `${moment(this.editedItem.end_date).format('YYYY-MM-DD') + ' ' + this.editedItem.end_time}`,
+              "file_name"     : this.editedItem.files ? filename : this.editedItem.file_name,
+              "file_bg_name"  : this.editedItem.files_bg ? filename2 : this.editedItem.file_bg_name,
+              "file_btn_name" : this.editedItem.files_btn ? filename3 : this.editedItem.file_btn_name,
+              "status"        : this.editedItem.status
+            }
+     
             try {
               let path = await `/api/updateFestival`
               let res = await axios.post(`${path}`, fd_edit)
               console.log(res);
 
               if(res){
-                  let image_name = `${this.editedItem.id}`
 
+                  // รูปภาพ
                   let fd2 = new FormData();
-                  fd2.append('image_name', image_name);
+                  fd2.append('image_name', filename);
                   fd2.append('image', this.editedItem.files);
 
                   let path2 = await `/api/uploadFile`
                   let res2  = await axios.post(`${path2}`, fd2)
                   console.log(res2);
+
+                  // พื้นหลัง
+                  let fd3 = new FormData();
+                  fd3.append('image_name', filename2);
+                  fd3.append('image', this.editedItem.files_bg);
+              
+                  let path3 = await `/api/uploadFileBg`
+                  let res3  = await axios.post(`${path3}`, fd3)
+                  console.log(res3);
+
+                  // ปุ่มลงนาม
+                  let fd4 = new FormData();
+                  fd4.append('image_name', filename3);
+                  fd4.append('image', this.editedItem.files_btn);
+              
+                  let path4 = await `/api/uploadFileBg`
+                  let res4  = await axios.post(`${path4}`, fd4)
+                  console.log(res4);
     
                 }
               Swal.fire({
@@ -563,6 +670,7 @@
               console.log('error :' + error)
             }
 
+          // สร้าง
           }else{
 
             let fd = {
@@ -571,9 +679,9 @@
               "start_date"    : this.editedItem.start_date ? `${this.editedItem.start_date + ' ' + this.editedItem.start_time}` : `${this.date + ' ' + this.editedItem.start_time}`,
               "end_date"      : this.editedItem.end_date ? `${this.editedItem.end_date + ' ' + this.editedItem.end_time}` : `${this.date + ' ' + this.editedItem.end_time}`,
               "file_name"     : this.editedItem.files.name,
-              "file_type"     : this.editedItem.files.type,
-              "file_size"     : this.editedItem.files.size,
               "file_bg_name"  : this.editedItem.files_bg.name,
+              "file_btn_name" : this.editedItem.files_btn.name,
+              "color"         : this.color,
               "status"        : this.editedItem.status
             }
 
@@ -586,17 +694,34 @@
 
                 if(res){
 
-                  // let image_name = `${res.data.row_id}`
-
+                  //รูปภาพ
                   let fd2 = new FormData();
-
                   fd2.append('image_name', res.data.file_img);
                   fd2.append('image', this.editedItem.files);
 
                   let path2 = await `/api/uploadFile`
                   let res2  = await axios.post(`${path2}`, fd2)
                   console.log(res2);
-    
+
+                  //พื้นหลัง
+                  let fd3 = new FormData()
+                  fd3.append('image_name', res.data.file_bg);
+                  fd3.append('image', this.editedItem.files_bg);
+
+                  let path3 = await `/api/uploadFileBg`
+                  let res3  = await axios.post(`${path3}`, fd3)
+                  console.log(res3);
+
+                  //ปุ่มลงนาม
+                  let fd4 = new FormData()
+                  fd4.append('image_name', res.data.file_btn);
+                  fd4.append('image', this.editedItem.files_btn);
+
+                  let path4 = await `/api/uploadFileBtn`
+                  let res4  = await axios.post(`${path4}`, fd4)
+                  console.log(res4);
+
+
                 }
                 Swal.fire({
                     icon: 'success',
@@ -619,6 +744,13 @@
           }
         }
       },
+
+      splitFile(v, type){
+        const arr_file      = v.name.split(".");
+        const filename      = `${type+this.editedItem.id+'.'+arr_file[1]}`  
+        return filename
+      },
+      
 
       async toggle(v){
         Swal.fire({
@@ -659,7 +791,7 @@
               v.status == 1 ? v.status = 0 : v.status = 1
             }
         }) 
-      }
+      },
     },
   }
 </script>
