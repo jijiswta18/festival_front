@@ -12,13 +12,11 @@
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-
       <v-list 
       class="mt-5"
         dense 
         nav
       >
-
         <router-link  
           v-if="check_roles.roles === 'admin'"
           class="d-flex align-center menu-link"
@@ -64,13 +62,10 @@
         </router-link>
       </v-list>
     </v-navigation-drawer>
-
-  
-
     <v-app-bar class="navbar" app>
       <div class="style-navbar">
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-        
+
         <div class="align-center d-flex">
           <span class="mr-2">{{check_roles.name}}</span>
           <v-menu offset-y>
@@ -90,23 +85,15 @@
               </v-list-item>
             </v-list>
           </v-menu>
+          <div  :class="!check_festival?'isdisabled':''">
             <router-link to="/festival">
                 <i class="fa-solid fa-arrow-up-right-from-square f-24"></i>
             </router-link>
-          
+          </div> 
         </div>
-
-
-
-        <!-- <div class="box-logout" @click="logout" >
-          <i class="fa-solid fa-right-from-bracket"></i>
-        </div> -->
       </div>
-    
-    
     </v-app-bar>
     <v-main>
-       
       <v-container>
          <router-view></router-view>
       </v-container>
@@ -118,20 +105,39 @@
 
 <script>
   import store from '../store/index.js';
+    import moment from 'moment';
   export default {
     name: 'MyHome',
     components: {},
     data: () => ({
       drawer: null,
       right: null,
-      check_roles: store.getters.user
-      //
+      check_roles: store.getters.user,
     }),
+     computed: {
+        check_festival () {
+          
+          let data_festival = this.$store.getters.festival
+
+          let date_today = moment().format('DD/MM/YYYY hh:mm')
+     
+          let start_date = moment(data_festival.start_date).format('DD/MM/YYYY hh:mm')
+
+          let end_date = moment(data_festival.end_date).format('DD/MM/YYYY hh:mm')
+          
+          let check_date = (date_today >= start_date) && (date_today <= end_date)
+
+          return check_date
+
+        
+        },
+    },
+
     methods: {
       async logout(){
         await this.$store.dispatch('logout')
         this.$router.push('/login')
-      }
+      },
     }
   }
 </script>
@@ -185,5 +191,9 @@
   }
   .f-24{
     font-size: 22px;
+  }
+  .isdisabled a{
+    pointer-events: none;
+    cursor: none;
   }
 </style>

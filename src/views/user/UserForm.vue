@@ -133,8 +133,8 @@
                             sm="6"
                         >
                             <v-select
-                            v-model="state"
-                            :items="selectState"
+                            v-model="status"
+                            :items="selectStatus"
                             :rules="rules.stateRules"
                             item-text="value"
                             item-value="id"
@@ -209,8 +209,9 @@
                 { value: 'ศทส', id: 1 },
                 { value: 'สล', id: 2 },
             ],
-            state: { value: '', id: null },
-            selectState: [
+            status: { value: '', id: null },
+            state: '',
+            selectStatus: [
                 { value: 'ใช้งาน', id: 1 },
                 { value: 'ไม่ใช้งาน', id: 0 },
             ],
@@ -247,8 +248,7 @@
             formTitle () {
                 return this.editedIndex === -1 ? 'สร้างเทศกาล' : 'แก้ไขเทศกาล'
             },
-            async saveUser(){
-                
+            async saveUser(){ 
                 if(this.$refs.form.validate()){
                     let fd = {
                         "userId"    : this.userId,
@@ -259,7 +259,8 @@
                         "position"  : this.position,
                         "divisions" : this.divisions,
                         "roles"     : this.roles,
-                        "state"     : this.state,
+                        "status"    : this.status,
+                        // "state"     : this.state,
                         "detail"    : this.detail,
                     }
                     try {

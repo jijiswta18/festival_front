@@ -10,6 +10,7 @@ import TestView from '../views/testView.vue'
 import UserView from '../views/user/UserView.vue'
 import UserForm from '../views/user/UserForm.vue'
 import UserFormEdit from '../views/user/UserFormEdit.vue'
+import ReportView from '../views/report/ReportView.vue'
 
 
 Vue.use(VueRouter)
@@ -84,11 +85,11 @@ const routes = [
         name: 'userFormEdit',
         component: UserFormEdit
       },
-      // {
-      //   path: '/report',
-      //   name: 'report',
-      //   component: ReportView
-      // },
+      {
+        path: '/report',
+        name: 'report',
+        component: ReportView
+      },
     ]
   },
 ]

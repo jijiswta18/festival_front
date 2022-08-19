@@ -233,7 +233,6 @@
                               label="เเนบรูปปุ่มลงนาม"
                               v-model="editedItem.files_btn"
                             ></v-file-input>
-
                             <div v-if="urlBtn" class="preview">
                               <img :src="urlBtn" />
                             </div>    
@@ -391,6 +390,7 @@
       valid: true,
       img_path : '',
       bg_path : '',
+      btn_path : '',
       editedItem: {},
       defaultItem: {},
       nameRules: [
@@ -592,17 +592,6 @@
               var filename3 = this.splitFile(this.editedItem.files_btn, 'btnfid_')
             }
             
-           
-            // const arr_file      =  this.editedItem.files.name.split(".");
-            // const filename    = `${'imgfid_'+this.editedItem.id+'.'+arr_file[1]}`  
-
-            // let arr_file2     = await this.editedItem.files_bg.name.split(".");
-            // let arr_file3     = await this.editedItem.files_btn.name.split(".");
-          
-          
-            // let filename2  = `${'bgfid_'+this.editedItem.id+'.'+arr_file2[1]}`
-            // let filename3  = `${'btnfid_'+this.editedItem.id+'.'+arr_file3[1]}`
-            
             let fd_edit = {
               "fid"           : this.editedItem.id,
               "user_id"       : this.userId,
@@ -649,17 +638,17 @@
                   let path4 = await `/api/uploadFileBg`
                   let res4  = await axios.post(`${path4}`, fd4)
                   console.log(res4);
-    
                 }
               Swal.fire({
                   icon: 'success',
                   title: 'บันทึกสำเร็จ',
                   text: 'ระบบได้ทำการบันทึกข้อมูลของคุณแล้ว' 
               }).then( function(){
-                  // window.location.href = '/';
+
               });
               this.dialog = false
               await this.getFestival()
+              await this.$store.dispatch('checkFestival')
 
             } catch (error) {
               Swal.fire({
@@ -729,8 +718,9 @@
                     text: 'ระบบได้ทำการบันทึกข้อมูลของคุณแล้ว'
                 }).then( function(){
                 });
-                  this.dialog = await false
-                 await this.getFestival()
+                this.dialog = await false
+                await this.getFestival()
+                await this.$store.dispatch('checkFestival')
                 console.log(res);
             } catch (error) {
               Swal.fire({
@@ -770,6 +760,8 @@
                 console.log(payload);
                 let path      = `/api/updateFestivalStatus`
                 let response = await axios.post(`${path}`, payload)
+
+                this.$store.dispatch('checkFestival')
 
                 if(payload){
                     Swal.fire({

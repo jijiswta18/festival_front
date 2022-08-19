@@ -81,9 +81,9 @@
                             title: 'เข้าสู่ระบบสำเร็จ',
                             showConfirmButton: false,
                             timer: 1500
-                    })
-                            
-                        }
+                        })
+                        this.$store.dispatch('checkFestival')    
+                    }
                     } catch (error) {
                         console.log(error);
                     }
@@ -91,6 +91,7 @@
                 }
 
             }
+            
         },
     };
 </script>

@@ -135,8 +135,8 @@
                             sm="6"
                         >
                             <v-select
-                            v-model="state"
-                            :items="selectState"
+                            v-model="status"
+                            :items="selectStatus"
                             :rules="rules.stateRules"
                             item-text="value"
                             item-value="id"
@@ -212,8 +212,9 @@
                 { value: 'ศทส', id: 1 },
                 { value: 'สล', id: 2 },
             ],
-            state: { value: '', id: null },
-            selectState: [
+            status: { value: '', id: null },
+            state: '',
+            selectStatus: [
                 { value: 'ใช้งาน', id: 1 },
                 { value: 'ไม่ใช้งาน', id: 0 },
             ],
@@ -250,15 +251,15 @@
             async getUserDetail(){
                 let path = await `/api/getUserDetail`
                 let response = await axios.get(`${path}/`+this.$route.params.id)
-                console.log(response);
                 this.data = response.data.data[0]
+                console.log(this.data );
                   this.username     = this.data.username
-                //   this.password     = this.data.password
                   this.name         = this.data.name
                   this.lastname     = this.data.lastname
                   this.position     = this.data.position
                   this.divisions    = this.data.divisions
                   this.roles        = this.data.roles
+                  this.status       = this.data.status
                   this.state        = this.data.state
                   this.detail       = this.data.detail
             },
@@ -267,13 +268,12 @@
                     let fd = {
                         "id"        : this.$route.params.id,
                         "userId"    : this.userId,
-                        // "username"  : this.username,
-                        // "password"  : this.password,
                         "name"      : this.name,
                         "lastname"  : this.lastname,
                         "position"  : this.position,
                         "divisions" : this.divisions,
                         "roles"     : this.roles,
+                        "status"    : this.status,
                         "state"     : this.state,
                         "detail"    : this.detail
                     }
@@ -302,8 +302,8 @@
             cancel(){
                  this.$router.push('/user')
             },
-            async deleteUser (v) {
-                console.log(v);
+            async deleteUser () {
+           
                 Swal.fire({
                     title: 'คำเตือน',
                     text: "คุณต้องการลบข้อมูลเจ้าหน้าที่ใช่หรือไม่ ?",
@@ -316,7 +316,7 @@
                 }).then(async (result) => {
                     if (result.isConfirmed) {
                         const payload = { 
-                            id: v.id,
+                            id: this.$route.params.id,
                             userId: this.userId
                         }
                         let path =  `/api/deleteUser`
@@ -325,7 +325,6 @@
                         if(payload){
                             Swal.fire({
                                 icon: 'success',
-                                // title: 'เรียบร้อย',
                                 text: 'ลบข้อมูลพนักงานสำเร็จ',
                             })
                             if(response){

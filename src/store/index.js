@@ -8,6 +8,7 @@ Vue.use(Vuex)
 const getDefaultState = () => {
   return {
     user: null,
+    festival: null
   }
 }
 export default new Vuex.Store({
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     user (state) {
       return state.user
     },
+    festival (state) {
+      return state.festival
+    },
     isAuthenticated: state => !!state.user,  
 
    
@@ -27,8 +31,12 @@ export default new Vuex.Store({
     authUser (state, data) {
       state.user = data
     },
+    checkFestival (state, data) {
+      state.festival = data
+    },
     clearAuthData (state) {
       state.user = null
+      // state.festival = null
       localStorage.removeItem('token')
       localStorage.removeItem('expirationDate')
     },
@@ -43,8 +51,6 @@ export default new Vuex.Store({
           username: authData.username,
           password: authData.password
       })
-
-      console.log(response);
 
       const now = await new Date()
       
@@ -79,15 +85,21 @@ export default new Vuex.Store({
 
     },
 
+    async checkFestival({ commit }){
+      let path = '/api/checkFestival'
+      let response =  await axios.get(path)
+
+      const checkData = response.data.data[0]
+
+      await commit('checkFestival', checkData)
+
+    },
 
     async logout({commit}){
       commit('clearAuthData')
     }
-    // async logout({ commit }){
-    //   let path = await '/api/logout'      
-    //   await axios.post(path)
-    //   await commit('clearAuthData')    
-    // },
+   
+
 
   },
   modules: {
