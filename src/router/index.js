@@ -5,12 +5,15 @@ import store from '../store/index.js';
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import FestivalView from '../views/festival/FestivalView.vue'
+import FestivalPreview from '../views/festival/FestivalPreview.vue'
 import FestivalForm from '../views/FestivalForm.vue'
 import TestView from '../views/testView.vue'
 import UserView from '../views/user/UserView.vue'
 import UserForm from '../views/user/UserForm.vue'
 import UserFormEdit from '../views/user/UserFormEdit.vue'
 import ReportView from '../views/report/ReportView.vue'
+import ReportSign from '../views/report/ReportSign.vue'
+
 
 
 Vue.use(VueRouter)
@@ -23,9 +26,11 @@ const routes = [
     component: LoginView,
     beforeEnter (to, from, next) {
       store.dispatch('checkLogin')
-      if (store.state.user) {          
+      if (store.state.user) {         
+
         next({ name: 'festival' })
       } else {
+
           next()
       }
     },
@@ -52,6 +57,12 @@ const routes = [
   },
 
   {
+    path: '/festival/preview/:id',
+    name: 'festivalPreview',
+    component: FestivalPreview
+  },
+
+  {
     path: '/',
     component: HomeView,
     beforeEnter (to, from, next) {
@@ -69,7 +80,7 @@ const routes = [
         name: 'festival',
         component: FestivalView
       },
-     
+
       {
         path: '/user',
         name: 'user',
@@ -89,6 +100,11 @@ const routes = [
         path: '/report',
         name: 'report',
         component: ReportView
+      },
+      {
+        path: '/report/sign/:id',
+        name: 'reportSign',
+        component: ReportSign
       },
     ]
   },

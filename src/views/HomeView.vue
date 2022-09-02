@@ -5,10 +5,13 @@
       v-model="drawer"
       app
     >
-      <v-list-item>
-        <v-list-item-content>
+      <v-list-item >
+        <v-list-item-content class="head-menu">
+          <div class="logo-cgd mr-2">
+            <img src="@/assets/images/logo-cgd.png"/>
+          </div>
           <v-list-item-title class="text-h6">
-            Festival
+            ลงนามถวายพระพร
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
@@ -85,22 +88,20 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <div  :class="!check_festival?'isdisabled':''">
+          <!-- <div  :class="!check_festival?'isdisabled':''"> -->
             <router-link to="/festival">
                 <i class="fa-solid fa-arrow-up-right-from-square f-24"></i>
             </router-link>
-          </div> 
+          <!-- </div>  -->
         </div>
       </div>
     </v-app-bar>
     <v-main>
-      <v-container>
+      <v-container class="mt-3">
          <router-view></router-view>
       </v-container>
     </v-main>
   </v-app>
-
-
 </template>
 
 <script>
@@ -142,9 +143,9 @@
   }
 </script>
 <style>
-  /* body{
-    font-family: 'Prompt', sans-serif;
-  } */
+  body{
+    font-family: 'Prompt', sans-serif !important;
+  }
   .style-navbar{
     width: 100%;
     display: flex;
@@ -166,7 +167,7 @@
   }
 
   .sidebar{
-    background-color: #1e1e2d!important;
+    background-color: #181824!important;
   }
   .navbar{
     background-color: white!important;
@@ -182,9 +183,11 @@
     width: 20px;
     margin-right: 1rem;
     color: #a2a3b7!important;
+    font-size: 18px;
   }
   .menu-text{
     color: #a2a3b7;
+    font-size: 14px!important;
   }
   .box-user .fa-circle-user{
     font-size: 24px!important;
@@ -195,5 +198,38 @@
   .isdisabled a{
     pointer-events: none;
     cursor: none;
+  }
+  .logo-cgd{
+    max-width: 48px;
+    height: 48px;
+  }
+  .logo-cgd img{
+    width: 100%;
+  }
+  .head-menu{
+    flex-wrap: inherit!important;
+    width: 100%;
+  }
+  .v-main{
+    background-color: #eef0f8;
+  }
+
+  /* sidebar active */
+  .menu-link.router-link-exact-active{
+    background-color: #3445E5;
+  }
+  .menu-link.router-link-exact-active:hover{
+    background-color: #3445E5;
+  }
+  .menu-link.router-link-exact-active .menu-icon,
+  .menu-link.router-link-exact-active .menu-text{
+    color: white!important;
+  }
+  .menu-link:hover{
+    background-color: #27283D;
+  }
+  .menu-link:hover .menu-icon,
+  .menu-link:hover .menu-text{
+    color: white!important;
   }
 </style>

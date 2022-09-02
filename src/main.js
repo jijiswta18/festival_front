@@ -5,9 +5,14 @@ import VueAxios from 'vue-axios'
 import router from './router'
 import vuetify from './plugins/vuetify'
 import store from './store'
+import VueExcelXlsx from "vue-excel-xlsx";
 
 
 Vue.use(VueAxios,axios)
+
+Vue.use(VueExcelXlsx);
+
+
 
 axios.defaults.baseURL = 'http://localhost:5000'; //'http://10.100.90.23';
 

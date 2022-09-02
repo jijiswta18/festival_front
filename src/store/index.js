@@ -47,6 +47,7 @@ export default new Vuex.Store({
 
     async login ( {commit}, authData){
       let path = '/api/login'
+      // let path = '/api/login'
       let response =  await axios.post(path,{
           username: authData.username,
           password: authData.password

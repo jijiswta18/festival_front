@@ -1,43 +1,47 @@
 <template>
-    <v-data-table
-        :headers="headers"
-        :items="datas_user"
-        sort-by="calories"
-        class="elevation-1"
-    >
-    <template v-slot:top>
-      <v-toolbar flat>
-        <v-toolbar-title>รายการบุคลากร</v-toolbar-title>
-
-        <v-divider
-          class="mx-4"
-          inset
-          vertical
-        ></v-divider>
-        <v-spacer></v-spacer>
-          <!-- <template v-slot:activator="{ attrs }"> -->
-            <v-btn
-              class="mb-2 btn-create"
-              @click="create"
-            >
-              สร้าง
-            </v-btn>
-          <!-- </template> -->
-      </v-toolbar>
-    </template>
-    <template v-slot:[`item.create_date`]="{ item }">{{getThaiDate(item.create_date)}}</template>
-    <template v-slot:[`item.name`]="{ item }">{{item.name + ' ' + item.lastname}}</template>
-    <template v-slot:[`item.status`]="{ item }">{{item.status == 1 ? 'ใช้งาน' : 'ไม่ใช้งาน'}}</template>
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-icon
-        small
-        class="mr-2"
-        @click="editItem(item)"
+  <v-data-table
+      :headers="headers"
+      :items="datas_user"
+      :search="search"
+      sort-by="calories"
+      class="elevation-1"
+  >
+  <template v-slot:top>
+    <v-toolbar flat>
+      <v-toolbar-title>รายการบุคลากร</v-toolbar-title>
+      <v-btn
+        class="btn-create ml-2"
+        @click="create"
       >
-        mdi-pencil
-      </v-icon>
-    </template>
-  </v-data-table>
+        <i class="fa-solid fa-plus icon-style"></i>
+        เพิ่มรายการใหม่
+      </v-btn>
+      <v-spacer></v-spacer>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        hide-details
+      ></v-text-field>
+    </v-toolbar>
+  </template>
+  <template v-slot:[`item.number`]="{index}">{{index + 1}}</template>
+  <template v-slot:[`item.create_date`]="{ item }">{{getThaiDate(item.create_date)}}</template>
+  <template v-slot:[`item.name`]="{ item }">{{item.name + ' ' + item.lastname}}</template>
+  <template v-slot:[`item.status`]="{ item }">{{item.status == 1 ? 'ใช้งาน' : 'ไม่ใช้งาน'}}</template>
+  <template v-slot:[`item.actions`]="{ item }">
+    <v-btn
+      color="primary"
+      fab
+      x-small
+      dark
+      @click="editItem(item)"
+    >
+      <v-icon>mdi-pencil</v-icon>
+    </v-btn>
+  </template>
+</v-data-table>
 </template>
 <script>
     import  axios  from "axios";
@@ -46,20 +50,21 @@
     data: () => ({
       dialog: false,
       dialogDelete: false,
+      search: '',
       headers: [
-        // {
-        //   text: 'ลำดับ',
-        //   align: 'start',
-        //   sortable: false,
-        //   value: 'number',
-        // },
-        { text: 'วันที่จัดสร้าง', value: 'create_date' },
+        {
+          text: '',
+          align: 'start',
+          sortable: false,
+          value: 'number',
+        },
+        { text: 'วันที่จัดสร้าง', value: 'create_date', align: 'center'},
         { text: 'ชื่อ-สกุล', value: 'name' },
         { text: 'ตำเเหน่ง', value: 'position' },
 
-        { text: 'ระดับการใช้งาน', value: 'roles' },
-        { text: 'สถานะ', value: 'status' },
-        { text: 'Actions', value: 'actions', sortable: false },
+        { text: 'ระดับการใช้งาน', value: 'roles', align: 'center'},
+        { text: 'สถานะ', value: 'status', align: 'center'},
+        { text: 'Actions', value: 'actions', align: 'center', sortable: false },
       ],
       datas_user: [],
     }),

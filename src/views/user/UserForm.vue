@@ -14,12 +14,29 @@
                     <v-row align="center">
                         <v-col
                             cols="12"
-                            sm="6"
+                            sm="12"
                         >
                             <v-text-field
                                 v-model="username"
                                 :rules="usernameRules"
                                 label="รหัสผู้ใช้งาน"
+                                dense
+                                outlined
+                                clearable
+                            ></v-text-field>
+                        </v-col>
+        
+                        
+                    </v-row>
+                    <!-- <v-row align="center">
+                        <v-col
+                            cols="12"
+                            sm="6"
+                        >
+                            <v-text-field
+                                v-model="username"
+                                :rules="usernameRules"
+                                label="Username"
                                 dense
                                 outlined
                                 clearable
@@ -35,14 +52,14 @@
                                 outlined
                                 clearable
                                 v-model="password"
-                                label="รหัสผ่าน"
+                                label="Password"
                                 :rules="passwordRules"
                                 :type="show1 ? 'text' : 'password'"
                                 :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                                 @click:append="show1 = !show1"
                             ></v-text-field>
                         </v-col>
-                    </v-row>
+                    </v-row> -->
 
                     <v-row align="center">
                         <v-col
@@ -192,6 +209,7 @@
             show1: false,
             valid: true,
             check_title :  true,
+            username_ad: '',
             username: '',
             password: '',
             name: '',
@@ -209,13 +227,16 @@
                 { value: 'ศทส', id: 1 },
                 { value: 'สล', id: 2 },
             ],
-            status: { value: '', id: null },
+            status: { value: 'ใช้งาน', id: 1 },
             state: '',
             selectStatus: [
                 { value: 'ใช้งาน', id: 1 },
                 { value: 'ไม่ใช้งาน', id: 0 },
             ],
 
+            usernameAdRules: [
+                v => !!v || 'กรุณากรอกข้อมูล',
+            ],
             usernameRules: [
                 v => !!v || 'กรุณากรอกข้อมูล',
             ],
@@ -251,17 +272,18 @@
             async saveUser(){ 
                 if(this.$refs.form.validate()){
                     let fd = {
-                        "userId"    : this.userId,
-                        "username"  : this.username,
-                        "password"  : this.password,
-                        "name"      : this.name,
-                        "lastname"  : this.lastname,
-                        "position"  : this.position,
-                        "divisions" : this.divisions,
-                        "roles"     : this.roles,
-                        "status"    : this.status,
+                        "userId"        : this.userId,
+                        "username"      : this.username,
+                        // "password"      : this.password,
+                        // "username_ad"   : this.username_ad,
+                        "name"          : this.name,
+                        "lastname"      : this.lastname,
+                        "position"      : this.position,
+                        "divisions"     : this.divisions,
+                        "roles"         : this.roles,
+                        "status"        : this.status.id,
                         // "state"     : this.state,
-                        "detail"    : this.detail,
+                        "detail"        : this.detail,
                     }
                     try {
 
@@ -283,9 +305,7 @@
                         })
                         console.log('error :' + error)
                     }
-                } else{
-                    this.$refs.form.validate()
-                }
+                } 
             },
             cancel(){
                  this.$router.push('/user')

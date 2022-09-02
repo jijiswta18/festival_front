@@ -12,14 +12,27 @@
             >
                 <v-card-text >
                     <v-row align="center">
+                        <!-- <v-col
+                            cols="12"
+                            sm="6"
+                        >
+                            <v-text-field
+                                v-model="username_ad"
+                                label="รหัสผู้ใช้งาน"
+                                dense
+                                outlined
+                                clearable
+                                disabled
+                            ></v-text-field>
+                        </v-col> -->
+
                         <v-col
                             cols="12"
                             sm="12"
                         >
                             <v-text-field
                                 v-model="username"
-                                :rules="usernameRules"
-                                label="ชื่อผู้ใช้งาน"
+                                label="รหัสผู้ใช้งาน"
                                 dense
                                 outlined
                                 clearable
@@ -195,6 +208,7 @@
         data: () => ({
             show1: false,
             valid: true,
+            username_ad: '',
             username: '',
             password: '',
             name: '',
@@ -218,9 +232,12 @@
                 { value: 'ใช้งาน', id: 1 },
                 { value: 'ไม่ใช้งาน', id: 0 },
             ],
-            usernameRules: [
-                v => !!v || 'กรุณากรอกข้อมูล',
-            ],
+            // usernameAdRules: [
+            //     v => !!v || 'กรุณากรอกข้อมูล',
+            // ],
+            // usernameRules: [
+            //     v => !!v || 'กรุณากรอกข้อมูล',
+            // ],
             passwordRules: [
                 v => !!v || 'กรุณากรอกข้อมูล',
                 v => v.length >= 8 || 'Min 8 characters',
@@ -253,6 +270,7 @@
                 let response = await axios.get(`${path}/`+this.$route.params.id)
                 this.data = response.data.data[0]
                 console.log(this.data );
+                //   this.username_ad  = this.data.username_ad
                   this.username     = this.data.username
                   this.name         = this.data.name
                   this.lastname     = this.data.lastname
@@ -277,6 +295,7 @@
                         "state"     : this.state,
                         "detail"    : this.detail
                     }
+
                     try {
 
                         let path = await `/api/updateUser`
