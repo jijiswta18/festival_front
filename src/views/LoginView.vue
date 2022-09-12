@@ -47,7 +47,9 @@
                                     @click:append="show1 = !show1"
                                     prepend-icon="fa-solid fa-lock"
                                     class="input-password"
+                                    autocomplete="on"
                                 ></v-text-field>
+                                
                             </div>
                             <div class="text-center mt-2">
                                 <!-- <v-spacer></v-spacer> -->

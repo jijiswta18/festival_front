@@ -1,9 +1,13 @@
 <template>
+    <div>
+       
     <div 
       @click="exportExcel"
      
     >export
     </div>
+    </div>
+    
 </template>
 
 <script>
@@ -13,6 +17,7 @@
         name: "vue-excel-xlsx1",
         data(){
           return{
+          
             columns : [
               {
                   label: "ลำดับ",
@@ -96,6 +101,7 @@
         //             }
         //         },
         methods: {
+       
             async exportExcel() {
                 let createXLSLFormatObj = [];
                 let newXlsHeader = [];

@@ -89,9 +89,21 @@
             </v-list>
           </v-menu>
           <!-- <div  :class="!check_festival?'isdisabled':''"> -->
-            <router-link to="/festival">
+          <v-btn
+            color="back"
+            v-ripple="false" icon
+
+            @click="previewItem"
+            >
+            <i class="fa-solid fa-arrow-up-right-from-square f-24"></i>
+          </v-btn>
+
+          <!-- <router-link :to="{ name: 'festivalForm'}" target="_blank">
+            <i class="fa-solid fa-arrow-up-right-from-square f-24"></i>
+          </router-link> -->
+            <!-- <router-link to="/festival">
                 <i class="fa-solid fa-arrow-up-right-from-square f-24"></i>
-            </router-link>
+            </router-link> -->
           <!-- </div>  -->
         </div>
       </div>
@@ -135,6 +147,12 @@
     },
 
     methods: {
+      previewItem(){
+        const routeData = this.$router.resolve({
+          name: "festivalForm",
+        });
+        window.open(routeData.href, "_blank");
+    },
       async logout(){
         await this.$store.dispatch('logout')
         this.$router.push('/login')

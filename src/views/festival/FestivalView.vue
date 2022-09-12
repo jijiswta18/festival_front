@@ -193,58 +193,152 @@
                       <v-row>
                         <v-col cols="6">
                           <v-file-input
+                            v-if="!img_path"
                             id="file"
                             accept="image/png, image/jpeg, image/bmp"
                             prepend-icon="mdi-camera"
                             label="เเนบรูปเทศกาล"
                             v-model="editedItem.files"
-                           
-                            
-                            
+                            :rules="rules.filesRules" 
+                            @change="onFileChange(editedItem.files, 'img')"
                           ></v-file-input>
 
-                          <div v-if="url" class="preview">
-                            <img :src="url" />
-                            <!-- <p>{{editedItem.files}}</p> -->
-                            
-                          </div>    
+                          <div v-if="img_path">
+                            <label for="img_path">เเนบรูปเทศกาล</label>
+                            <div class="d-flex flex-row align-center">
+                              <div class="preview" @click="overlayImg = !overlayImg">
+                                <img :src="img_path" />
+                              </div>    
+                              <v-btn
+                                class="mx-2 remove-icon"
+                                fab
+                                dark
+                                x-small
+                                color="pink"
+                                @click="removePreview('img')"
+                                
+                              >
+                                <v-icon dark>
+                                  fa-xmark
+                                </v-icon>
+                              </v-btn>
+                            </div>
+
+                            <v-overlay class="style-bg" :opacity="opacity"  :z-index="zIndex" :absolute="absolute" :value="overlayImg">
+                              <img :src="img_path" />
+                             
+                              <v-btn
+                                class="btn-overlay"
+                                icon
+                                @click="overlayImg = false"
+                              >
+                              <v-icon  dark>
+                                fa-xmark
+                              </v-icon>
+                              </v-btn>
+                            </v-overlay>
+
+                          </div>
+                        
                         </v-col>
 
                         <v-col cols="6">
                           <v-file-input
+                            v-if="!bg_path"
                             accept="image/png, image/jpeg, image/bmp"
                             prepend-icon="mdi-camera"
                             label="เเนบรูปพื้นหลัง"
                             v-model="editedItem.files_bg"
+                            :rules="rules.filesBgRules" 
+                            @change="onFileChange(editedItem.files_bg, 'bg')"
                           ></v-file-input>
-                          {{urlBg}}
-                          <div v-if="urlBg" class="preview">
-                            <img :src="urlBg" />
-                          </div>    
+
+
+                          <div v-if="bg_path">
+                            <label for="bg_path">เเนบรูปพื้นหลัง</label>
+                            <div class="d-flex flex-row align-center">
+                              <div class="preview" @click="overlayBg = !overlayBg">
+                                <img :src="bg_path"/> 
+                              </div> 
+                              <v-btn
+                                class="mx-2 remove-icon"
+                                fab
+                                dark
+                                x-small
+                                color="pink"
+                                @click="removePreview('bg')"
+                              >
+                                <v-icon dark>
+                                  fa-xmark
+                                </v-icon>
+                              </v-btn> 
+                            </div>
+                            <v-overlay class="style-bg" :opacity="opacity"  :z-index="zIndex" :value="overlayBg">
+                              <img :src="bg_path" />
+                             
+                              <v-btn
+                                class="btn-overlay"
+                                icon
+                                @click="overlayBg = false"
+                              >
+                              <v-icon  dark>
+                                fa-xmark
+                              </v-icon>
+                              </v-btn>
+                            </v-overlay>
+                          </div>
                         </v-col>
                       </v-row>
 
                       <v-row>
                         <v-col cols="6">
                           <v-file-input
+                            v-if="!btn_path"
                             id="file"
                             accept="image/png, image/jpeg, image/bmp"
                             prepend-icon="mdi-camera"
                             label="เเนบรูปปุ่มลงนาม"
                             v-model="editedItem.files_btn"
+                            :rules="rules.filesBtnRules" 
+                            @change="onFileChange(editedItem.files_btn, 'btn')"
                           ></v-file-input>
-                          <div v-if="urlBtn" class="preview">
-                            <img :src="urlBtn" />
-                          </div>    
+
+                          <div v-if="btn_path">
+                            <label for="bg_path">เเนบรูปปุ่มลงนาม</label>
+                            <div class="d-flex flex-row align-center">
+                              <div class="preview" @click="overlayBtn = !overlayBtn">
+                                <img :src="btn_path"/>
+                              </div>  
+                              <v-btn
+                                class="mx-2 remove-icon"
+                                fab
+                                dark
+                                x-small
+                                color="pink"
+                                @click="removePreview('btn')"
+                              >
+                                <v-icon dark>
+                                  fa-xmark
+                                </v-icon>
+                              </v-btn>
+                            </div>
+                            <v-overlay class="style-bg" :opacity="opacity"  :z-index="zIndex" :value="overlayBtn">
+                              <img :src="btn_path" />
+                             
+                              <v-btn
+                                class="btn-overlay"
+                                icon
+                                @click="overlayBtn = false"
+                              >
+                              <v-icon  dark>
+                                fa-xmark
+                              </v-icon>
+                              </v-btn>
+                            </v-overlay>
+                          </div>
                         </v-col>
 
                         <v-col cols="6">
-                          <!-- <v-color-picker 
-                            v-model="color"
-                            mode="hexa"
-                            flat 
-                          ></v-color-picker> -->
-
                           <v-text-field v-model="color" hide-details class="ma-0 pa-0" solo>
                             <template v-slot:append>
                               <v-menu v-model="color_menu" top nudge-bottom="105" nudge-left="16" :close-on-content-click="false">
@@ -279,7 +373,6 @@
                           ></v-select>
                         </v-col>
                       </v-row>
-
                   </v-container>
                 </v-form>
               </v-card-text>
@@ -352,6 +445,12 @@
   export default {
   components: { },
     data: () => ({
+      overlayImg: false,
+      overlayBg: false,
+      overlayBtn: false,
+      absolute: false,
+      zIndex: 1,
+      opacity: 1,
       dialog: false,
       search: '',
       headers: [
@@ -394,29 +493,42 @@
       datas: [],
       editedIndex: -1,
       valid: true,
-      img_path : '',
-      bg_path : '',
-      btn_path : '',
+      img_path : null,
+      bg_path : null,
+      btn_path : null,
       editedItem: {},
       defaultItem: {},
+      checkFileImg: false,
+      checkFileBg: false,
+      checkFileBtn: false,
       nameRules: [
         v => !!v || 'กรุณาใส่ข้อมูล',
       ],
 
       startRules: [v => !!v || "กรุณาใส่ข้อมูล"],
       endRules: [v => !!v || "กรุณาใส่ข้อมูล"],
-      fileRules: [
-        v => !!v || 'File is required',
-        v => (v && v.size > 0) || 'File is required',
-      ],
-      // filesRules : [v => !!v || 'กรุณาใส่ข้อมูล'],
-      // filesbgRules : [v => !!v || 'กรุณาใส่ข้อมูล'],
-      // filesbtnRules : [v => !!v || 'กรุณาใส่ข้อมูล'],
+      rules:{
+        filesRules: [
+          v => !!v || 'กรุณาใส่ข้อมูล',
+          v => (v && v.size > 0) || 'File is required',
+        ],
+        filesBgRules: [
+          v => !!v || 'กรุณาใส่ข้อมูล',
+          v => (v && v.size > 0) || 'File is required',
+        ],
+        filesBtnRules: [
+          v => !!v || 'กรุณาใส่ข้อมูล',
+          v => (v && v.size > 0) || 'File is required',
+        ],
+
+      },
       selectStatus: [
         { value: 'ใช้งาน', id: 1 },
         { value: 'ไม่ใช้งาน', id: 0 },
       ],  
-      }),
+      currPic: null
+    }),
+      
     computed: {
       formTitle () {
         return this.editedIndex === -1 ? 'สร้างเทศกาล' : 'แก้ไขเทศกาล'
@@ -438,20 +550,9 @@
         
         return this.editedItem.end_date ? d_option : d_now
       },
-      url() {
-        return  this.editedItem.files ? URL.createObjectURL(this.editedItem.files) : this.img_path;
-      },
-      urlBg() {
-        return  this.editedItem.files_bg ? URL.createObjectURL(this.editedItem.files_bg) : this.bg_path;
-      },
-      urlBtn() {
-        return  this.editedItem.files_btn ? URL.createObjectURL(this.editedItem.files_btn) : this.btn_path;
-      },
     
       swatchStyle() {
         const { color, color_menu } = this
-        // console.log(color);
-        // console.log(menu);
         return {
           backgroundColor: color,
           cursor: 'pointer',
@@ -467,13 +568,22 @@
     watch: {
       dialog (val) {
         val || this.close() 
+        console.log(val);
       },
+      // overlay (val) {
+      //   console.log(val);
+      //   // val && setTimeout(() => {
+      //   //   this.overlay = false
+      //   // }, 2000)
+      // },
     
      
     },
     mounted(){
       this.getFestival()
+      console.log(this.editedItem);
     },
+
 
     methods: {
       timeFormat:function(d){
@@ -487,6 +597,74 @@
           return "";
         }            
       },
+
+      openDialog(idx) {
+        this.currPic = this.img_path[idx]
+        return this.showDialog = true
+      },
+
+      onFileChange(payload, type) {
+        const file = payload; // in case vuetify file input
+        // console.log(file);
+        // console.log(type);
+
+        switch(type) {
+          case 'img':
+            if (file) {
+              this.checkFileImg = true
+              this.img_path = URL.createObjectURL(file);
+              URL.revokeObjectURL(file); // free memory
+
+            } else {
+              this.img_path =  null
+            }  
+          break;
+          case 'bg':
+             if (file) {
+                this.checkFileBg = true
+                this.bg_path = URL.createObjectURL(file);
+                URL.revokeObjectURL(file); // free memory
+              } else {
+                this.bg_path =  null
+              }
+          break;
+          case 'btn':
+             if (file) {
+                this.checkFileBtn = true
+                this.btn_path = URL.createObjectURL(file);
+                URL.revokeObjectURL(file); // free memory
+              } else {
+                this.btn_path =  null
+              }
+          break;
+          default:
+            // code block
+        }
+      },
+
+      removePreview(type){
+        console.log(type);
+        switch(type) {
+          case 'img':
+            this.img_path =  null
+            this.editedItem.files = null
+            this.checkFileImg = false
+          break;
+          case 'bg':
+            this.bg_path =  null
+            this.editedItem.files_bg = null
+            this.checkFileBg = false
+          break;
+          case 'btn':
+            this.btn_path =  null
+            this.editedItem.files_btn = null
+            this.checkFileBtn = false
+          break;
+          default:
+            // code block
+        }
+      },  
+    
       previewItem(v){
         const routeData = this.$router.resolve({
         name: "festivalPreview",
@@ -504,6 +682,7 @@
         })
       },
       async editItem (item) {
+        console.log(item);
         this.editedItem             = await JSON.parse(JSON.stringify(item))
         this.editedItem.start_time  = await moment(item.start_date).format('HH:mm')
         this.editedItem.end_time    = await moment(item.end_date).format('HH:mm')
@@ -511,8 +690,13 @@
         this.bg_path                = await `${axios.defaults.baseURL}/uploads/${item.file_bg_name}`;
         this.btn_path               = await `${axios.defaults.baseURL}/uploads/${item.file_btn_name}`;
         this.color                  = await item.color
+        // this.editedItem.files       = await new File(["image"], item.file_name);
+        // this.editedItem.files_bg    = await new File(["image"], item.file_bg_name);
+        // this.editedItem.files_btn   = await new File(["image"], item.file_btn_name);
         this.dialog                 = await true
         this.editedIndex            = 1
+
+        console.log(item);
       },
       deleteItem (item) {
         Swal.fire({
@@ -520,8 +704,6 @@
             text: "คุณต้องการลบข้อมูลเทศกาลใช่หรือไม่ ?",
             icon: 'warning',
             showCancelButton: true,
-            // confirmButtonColor: '#3085d6',
-            // cancelButtonColor: '#d33',
             confirmButtonText: 'ลบ',
             cancelButtonText: 'ยกเลิก',
         }).then(async (result) => {
@@ -536,7 +718,6 @@
                 if(payload){
                     Swal.fire({
                         icon: 'success',
-                        // title: 'เรียบร้อย',
                         text: 'ลบข้อมูลพนักงานสำเร็จ',
                     })
                     if(response){
@@ -552,16 +733,12 @@
                   
             }
         }) 
-        // this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
       },
       close () {
         this.dialog = false
         if(this.editedIndex === -1){
-          console.log('=======');
           this.$nextTick(() => {
             this.editedItem = Object.assign({}, this.defaultItem)
-            // this.editedIndex = -1
           })
         }
 
@@ -572,13 +749,6 @@
           let path = await `/api/getFestival`
           let response = await axios.get(`${path}`)
           this.datas = response.data.data
-
-          // response.data.data.forEach(item => {
-          //     this.test.push({'switch':item.state == '1' ? true : false})
-          // })
-
-
-          console.log( this.datas );
         } catch (error) {
              console.log('error :' + error)
         }
@@ -588,15 +758,17 @@
           // แก้ไข
           if(this.editedIndex > -1){
 
-            if(this.editedItem.files){
+            if(this.checkFileImg){
               var filename = this.splitFile(this.editedItem.files, 'imgfid_')
+             
             }
 
-            if(this.editedItem.files_bg){
+            if(this.checkFileBg){
               var filename2 = this.splitFile(this.editedItem.files_bg, 'bgfid_')
+  
             }
 
-            if(this.editedItem.files_btn){
+            if(this.checkFileBtn){
               var filename3 = this.splitFile(this.editedItem.files_btn, 'btnfid_')
             }
             
@@ -607,11 +779,17 @@
               "color"         : this.color,
               "start_date"    : `${moment(this.editedItem.start_date).format('YYYY-MM-DD') + ' ' + this.editedItem.start_time}`,
               "end_date"      : `${moment(this.editedItem.end_date).format('YYYY-MM-DD') + ' ' + this.editedItem.end_time}`,
+              // "file_name"     : filename ? filename : this.editedItem.files,
+              // "file_bg_name"  : filename2 ? filename2 : this.editedItem.files_bg,
+              // "file_btn_name"  : filename3 ? filename3 : this.editedItem.files_btn,
               "file_name"     : this.editedItem.files ? filename : this.editedItem.file_name,
               "file_bg_name"  : this.editedItem.files_bg ? filename2 : this.editedItem.file_bg_name,
-              "file_btn_name" : this.editedItem.files_btn ? filename3 : this.editedItem.file_btn_name,
+              "file_btn_name"  : this.editedItem.files_btn ? filename3 : this.editedItem.file_btn_name,
               "status"        : this.editedItem.status
             }
+
+            // console.log(fd_edit);
+
      
             try {
               let path = await `/api/updateFestival`
@@ -620,6 +798,8 @@
 
               if(res){
 
+                if(this.checkFileImg){
+                  console.log(this.checkFileImg, 'img');
                   // รูปภาพ
                   let fd2 = new FormData();
                   fd2.append('image_name', filename);
@@ -628,7 +808,10 @@
                   let path2 = await `/api/uploadFile`
                   let res2  = await axios.post(`${path2}`, fd2)
                   console.log(res2);
+                }
 
+                if(this.checkFileBg){
+                  console.log(this.checkFileBg, 'bg');
                   // พื้นหลัง
                   let fd3 = new FormData();
                   fd3.append('image_name', filename2);
@@ -637,16 +820,20 @@
                   let path3 = await `/api/uploadFileBg`
                   let res3  = await axios.post(`${path3}`, fd3)
                   console.log(res3);
+                }
 
+                if(this.checkFileBtn){
+                  console.log(this.checkFileBtn, 'btn');
                   // ปุ่มลงนาม
                   let fd4 = new FormData();
                   fd4.append('image_name', filename3);
                   fd4.append('image', this.editedItem.files_btn);
               
-                  let path4 = await `/api/uploadFileBg`
+                  let path4 = await `/api/uploadFileBtn`
                   let res4  = await axios.post(`${path4}`, fd4)
                   console.log(res4);
                 }
+              }
               Swal.fire({
                   icon: 'success',
                   title: 'บันทึกสำเร็จ',
@@ -742,11 +929,13 @@
           }
         }
       },
+
       splitFile(v, type){
         const arr_file      = v.name.split(".");
         const filename      = `${type+this.editedItem.id+'.'+arr_file[1]}`  
         return filename
       },
+    
       async toggle(v){
         Swal.fire({
           title: 'คำเตือน',
@@ -811,11 +1000,33 @@
       cursor: pointer;
     }
     .preview{
-      width: 50px;
-      height: 50px;
+      width: 70px;
+      height: 70px;
       border: 1px solid #ddd;
+      cursor: pointer;
     }
     .preview img{
+      width: 100%;
+    }
+    .btn-overlay{
+      position: absolute;
+      top: -2rem;
+    }
+    .remove-icon{
+      max-width: 20px;
+      max-height: 20px;
+    }
+    .remove-icon .v-icon{
+      max-width: 14px;
+      max-height: 14px;
+    }
+    .style-bg .v-overlay__content{
+      width: auto;
+      height: 600px;
+      max-width: 700px;
+    }
+
+    .style-bg img{
       width: 100%;
     }
    

@@ -267,7 +267,7 @@
         methods: {
             async getUserDetail(){
                 let path = await `/api/getUserDetail`
-                let response = await axios.get(`${path}/`+this.$route.params.id)
+                let response = await axios.post(`${path}/`+this.$route.params.id)
                 this.data = response.data.data[0]
                 console.log(this.data );
                 //   this.username_ad  = this.data.username_ad

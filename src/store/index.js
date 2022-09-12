@@ -46,6 +46,8 @@ export default new Vuex.Store({
   actions: {
 
     async login ( {commit}, authData){
+
+
       let path = '/api/login'
       // let path = '/api/login'
       let response =  await axios.post(path,{
@@ -77,8 +79,6 @@ export default new Vuex.Store({
           console.log('expire','now')
           commit('clearAuthData')
           return
-      }else{
-        console.log('expire','expire')
       }
 
       expirationDate = new Date(now.getTime() + 1*60*60*1000)

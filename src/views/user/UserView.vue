@@ -29,6 +29,7 @@
   <template v-slot:[`item.number`]="{index}">{{index + 1}}</template>
   <template v-slot:[`item.create_date`]="{ item }">{{getThaiDate(item.create_date)}}</template>
   <template v-slot:[`item.name`]="{ item }">{{item.name + ' ' + item.lastname}}</template>
+  <template v-slot:[`item.roles`]="{ item }">{{item.roles == 'admin' ? 'ผู้ดูเเลระบบ' : 'ผู้ใช้งานระดับสูง'}}</template>
   <template v-slot:[`item.status`]="{ item }">{{item.status == 1 ? 'ใช้งาน' : 'ไม่ใช้งาน'}}</template>
   <template v-slot:[`item.actions`]="{ item }">
     <v-btn
@@ -58,7 +59,7 @@
           sortable: false,
           value: 'number',
         },
-        { text: 'วันที่จัดสร้าง', value: 'create_date', align: 'center'},
+        { text: 'วันที่สร้าง', value: 'create_date', align: 'center'},
         { text: 'ชื่อ-สกุล', value: 'name' },
         { text: 'ตำเเหน่ง', value: 'position' },
 

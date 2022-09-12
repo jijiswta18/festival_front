@@ -152,7 +152,6 @@
                             <v-select
                             v-model="status"
                             :items="selectStatus"
-                            :rules="rules.stateRules"
                             item-text="value"
                             item-value="id"
                             label="สถานะการใช้งาน"
@@ -224,14 +223,14 @@
             ],
             divisions: { value: '', id: null },
             selectDivisions: [
-                { value: 'ศทส', id: 1 },
-                { value: 'สล', id: 2 },
+                { value: 'ศทส', id: '1' },
+                { value: 'สล', id: '2' },
             ],
-            status: { value: 'ใช้งาน', id: 1 },
+            status: { value: 'ใช้งาน', id: '1' },
             state: '',
             selectStatus: [
-                { value: 'ใช้งาน', id: 1 },
-                { value: 'ไม่ใช้งาน', id: 0 },
+                { value: 'ใช้งาน', id: '1' },
+                { value: 'ไม่ใช้งาน', id: '0' },
             ],
 
             usernameAdRules: [
@@ -257,14 +256,19 @@
                 v =>/^[a-zA-Zก-ฮะ-์\s]+$/.test(v) ||` ห้ามกรอกอักขระพิเศษ เเละตัวเลข`
             ],
             rules:{
-                // divisionsRules: [(v) =>  v.length>0 || "เลือกประเภทหน่วยงาน"],
-                rolesRules: [(v) =>  v.length>0 || "เลือกประเภทสิทธิ์การใช้งาน"],
-                // stateRules: [(v) =>  v.length>0 || "เลือกสถานะการใช้งาน"],
+                divisionsRules: [(v) =>  v.length> 0  || "เลือกประเภทหน่วยงาน"],
+                rolesRules: [(v) =>  v.length> 0 || "เลือกประเภทสิทธิ์การใช้งาน"],
+                // statusRules: [(v) =>  v.length> 0 || "เลือกสถานะการใช้งาน"],
             }
                
             
         }),
-        created(){},
+        created(){
+           
+        },
+        mounted(){
+            console.log(this.rules.divisionsRules);
+        },
         methods: {
             formTitle () {
                 return this.editedIndex === -1 ? 'สร้างเทศกาล' : 'แก้ไขเทศกาล'
