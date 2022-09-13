@@ -20,7 +20,8 @@
         dense 
         nav
       >
-        <router-link  
+
+        <router-link
           v-if="check_roles.roles === 'admin'"
           class="d-flex align-center menu-link"
           to="/"
@@ -38,6 +39,7 @@
         <router-link
           v-if="check_roles.roles === 'admin'"
           class="d-flex align-center menu-link"
+          active-class="activemenu"
           to="/user"
         >
           <v-list-item link>
@@ -52,6 +54,7 @@
         
         <router-link 
           class="d-flex align-center menu-link"
+          active-class="activemenu"
           to="/report"
         >
           <v-list-item link>
@@ -233,15 +236,29 @@
   }
 
   /* sidebar active */
-  .menu-link.router-link-exact-active{
+
+  
+  .activemenu,
+  .router-link-exact-active{
     background-color: #3445E5;
   }
-  .menu-link.router-link-exact-active:hover{
+  .activemenu:hover,
+  .router-link-exact-active:hover{
     background-color: #3445E5;
   }
-  .menu-link.router-link-exact-active .menu-icon,
-  .menu-link.router-link-exact-active .menu-text{
+  .activemenu .menu-icon,
+  .activemenu .menu-text{
     color: white!important;
+  }
+  .activemenu.menu-link:hover{
+    background-color: #3445E5;
+  }
+  .router-link-exact-active .menu-icon,
+  .router-link-exact-active .menu-text{
+    color: white!important;
+  }
+  .router-link-exact-active.menu-link:hover{
+    background-color: #3445E5;
   }
   .menu-link:hover{
     background-color: #27283D;

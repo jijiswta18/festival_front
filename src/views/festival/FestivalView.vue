@@ -737,9 +737,16 @@
       close () {
         this.dialog = false
         if(this.editedIndex === -1){
+          console.log('======');
           this.$nextTick(() => {
             this.editedItem = Object.assign({}, this.defaultItem)
+            
           })
+        }else{
+          this.img_path = null
+          this.bg_path  = null
+          this.btn_path = null
+          this.color    = '#1976D2FF'
         }
 
       },
