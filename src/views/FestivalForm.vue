@@ -36,7 +36,7 @@
               ></v-text-field>
           
               <div class="box-submit text-center">
-              <img src="@/assets/images/banner01.gif"  @click="submit"/>
+              <img :src="avatar_url + data.file_btn_name"   @click="submit"/>
               </div>
             </v-form>
               <div v-if="checkSubmit" class="box-detail">
@@ -240,6 +240,14 @@
   }
    .box-footer{
     margin: 2rem 0;
+  }
+  .image{
+    max-width: 700px!important;
+    max-height: 600px!important;
+    display: inline-block;
+  }
+  .image .w-100{
+    width: 100%;
   }
   @media only screen and (max-width: 600px) {
     .image .w-100{

@@ -192,21 +192,10 @@
     .header-form{
         height: 90px;
         width: 90px;
-     
-        /* background-color: #213862!important; */
     }
     .header-form img{
        width: 100%;
     }
-   /* .input-username fieldset{
-        background-color: #27283D;
-    }
-   .input-password fieldset{
-        background-color: #27283D;
-    } */
-    /* .title-form{
-        color: white;
-    } */
     .btn-login{
         background-color: #213862!important;
         color: white!important;

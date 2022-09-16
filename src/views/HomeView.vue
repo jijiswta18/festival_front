@@ -81,7 +81,7 @@
                 v-bind="attrs"
                 v-on="on"
               >
-               <i class="fa-solid fa-circle-user"></i>
+               <i class="fa-solid fa-circle-user f-24"></i>
               </div>
             </template>
             
@@ -92,14 +92,14 @@
             </v-list>
           </v-menu>
           <!-- <div  :class="!check_festival?'isdisabled':''"> -->
-          <v-btn
+          <div
+            v-if="this.$store.getters.festival"
             color="back"
-            v-ripple="false" icon
-
             @click="previewItem"
+
             >
             <i class="fa-solid fa-arrow-up-right-from-square f-24"></i>
-          </v-btn>
+          </div>
 
           <!-- <router-link :to="{ name: 'festivalForm'}" target="_blank">
             <i class="fa-solid fa-arrow-up-right-from-square f-24"></i>
@@ -210,11 +210,9 @@
     color: #a2a3b7;
     font-size: 14px!important;
   }
-  .box-user .fa-circle-user{
-    font-size: 24px!important;
-  }
   .f-24{
-    font-size: 22px;
+    font-size: 24px;
+    cursor: pointer;
   }
   .isdisabled a{
     pointer-events: none;

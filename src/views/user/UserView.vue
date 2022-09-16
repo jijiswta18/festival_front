@@ -88,7 +88,6 @@
           let path        = await `/api/getUser`
           let response    = await axios.get(`${path}`)
           this.datas_user = response.data.data
-          console.log(this.datas_user);
 
         } catch (error) {
           console.log('error :' + error)

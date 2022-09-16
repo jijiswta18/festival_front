@@ -260,15 +260,9 @@
                 rolesRules: [(v) =>  v.length> 0 || "เลือกประเภทสิทธิ์การใช้งาน"],
                 // statusRules: [(v) =>  v.length> 0 || "เลือกสถานะการใช้งาน"],
             }
-               
-            
+ 
         }),
-        created(){
-           
-        },
-        mounted(){
-            console.log(this.rules.divisionsRules);
-        },
+     
         methods: {
             formTitle () {
                 return this.editedIndex === -1 ? 'สร้างเทศกาล' : 'แก้ไขเทศกาล'

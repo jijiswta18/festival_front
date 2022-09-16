@@ -17,11 +17,17 @@ Vue.use(VueExcelXlsx);
 axios.defaults.baseURL = 'http://localhost:5000'; //'http://10.100.90.23';
 
 axios.defaults.headers.common = {
-  // "Content-Type": "application/json",
-  // 'X-Requested-With': 'XMLHttpRequest',
+  "Content-Type": "application/json",
+  'X-Requested-With': 'XMLHttpRequest',
 };
 
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  config.headers.Authorization =  token ? `Bearer ${token}` : '';
+  return config;
+});
 
+// let token = JSON.parse( localStorage.getItem('token') );
 
 // Vue.config.productionTip = false
 

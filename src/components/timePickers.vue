@@ -45,7 +45,6 @@
       fnTime(v){
         v = this.time
         this.$emit('get-time', v)
-        console.log(v);
       }
     }
   }

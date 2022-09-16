@@ -269,17 +269,15 @@
                 let path = await `/api/getUserDetail`
                 let response = await axios.post(`${path}/`+this.$route.params.id)
                 this.data = response.data.data[0]
-                console.log(this.data );
-                //   this.username_ad  = this.data.username_ad
-                  this.username     = this.data.username
-                  this.name         = this.data.name
-                  this.lastname     = this.data.lastname
-                  this.position     = this.data.position
-                  this.divisions    = this.data.divisions
-                  this.roles        = this.data.roles
-                  this.status       = this.data.status
-                  this.state        = this.data.state
-                  this.detail       = this.data.detail
+                this.username     = this.data.username
+                this.name         = this.data.name
+                this.lastname     = this.data.lastname
+                this.position     = this.data.position
+                this.divisions    = this.data.divisions
+                this.roles        = this.data.roles
+                this.status       = this.data.status
+                this.state        = this.data.state
+                this.detail       = this.data.detail
             },
             async updateUser(){ 
                 if(this.$refs.form.validate()){
@@ -322,7 +320,6 @@
                  this.$router.push('/user')
             },
             async deleteUser () {
-           
                 Swal.fire({
                     title: 'คำเตือน',
                     text: "คุณต้องการลบข้อมูลเจ้าหน้าที่ใช่หรือไม่ ?",
@@ -336,7 +333,9 @@
                     if (result.isConfirmed) {
                         const payload = { 
                             id: this.$route.params.id,
-                            userId: this.userId
+                            userId: this.userId,
+                            status: this.status === 1 ? '0' : '1',
+                            state: this.status === 1 ? '-2' : '1' 
                         }
                         let path =  `/api/deleteUser`
                         let response = await axios.post(`${path}`, payload)

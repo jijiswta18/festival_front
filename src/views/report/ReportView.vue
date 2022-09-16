@@ -93,31 +93,23 @@
     methods: {
         detail(v) {
             this.$router.push({ name: "reportSign", params: { id: v } });
-            console.log(v);
-        },
-        exportExcel(v) {
-            console.log("======", v);
         },
         async ReportFestival() {
             try {
                 let path = await `/api/getReportFestival`;
                 let response = await axios.get(`${path}`);
-                // console.log(response);
                 this.datas = response.data.data;
-                console.log(this.datas);
             }
             catch (error) {
                 console.log("error :" + error);
             }
         },
         async fetchData(v) {
-            console.log("===============", v);
             try {
                 let path = await `/api/export_ffuagvylst`;
                 let response = await axios.get(`${path}/` + v);
                 this.items = response.data.data;
                 return this.items;
-                // console.log(response);
             }
             catch (error) {
                 console.log("error :" + error);

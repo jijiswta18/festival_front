@@ -116,18 +116,15 @@
           previewSubmit(){
             if(this.$refs.form.validate()){
               this.check_preview = !this.check_preview
-              console.log('requied');
             }
           },
           printDivContent () {
               window.print()
           },
           async getFestivalPreview(){
-              let path = await `/api/getFestivalDetail`
+              let path = await `/api/getFestivalPreview`
               let response = await axios.get(`${path}/`+this.$route.params.id)
               this.item = response.data.data[0]
-              // this.preview_img = `${axios.defaults.baseURL}/uploads/${item.file_bg_name}`;
-              // console.log(this.item );
           },
         }
     }
@@ -222,10 +219,20 @@
     background: #213862;
     color: white;
   }
+  .image{
+    max-width: 700px!important;
+    max-height: 600px!important;
+    display: inline-block;
+  }
+  .image .w-100{
+    width: 100%;
+  }
+  
   @media only screen and (max-width: 600px) {
-    .image .w-100{
-      width: 100%;
-    }
+    /* .image .w-100{
+      max-width: 700px!important;
+      max-height: 600px!important;
+    } */
     .box-sign{
       position: relative;
       cursor: pointer;

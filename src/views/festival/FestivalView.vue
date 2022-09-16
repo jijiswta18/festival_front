@@ -568,20 +568,10 @@
     watch: {
       dialog (val) {
         val || this.close() 
-        console.log(val);
       },
-      // overlay (val) {
-      //   console.log(val);
-      //   // val && setTimeout(() => {
-      //   //   this.overlay = false
-      //   // }, 2000)
-      // },
-    
-     
     },
     mounted(){
       this.getFestival()
-      console.log(this.editedItem);
     },
 
 
@@ -605,9 +595,6 @@
 
       onFileChange(payload, type) {
         const file = payload; // in case vuetify file input
-        // console.log(file);
-        // console.log(type);
-
         switch(type) {
           case 'img':
             if (file) {
@@ -638,12 +625,10 @@
               }
           break;
           default:
-            // code block
         }
       },
 
       removePreview(type){
-        console.log(type);
         switch(type) {
           case 'img':
             this.img_path =  null
@@ -682,7 +667,6 @@
         })
       },
       async editItem (item) {
-        console.log(item);
         this.editedItem             = await JSON.parse(JSON.stringify(item))
         this.editedItem.start_time  = await moment(item.start_date).format('HH:mm')
         this.editedItem.end_time    = await moment(item.end_date).format('HH:mm')
@@ -690,13 +674,8 @@
         this.bg_path                = await `${axios.defaults.baseURL}/uploads/${item.file_bg_name}`;
         this.btn_path               = await `${axios.defaults.baseURL}/uploads/${item.file_btn_name}`;
         this.color                  = await item.color
-        // this.editedItem.files       = await new File(["image"], item.file_name);
-        // this.editedItem.files_bg    = await new File(["image"], item.file_bg_name);
-        // this.editedItem.files_btn   = await new File(["image"], item.file_btn_name);
         this.dialog                 = await true
         this.editedIndex            = 1
-
-        console.log(item);
       },
       deleteItem (item) {
         Swal.fire({
@@ -737,7 +716,6 @@
       close () {
         this.dialog = false
         if(this.editedIndex === -1){
-          console.log('======');
           this.$nextTick(() => {
             this.editedItem = Object.assign({}, this.defaultItem)
             
@@ -795,18 +773,12 @@
               "status"        : this.editedItem.status
             }
 
-            // console.log(fd_edit);
-
-     
             try {
               let path = await `/api/updateFestival`
               let res = await axios.post(`${path}`, fd_edit)
-              console.log(res);
-
               if(res){
 
                 if(this.checkFileImg){
-                  console.log(this.checkFileImg, 'img');
                   // รูปภาพ
                   let fd2 = new FormData();
                   fd2.append('image_name', filename);
@@ -818,7 +790,6 @@
                 }
 
                 if(this.checkFileBg){
-                  console.log(this.checkFileBg, 'bg');
                   // พื้นหลัง
                   let fd3 = new FormData();
                   fd3.append('image_name', filename2);
@@ -830,7 +801,6 @@
                 }
 
                 if(this.checkFileBtn){
-                  console.log(this.checkFileBtn, 'btn');
                   // ปุ่มลงนาม
                   let fd4 = new FormData();
                   fd4.append('image_name', filename3);
@@ -876,8 +846,6 @@
               "status"        : this.editedItem.status
             }
 
-            console.log(fd);
-
             try {
 
                 let path = await `/api/createFestival`
@@ -920,7 +888,11 @@
                     text: 'ระบบได้ทำการบันทึกข้อมูลของคุณแล้ว'
                 }).then( function(){
                 });
-                this.dialog = await false
+                this.dialog   = await false
+                this.img_path = null
+                this.bg_path  = null
+                this.btn_path = null
+                this.color    = '#1976D2FF'
                 await this.getFestival()
                 await this.$store.dispatch('checkFestival')
                 console.log(res);
@@ -958,7 +930,6 @@
                     user_id   : this.userId,
                     status     : v.status ? 1 : 0
                 }
-                console.log(payload);
                 let path      = `/api/updateFestivalStatus`
                 let response = await axios.post(`${path}`, payload)
 

@@ -133,7 +133,6 @@ export default {
                 let path = await `/api/export_ffuagvylst`
                  let response = await axios.get(`${path}/`+this.$route.params.id)
                 this.datas = response.data.data
-                console.log(response);
             
             } catch (error) {
                 console.log('error :' + error)
