@@ -14,7 +14,8 @@ Vue.use(VueExcelXlsx);
 
 
 
-axios.defaults.baseURL = 'http://localhost:5000'; //'http://10.100.90.23';
+axios.defaults.baseURL = ''; //'http://10.100.90.23';
+// axios.defaults.baseURL = 'http://localhost:5000'; //'http://10.100.90.23';
 
 axios.defaults.headers.common = {
   "Content-Type": "application/json",
