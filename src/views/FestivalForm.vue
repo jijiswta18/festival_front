@@ -207,8 +207,16 @@
       width: 100%;
       text-align: left;
   }
+  .box-submit{
+      width: 185px;
+      height: 60px;
+      margin: auto;
+  }
   .box-submit img {
-      cursor: pointer;
+    cursor: pointer;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
   }
   .btn{
     display: inline-block;
@@ -242,12 +250,14 @@
     margin: 2rem 0;
   }
   .image{
-    max-width: 700px!important;
-    max-height: 600px!important;
+    width: 700px!important;
+    height: 600px!important;
     display: inline-block;
   }
   .image .w-100{
     width: 100%;
+    height: auto;
+    object-fit: contain;
   }
   @media only screen and (max-width: 600px) {
     .image .w-100{
