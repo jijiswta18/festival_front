@@ -7,10 +7,10 @@
       class="elevation-1"
   >
   <template v-slot:top>
-    <v-toolbar flat>
-      <v-toolbar-title>รายการบุคลากร</v-toolbar-title>
+    <v-toolbar flat class="table-head">
+      <v-toolbar-title class="mr-2">รายการบุคลากร</v-toolbar-title>
       <v-btn
-        class="btn-create ml-2"
+        class="btn-create mb"
         @click="create"
       >
         <i class="fa-solid fa-plus icon-style"></i>
@@ -102,7 +102,7 @@
     },
   }
 </script>
-<style>
+<style scoped>
     .v-data-table-header{
         background-color: #0170c2;
     }

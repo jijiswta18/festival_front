@@ -7,16 +7,16 @@
       class="elevation-1"
     >
         <template v-slot:top>
-            <v-toolbar flat>
-            <v-toolbar-title>ระบบลงนามถวายพระพร</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-text-field
-                v-model="search"
-                append-icon="mdi-magnify"
-                label="Search"
-                single-line
-                hide-details
-            ></v-text-field>
+            <v-toolbar flat class="table-head">
+                <v-toolbar-title>ระบบลงนามถวายพระพร</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Search"
+                    single-line
+                    hide-details
+                ></v-text-field>
             </v-toolbar>
         </template>
         <template v-slot:[`item.number`]="{index}">{{index + 1}}</template>
@@ -126,5 +126,5 @@
     .icon-style{
       font-size: 18px;
     }
-
+   
 </style>

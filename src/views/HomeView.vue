@@ -233,9 +233,6 @@
     background-color: #eef0f8;
   }
 
-  /* sidebar active */
-
-  
   .activemenu,
   .router-link-exact-active{
     background-color: #3445E5;
@@ -265,4 +262,28 @@
   .menu-link:hover .menu-text{
     color: white!important;
   }
+  @media only screen and (max-width: 767px) {
+        .table-head{
+           height: auto!important;
+        }
+        .table-head .v-toolbar__title{
+          margin-bottom: 0.5rem;
+        }
+        .table-head .v-toolbar__content{
+           display: inline-block!important;
+           height: auto!important;
+           width: 100%;
+           padding: 20px 16px;
+        }
+        .table-head button{
+            min-width: 100%!important;
+        }
+        .table-head .mb{
+          margin-bottom: 0.5rem;
+          min-height: 45px;
+        }
+        .v-data-table-header-mobile__wrapper{
+          display: none!important;
+        }
+    }
 </style>

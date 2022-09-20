@@ -7,10 +7,10 @@
     class="elevation-1"
   >
     <template v-slot:top>
-      <v-toolbar flat>
-        <v-toolbar-title>รายการเทศกาล</v-toolbar-title>
+      <v-toolbar flat class="table-head">
+        <v-toolbar-title class="mr-2">รายการเทศกาล</v-toolbar-title>
         <v-btn
-          class="btn-create ml-2"
+          class="btn-create mb"
           @click="create"
         >
           <i class="fa-solid fa-plus icon-style"></i>
@@ -55,7 +55,7 @@
 
                       <v-row>
 
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                           <v-menu
                             v-model="menu"
                             :close-on-content-click="false"
@@ -85,7 +85,7 @@
                           </v-menu>
                         </v-col>
 
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                           <v-menu
                             v-model="menu2"
                             :close-on-content-click="false"
@@ -119,7 +119,7 @@
                       </v-row>
 
                       <v-row>
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                             <v-menu
                               ref="menu3"
                               v-model="menu3"
@@ -154,7 +154,7 @@
                           </v-menu>
                         </v-col>  
 
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                             <v-menu
                               ref="menu4"
                               v-model="menu4"
@@ -191,7 +191,7 @@
                       </v-row>
 
                       <v-row>
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                           <v-file-input
                             v-if="!img_path"
                             id="file"
@@ -222,8 +222,10 @@
                                   fa-xmark
                                 </v-icon>
                               </v-btn>
-                            </div>
+                              <span class="text-img">ขนาดไม่เกิน 700px * 600px</span>
 
+                            </div>
+                            
                             <v-overlay class="style-bg" :opacity="opacity"  :z-index="zIndex" :absolute="absolute" :value="overlayImg">
                               <img :src="img_path" />
                              
@@ -242,7 +244,7 @@
                         
                         </v-col>
 
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                           <v-file-input
                             v-if="!bg_path"
                             accept="image/png, image/jpeg, image/bmp"
@@ -272,7 +274,9 @@
                                   fa-xmark
                                 </v-icon>
                               </v-btn> 
+                              <span class="text-img">ขนาดไม่เกิน 900px * 900px</span>
                             </div>
+                            
                             <v-overlay class="style-bg" :opacity="opacity"  :z-index="zIndex" :value="overlayBg">
                               <img :src="bg_path" />
                              
@@ -291,7 +295,7 @@
                       </v-row>
 
                       <v-row>
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                           <v-file-input
                             v-if="!btn_path"
                             id="file"
@@ -321,7 +325,9 @@
                                   fa-xmark
                                 </v-icon>
                               </v-btn>
+                              <span class="text-img">ขนาดไม่เกิน 185px * 60px</span>
                             </div>
+                           
                             <v-overlay class="style-bg" :opacity="opacity"  :z-index="zIndex" :value="overlayBtn">
                               <img :src="btn_path" />
                              
@@ -338,7 +344,7 @@
                           </div>
                         </v-col>
 
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                           <v-text-field v-model="color" hide-details class="ma-0 pa-0" solo>
                             <template v-slot:append>
                               <v-menu v-model="color_menu" top nudge-bottom="105" nudge-left="16" :close-on-content-click="false">
@@ -380,18 +386,18 @@
               <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
-                  class="btn btn-cancel"
-                  text
-                  @click="close"
-              >
-                  ยกเลิก
-              </v-btn>
-              <v-btn
                   class="btn btn-submit"
                   text
                   @click="submit"
               >
                   บันทึก
+              </v-btn>
+              <v-btn
+                  class="btn btn-cancel"
+                  text
+                  @click="close"
+              >
+                  ยกเลิก
               </v-btn>
               </v-card-actions>
           </v-card>
@@ -509,15 +515,15 @@
       endRules: [v => !!v || "กรุณาใส่ข้อมูล"],
       rules:{
         filesRules: [
-          v => !!v || 'กรุณาใส่ข้อมูล',
+          v => !!v || 'กรุณาใส่ข้อมูล (ขนาดไม่เกิน 700px * 600px)',
           v => (v && v.size > 0) || 'File is required',
         ],
         filesBgRules: [
-          v => !!v || 'กรุณาใส่ข้อมูล',
+          v => !!v || 'กรุณาใส่ข้อมูล (ขนาดไม่เกิน 900px * 900px)',
           v => (v && v.size > 0) || 'File is required',
         ],
         filesBtnRules: [
-          v => !!v || 'กรุณาใส่ข้อมูล',
+          v => !!v || 'กรุณาใส่ข้อมูล (ขนาดไม่เกิน 185px * 60px)',
           v => (v && v.size > 0) || 'File is required',
         ],
 
@@ -1006,6 +1012,11 @@
 
     .style-bg img{
       width: 100%;
+    }
+
+    .text-img{
+      color: #ff5252;
+      font-size: 12px;
     }
    
 

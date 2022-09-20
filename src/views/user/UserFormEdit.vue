@@ -12,24 +12,7 @@
             >
                 <v-card-text >
                     <v-row align="center">
-                        <!-- <v-col
-                            cols="12"
-                            sm="6"
-                        >
-                            <v-text-field
-                                v-model="username_ad"
-                                label="รหัสผู้ใช้งาน"
-                                dense
-                                outlined
-                                clearable
-                                disabled
-                            ></v-text-field>
-                        </v-col> -->
-
-                        <v-col
-                            cols="12"
-                            sm="12"
-                        >
+                        <v-col cols="12">
                             <v-text-field
                                 v-model="username"
                                 label="รหัสผู้ใช้งาน"
@@ -40,30 +23,10 @@
 
                             ></v-text-field>
                         </v-col>
-        
-                        <!-- <v-col
-                            cols="12"
-                            sm="6"
-                        >
-                            <v-text-field
-                                dense
-                                outlined
-                                clearable
-                                v-model="password"
-                                label="รหัสผ่าน"
-                                :rules="passwordRules"
-                                :type="show1 ? 'text' : 'password'"
-                                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                                @click:append="show1 = !show1"
-                            ></v-text-field>
-                        </v-col> -->
                     </v-row>
 
                     <v-row align="center">
-                        <v-col
-                            cols="12"
-                            sm="6"
-                        >
+                        <v-col cols="12" md="6">
                             <v-text-field
                                 v-model="name"
                                 :rules="nameRules"
@@ -76,10 +39,7 @@
                             ></v-text-field>
                         </v-col>
 
-                        <v-col
-                            cols="12"
-                            sm="6"
-                        >
+                        <v-col cols="12" md="6">
                             <v-text-field
                                 v-model="lastname"
                                 :rules="lastnameRules"
@@ -94,10 +54,7 @@
                     </v-row>
 
                      <v-row align="center">
-                        <v-col
-                            cols="12"
-                            sm="6"
-                        >
+                        <v-col cols="12" md="6">
                             <v-text-field
                                 v-model="position"
                                 :rules="positionRules"
@@ -109,10 +66,7 @@
                             ></v-text-field>
                         </v-col>
 
-                        <v-col
-                            cols="12"
-                            sm="6"
-                        >
+                        <v-col cols="12" md="6">
                             <v-select
                                 v-model="divisions"
                                 :items="selectDivisions"
@@ -127,10 +81,7 @@
                     </v-row>
 
                     <v-row>
-                        <v-col
-                            cols="12"
-                            sm="6"
-                        >
+                        <v-col cols="12" md="6">
                             <v-select
                             v-model="roles"
                             :items="selectRoles"
@@ -143,10 +94,7 @@
                             ></v-select>
                         </v-col>
 
-                        <v-col
-                            cols="12"
-                            sm="6"
-                        >
+                        <v-col cols="12" md="6">
                             <v-select
                             v-model="status"
                             :items="selectStatus"
@@ -161,16 +109,13 @@
                     </v-row>
 
                     <v-row>
-                        <v-col
-                            cols="12"
-                            sm="6"
-                        >
-                        <v-textarea
-                            outlined
-                             dense
-                            name="input-7-4"
-                            label="หมายเหตุ"
-                            v-model="detail"
+                        <v-col cols="12" md="6">
+                            <v-textarea
+                                outlined
+                                dense
+                                name="input-7-4"
+                                label="หมายเหตุ"
+                                v-model="detail"
                             ></v-textarea>
                         </v-col>
                     </v-row>
