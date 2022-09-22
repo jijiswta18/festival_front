@@ -392,6 +392,7 @@
               >
                   บันทึก
               </v-btn>
+              <v-btn v-if="editedIndex > -1" color="error" @click="deleteItem(editedItem)"><i class="fa-solid fa-trash-can mr-1"></i>ลบ</v-btn>
               <v-btn
                   class="btn btn-cancel"
                   text
@@ -625,7 +626,7 @@
              if (file) {
                 this.checkFileBtn = true
                 this.btn_path = URL.createObjectURL(file);
-                URL.revokeObjectURL(file); // free memory
+                URL.revokeObjectURL(file); // free memoryeditedItem
               } else {
                 this.btn_path =  null
               }
@@ -673,6 +674,7 @@
         })
       },
       async editItem (item) {
+        console.log(this.editedItem);
         this.editedItem             = await JSON.parse(JSON.stringify(item))
         this.editedItem.start_time  = await moment(item.start_date).format('HH:mm')
         this.editedItem.end_time    = await moment(item.end_date).format('HH:mm')
@@ -695,27 +697,32 @@
             if (result.isConfirmed) {
                 const payload = { 
                     id: item.id,
+                    state : item.state === 1 ? '-2' : '1',
+                    status : item.state ===  1 ?  '0' : '1',
                     user_id: this.userId
                 }
                 let path =  `/api/deleteFestival`
                 let response = await axios.post(`${path}`, payload)
 
+
                 if(payload){
                     Swal.fire({
                         icon: 'success',
                         text: 'ลบข้อมูลพนักงานสำเร็จ',
+                    }).then(function(){
+                        if(response){
+                            window.location.href = '/';
+                        }
                     })
-                    if(response){
-                        window.location.href = '/';
-                    }
+                    
                 }else{
                     Swal.fire({
                         icon: 'error',
                         title: 'บันทึกไม่สำเร็จ',
                         text: 'มีข้อผิดพลาดที่ไม่คาดคิดเกิดขึ้น โปรดลองใหม่อีกครั้ง'
                     })
-                }
-                  
+                }  
+              
             }
         }) 
       },
@@ -1015,7 +1022,7 @@
     }
 
     .text-img{
-      color: #ff5252;
+      color: #213862;
       font-size: 12px;
     }
    

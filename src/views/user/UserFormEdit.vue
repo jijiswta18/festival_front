@@ -129,7 +129,7 @@
                     >
                         บันทึก
                     </v-btn>
-                        <v-btn color="error mr-2" @click="deleteUser"><i class="fa-solid fa-trash-can mr-1"></i>ลบ</v-btn>
+                    <v-btn color="error mr-2" @click="deleteUser"><i class="fa-solid fa-trash-can mr-1"></i>ลบ</v-btn>
                     <v-btn
                         class="btn btn-cancel"
                         text
@@ -289,10 +289,11 @@
                             Swal.fire({
                                 icon: 'success',
                                 text: 'ลบข้อมูลพนักงานสำเร็จ',
+                            }).then(function(){
+                                if(response){
+                                    window.location.href = '/user';
+                                }
                             })
-                            if(response){
-                                window.location.href = '/user';
-                            }
                         }else{
                             Swal.fire({
                                 icon: 'error',
