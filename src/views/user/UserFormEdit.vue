@@ -129,7 +129,7 @@
                     >
                         บันทึก
                     </v-btn>
-                    <v-btn color="error mr-2" @click="deleteUser"><i class="fa-solid fa-trash-can mr-1"></i>ลบ</v-btn>
+                    <!-- <v-btn color="error mr-2" @click="deleteUser"><i class="fa-solid fa-trash-can mr-1"></i>ลบ</v-btn> -->
                     <v-btn
                         class="btn btn-cancel"
                         text
@@ -264,47 +264,47 @@
             cancel(){
                  this.$router.push('/user')
             },
-            async deleteUser () {
-                Swal.fire({
-                    title: 'คำเตือน',
-                    text: "คุณต้องการลบข้อมูลเจ้าหน้าที่ใช่หรือไม่ ?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    // confirmButtonColor: '#3085d6',
-                    // cancelButtonColor: '#d33',
-                    confirmButtonText: 'ลบ',
-                    cancelButtonText: 'ยกเลิก',
-                }).then(async (result) => {
-                    if (result.isConfirmed) {
-                        const payload = { 
-                            id: this.$route.params.id,
-                            userId: this.userId,
-                            status: this.status === 1 ? '0' : '1',
-                            state: this.status === 1 ? '-2' : '1' 
-                        }
-                        let path =  `/api/deleteUser`
-                        let response = await axios.post(`${path}`, payload)
+            // async deleteUser () {
+            //     Swal.fire({
+            //         title: 'คำเตือน',
+            //         text: "คุณต้องการลบข้อมูลเจ้าหน้าที่ใช่หรือไม่ ?",
+            //         icon: 'warning',
+            //         showCancelButton: true,
+            //         // confirmButtonColor: '#3085d6',
+            //         // cancelButtonColor: '#d33',
+            //         confirmButtonText: 'ลบ',
+            //         cancelButtonText: 'ยกเลิก',
+            //     }).then(async (result) => {
+            //         if (result.isConfirmed) {
+            //             const payload = { 
+            //                 id: this.$route.params.id,
+            //                 userId: this.userId,
+            //                 state : this.state === 1 ? '0' : '1',
+            //                 status : this.state ===  1 ?  '0' : '0',
+            //             }
+            //             let path =  `/api/deleteUser`
+            //             let response = await axios.post(`${path}`, payload)
 
-                        if(payload){
-                            Swal.fire({
-                                icon: 'success',
-                                text: 'ลบข้อมูลพนักงานสำเร็จ',
-                            }).then(function(){
-                                if(response){
-                                    window.location.href = '/user';
-                                }
-                            })
-                        }else{
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'บันทึกไม่สำเร็จ',
-                                text: 'มีข้อผิดพลาดที่ไม่คาดคิดเกิดขึ้น โปรดลองใหม่อีกครั้ง'
-                            })
-                        }
+            //             if(payload){
+            //                 Swal.fire({
+            //                     icon: 'success',
+            //                     text: 'ลบข้อมูลพนักงานสำเร็จ',
+            //                 }).then(function(){
+            //                     if(response){
+            //                         window.location.href = '/user';
+            //                     }
+            //                 })
+            //             }else{
+            //                 Swal.fire({
+            //                     icon: 'error',
+            //                     title: 'บันทึกไม่สำเร็จ',
+            //                     text: 'มีข้อผิดพลาดที่ไม่คาดคิดเกิดขึ้น โปรดลองใหม่อีกครั้ง'
+            //                 })
+            //             }
                           
-                    }
-                }) 
-            },
+            //         }
+            //     }) 
+            // },
 
         }
     }

@@ -1,7 +1,7 @@
 <template>
   <v-data-table
       :headers="headers"
-      :items="datas_user"
+      :items="check_datas"
       :search="search"
       sort-by="calories"
       class="elevation-1"
@@ -17,6 +17,12 @@
         เพิ่มรายการใหม่
       </v-btn>
       <v-spacer></v-spacer>
+      <v-checkbox
+        v-model="checkbox"
+        :label="`เเสดงรายการทั้งหมด`"
+        @click="checkState(datas_user)"
+      ></v-checkbox>
+      <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
         append-icon="mdi-magnify"
@@ -24,13 +30,20 @@
         single-line
         hide-details
       ></v-text-field>
+      <!-- <v-select
+        v-model="state"
+        :items="selectState"
+        item-text="value"
+        item-value="id"
+        v-on:change="changeRoute(datas_user)"
+      ></v-select> -->
     </v-toolbar>
   </template>
   <template v-slot:[`item.number`]="{index}">{{index + 1}}</template>
   <template v-slot:[`item.create_date`]="{ item }">{{getThaiDate(item.create_date)}}</template>
   <template v-slot:[`item.name`]="{ item }">{{item.name + ' ' + item.lastname}}</template>
   <template v-slot:[`item.roles`]="{ item }">{{item.roles == 'admin' ? 'ผู้ดูเเลระบบ' : 'ผู้ใช้งานระดับสูง'}}</template>
-  <template v-slot:[`item.status`]="{ item }">{{item.status == 1 ? 'ใช้งาน' : 'ไม่ใช้งาน'}}</template>
+  <template v-slot:[`item.status`]="{ item }"><span :class="item.status == 0 ?'red--text':''">{{item.status == 1 ? 'ใช้งาน' : 'ไม่ใช้งาน'}}</span></template>
   <template v-slot:[`item.actions`]="{ item }">
     <v-btn
       color="primary"
@@ -68,12 +81,14 @@
         { text: 'Actions', value: 'actions', align: 'center', sortable: false },
       ],
       datas_user: [],
+      checkbox: false,
+      check_datas : [],
     }),
 
     created () {
       this.getUser()
     },
-
+    
     methods: {
       getThaiDate(item){
         if (item){
@@ -89,16 +104,43 @@
           let response    = await axios.get(`${path}`)
           this.datas_user = response.data.data
 
+          this.checkState(this.datas_user)
+
         } catch (error) {
-          console.log('error :' + error)
+          // console.log('error :' + error)
         }
       },
+      checkState(v){
+
+        const datas = v
+        if(!this.checkbox){
+          const result = datas.filter(data => data.status == 1);
+          this.check_datas = result
+        }else{
+          this.check_datas = this.datas_user
+        }
+  
+      },
+  
        create(){
         this.$router.push({ name: 'userForm', params: { title: 'create' } })
       },
       editItem (item) {
         this.$router.push({ name: 'userFormEdit', params: { id: item.id } })
-      }
+      },
+      // changeRoute(v){
+      //   console.log(this.state);
+      //   var names = v.map(function(value){ return value.state })
+      //   v.forEach(item => {
+      //       this.selectState.push({'id':item.state,'value':item.value})
+      //   })
+
+      //   console.log(this.selectState);
+
+
+ 
+      // }
+      
     },
   }
 </script>

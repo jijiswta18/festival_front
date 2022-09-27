@@ -1,7 +1,7 @@
 <template >
   <v-data-table
     :headers="headers"
-    :items="datas"
+    :items="check_datas"
     :search="search"
     sort-by="calories"
     class="elevation-1"
@@ -17,6 +17,12 @@
           เพิ่มรายการใหม่
         </v-btn>
 
+        <v-spacer></v-spacer>
+        <v-checkbox
+          v-model="checkbox"
+          :label="`เเสดงรายการทั้งหมด`"
+          @click="checkState(datas)"
+        ></v-checkbox>
         <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
@@ -42,6 +48,7 @@
                   enctype="multipart/form-data"
                 >
                   <v-container>
+                    {{checkFileImg}}
                       <v-row>
                         <v-col cols="12">
                           <v-text-field
@@ -195,7 +202,7 @@
                           <v-file-input
                             v-if="!img_path"
                             id="file"
-                            accept="image/png, image/jpeg, image/bmp"
+                            accept="image/png, image/jpeg"
                             prepend-icon="mdi-camera"
                             label="เเนบรูปเทศกาล"
                             v-model="editedItem.files"
@@ -413,11 +420,13 @@
     <template v-slot:[`item.end_time`]="{ item }">{{timeFormat(item.end_date)}}</template>
     <template v-slot:[`item.create_date`]="{ item }">{{getThaiDate(item.create_date)}}</template>
     <template v-slot:[`item.status`]="{ item }">
-    <v-switch
-      @click="toggle(item)"
-      v-model="item.status"
-      :label="`${item.status == 1 ? 'ใช้งาน' : 'ไม่ใช้งาน'}`"
-      ></v-switch>
+      <div class="d-flex flex-row align-center">
+        <v-switch
+        @click="toggle(item)"
+        v-model="item.status"
+        :label="`${item.status == 1 ? 'ใช้งาน' : 'ไม่ใช้งาน'}`"
+        ></v-switch><span v-if="item.state == 0" class="red--text ml-2 ">(ยกเลิก)</span>
+      </div>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
       <v-btn
@@ -473,7 +482,7 @@
         { text: 'ตั้งเเต่เวลา', value: 'start_time' },
         { text: 'ถึงเวลา', value: 'end_time' },
         { text: 'วันที่สร้าง', value: 'create_date' },
-        { text: 'สถานะ', value: 'status' },
+        { text: 'สถานะ', value: 'status', align: 'center' },
         { text: 'Preview', value: 'preview', align: 'center', sortable: false },
         { text: 'Actions', value: 'actions', align: 'center', sortable: false },
       ],
@@ -533,7 +542,9 @@
         { value: 'ใช้งาน', id: 1 },
         { value: 'ไม่ใช้งาน', id: 0 },
       ],  
-      currPic: null
+      currPic: null,
+      checkbox: false,
+      check_datas: []
     }),
       
     computed: {
@@ -594,7 +605,6 @@
           return "";
         }            
       },
-
       openDialog(idx) {
         this.currPic = this.img_path[idx]
         return this.showDialog = true
@@ -636,11 +646,13 @@
       },
 
       removePreview(type){
+
         switch(type) {
           case 'img':
             this.img_path =  null
             this.editedItem.files = null
             this.checkFileImg = false
+        
           break;
           case 'bg':
             this.bg_path =  null
@@ -674,7 +686,6 @@
         })
       },
       async editItem (item) {
-        console.log(this.editedItem);
         this.editedItem             = await JSON.parse(JSON.stringify(item))
         this.editedItem.start_time  = await moment(item.start_date).format('HH:mm')
         this.editedItem.end_time    = await moment(item.end_date).format('HH:mm')
@@ -697,8 +708,8 @@
             if (result.isConfirmed) {
                 const payload = { 
                     id: item.id,
-                    state : item.state === 1 ? '-2' : '1',
-                    status : item.state ===  1 ?  '0' : '1',
+                    state : item.state === 1 ? '0' : '1',
+                    status : item.state ===  1 ?  '0' : '0',
                     user_id: this.userId
                 }
                 let path =  `/api/deleteFestival`
@@ -734,10 +745,13 @@
             
           })
         }else{
-          this.img_path = null
-          this.bg_path  = null
-          this.btn_path = null
-          this.color    = '#1976D2FF'
+          this.color        = '#1976D2FF'
+          this.img_path     = null
+          this.bg_path      = null
+          this.btn_path     = null
+          this.checkFileImg = false
+          this.checkFileBg  = false
+          this.checkFileBtn = false
         }
 
       },
@@ -747,39 +761,41 @@
           let path = await `/api/getFestival`
           let response = await axios.get(`${path}`)
           this.datas = response.data.data
+          this.checkState(this.datas)
+
         } catch (error) {
              console.log('error :' + error)
         }
       },
       async submit () {  
         if(this.$refs.form.validate()){
+       
           // แก้ไข
           if(this.editedIndex > -1){
 
             if(this.checkFileImg){
-              var filename = this.splitFile(this.editedItem.files, 'imgfid_')
-             
+              var filename = await this.splitFile(this.editedItem.files, 'imgfid_')
             }
 
             if(this.checkFileBg){
-              var filename2 = this.splitFile(this.editedItem.files_bg, 'bgfid_')
+              var filename2 = await this.splitFile(this.editedItem.files_bg, 'bgfid_')
   
             }
 
             if(this.checkFileBtn){
-              var filename3 = this.splitFile(this.editedItem.files_btn, 'btnfid_')
+              var filename3 = await this.splitFile(this.editedItem.files_btn, 'btnfid_')
             }
-            
-            let fd_edit = {
+
+
+
+            // console.log(this.editedItem);
+            let fd_edit = await {
               "fid"           : this.editedItem.id,
               "user_id"       : this.userId,
               "name"          : this.editedItem.name,
               "color"         : this.color,
               "start_date"    : `${moment(this.editedItem.start_date).format('YYYY-MM-DD') + ' ' + this.editedItem.start_time}`,
               "end_date"      : `${moment(this.editedItem.end_date).format('YYYY-MM-DD') + ' ' + this.editedItem.end_time}`,
-              // "file_name"     : filename ? filename : this.editedItem.files,
-              // "file_bg_name"  : filename2 ? filename2 : this.editedItem.files_bg,
-              // "file_btn_name"  : filename3 ? filename3 : this.editedItem.files_btn,
               "file_name"     : this.editedItem.files ? filename : this.editedItem.file_name,
               "file_bg_name"  : this.editedItem.files_bg ? filename2 : this.editedItem.file_bg_name,
               "file_btn_name"  : this.editedItem.files_btn ? filename3 : this.editedItem.file_btn_name,
@@ -794,8 +810,8 @@
                 if(this.checkFileImg){
                   // รูปภาพ
                   let fd2 = new FormData();
-                  fd2.append('image_name', filename);
-                  fd2.append('image', this.editedItem.files);
+                  await fd2.append('image_name', filename);
+                  await fd2.append('image', this.editedItem.files);
 
                   let path2 = await `/api/uploadFile`
                   let res2  = await axios.post(`${path2}`, fd2)
@@ -805,8 +821,8 @@
                 if(this.checkFileBg){
                   // พื้นหลัง
                   let fd3 = new FormData();
-                  fd3.append('image_name', filename2);
-                  fd3.append('image', this.editedItem.files_bg);
+                  await fd3.append('image_name', filename2);
+                  await fd3.append('image', this.editedItem.files_bg);
               
                   let path3 = await `/api/uploadFileBg`
                   let res3  = await axios.post(`${path3}`, fd3)
@@ -816,8 +832,8 @@
                 if(this.checkFileBtn){
                   // ปุ่มลงนาม
                   let fd4 = new FormData();
-                  fd4.append('image_name', filename3);
-                  fd4.append('image', this.editedItem.files_btn);
+                  await fd4.append('image_name', filename3);
+                  await fd4.append('image', this.editedItem.files_btn);
               
                   let path4 = await `/api/uploadFileBtn`
                   let res4  = await axios.post(`${path4}`, fd4)
@@ -856,7 +872,7 @@
               "file_bg_name"  : this.editedItem.files_bg.name,
               "file_btn_name" : this.editedItem.files_btn.name,
               "color"         : this.color,
-              "status"        : this.editedItem.status
+              "status"        : this.editedItem.status ? this.editedItem.status : 0
             }
 
             try {
@@ -867,27 +883,27 @@
                 if(res){
 
                   //รูปภาพ
-                  let fd2 = new FormData();
-                  fd2.append('image_name', res.data.file_img);
-                  fd2.append('image', this.editedItem.files);
+                  let fd2 = await new FormData();
+                  await fd2.append('image_name', res.data.file_img);
+                  await fd2.append('image', this.editedItem.files);
 
                   let path2 = await `/api/uploadFile`
                   let res2  = await axios.post(`${path2}`, fd2)
                   console.log(res2);
 
                   //พื้นหลัง
-                  let fd3 = new FormData()
-                  fd3.append('image_name', res.data.file_bg);
-                  fd3.append('image', this.editedItem.files_bg);
+                  let fd3 = await new FormData()
+                  await fd3.append('image_name', res.data.file_bg);
+                  await fd3.append('image', this.editedItem.files_bg);
 
                   let path3 = await `/api/uploadFileBg`
                   let res3  = await axios.post(`${path3}`, fd3)
                   console.log(res3);
 
                   //ปุ่มลงนาม
-                  let fd4 = new FormData()
-                  fd4.append('image_name', res.data.file_btn);
-                  fd4.append('image', this.editedItem.files_btn);
+                  let fd4 = await new FormData()
+                  await fd4.append('image_name', res.data.file_btn);
+                  await fd4.append('image', this.editedItem.files_btn);
 
                   let path4 = await `/api/uploadFileBtn`
                   let res4  = await axios.post(`${path4}`, fd4)
@@ -969,6 +985,18 @@
             }
         }) 
       },
+
+      checkState(v){
+        const datas = v
+        if(!this.checkbox){
+          const result = datas.filter(data => data.state == 1);
+          this.check_datas = result
+        }else{
+          this.check_datas = this.datas
+        }
+
+      },
+
     },
   }
 </script>
@@ -1024,6 +1052,17 @@
     .text-img{
       color: #213862;
       font-size: 12px;
+    }
+
+    .red--text{
+      font-size: 13px;
+    }
+
+    .v-input--checkbox .v-input__slot{
+      margin-bottom: 0px!important;
+    }
+    .v-input--checkbox .v-messages{
+      min-height: inherit!important;
     }
    
 
