@@ -21,7 +21,7 @@
         <v-checkbox
           v-model="checkbox"
           :label="`เเสดงรายการทั้งหมด`"
-          @click="checkState(datas)"
+          @click="checkState()"
         ></v-checkbox>
         <v-spacer></v-spacer>
         <v-text-field
@@ -48,7 +48,6 @@
                   enctype="multipart/form-data"
                 >
                   <v-container>
-                    {{checkFileImg}}
                       <v-row>
                         <v-col cols="12">
                           <v-text-field
@@ -254,7 +253,7 @@
                         <v-col cols="12" md="6">
                           <v-file-input
                             v-if="!bg_path"
-                            accept="image/png, image/jpeg, image/bmp"
+                            accept="image/png, image/jpeg"
                             prepend-icon="mdi-camera"
                             label="เเนบรูปพื้นหลัง"
                             v-model="editedItem.files_bg"
@@ -306,7 +305,7 @@
                           <v-file-input
                             v-if="!btn_path"
                             id="file"
-                            accept="image/png, image/jpeg, image/bmp"
+                            accept="image/png, image/jpeg"
                             prepend-icon="mdi-camera"
                             label="เเนบรูปปุ่มลงนาม"
                             v-model="editedItem.files_btn"
@@ -468,7 +467,10 @@
       zIndex: 1,
       opacity: 1,
       dialog: false,
-      search: '',
+      editedIndex: -1,
+      valid: true,
+      // currPic: null,
+      userId: store.getters.user.id,
       headers: [
         {
           text: '',
@@ -486,6 +488,8 @@
         { text: 'Preview', value: 'preview', align: 'center', sortable: false },
         { text: 'Actions', value: 'actions', align: 'center', sortable: false },
       ],
+      search: '',
+      checkbox: false,
       date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       id: null,
       name: '',
@@ -505,22 +509,17 @@
       menu3: false,
       menu4: false,
       color_menu: false,
-      userId: store.getters.user.id,
-      datas: [],
-      editedIndex: -1,
-      valid: true,
       img_path : null,
       bg_path : null,
       btn_path : null,
-      editedItem: {},
-      defaultItem: {},
       checkFileImg: false,
       checkFileBg: false,
       checkFileBtn: false,
-      nameRules: [
-        v => !!v || 'กรุณาใส่ข้อมูล',
-      ],
-
+      datas: [],
+      check_datas: [],
+      editedItem: {},
+      defaultItem: {},
+      nameRules: [v => !!v || 'กรุณาใส่ข้อมูล'],
       startRules: [v => !!v || "กรุณาใส่ข้อมูล"],
       endRules: [v => !!v || "กรุณาใส่ข้อมูล"],
       rules:{
@@ -542,33 +541,25 @@
         { value: 'ใช้งาน', id: 1 },
         { value: 'ไม่ใช้งาน', id: 0 },
       ],  
-      currPic: null,
-      checkbox: false,
-      check_datas: []
-    }),
       
+    }),
     computed: {
       formTitle () {
         return this.editedIndex === -1 ? 'สร้างเทศกาล' : 'แก้ไขเทศกาล'
       },
       DateFormatStart () {
-
         let d_start       = new Date(this.editedItem.start_date);
         let d_option      = d_start.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
         let d_now         = new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
-        
         return this.editedItem.start_date ? d_option : d_now
       
       },
       DateFormatEnd () {
-
         let d_end         = new Date(this.editedItem.end_date);
         let d_option      = d_end.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
-        let d_now         = new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
-        
+        let d_now         = new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });   
         return this.editedItem.end_date ? d_option : d_now
       },
-    
       swatchStyle() {
         const { color, color_menu } = this
         return {
@@ -582,7 +573,6 @@
     }
 
     },
-
     watch: {
       dialog (val) {
         val || this.close() 
@@ -591,8 +581,6 @@
     mounted(){
       this.getFestival()
     },
-
-
     methods: {
       timeFormat:function(d){
         return moment(d).format('HH:mm');
@@ -605,18 +593,19 @@
           return "";
         }            
       },
-      openDialog(idx) {
-        this.currPic = this.img_path[idx]
-        return this.showDialog = true
-      },
+      // openDialog(idx) {
+      //   this.currPic = this.img_path[idx]
+      //   return this.showDialog = true
+      // },
 
       onFileChange(payload, type) {
-        const file = payload; // in case vuetify file input
+        const file = payload // in case vuetify file input
         switch(type) {
           case 'img':
             if (file) {
               this.checkFileImg = true
               this.img_path = URL.createObjectURL(file);
+              console.log(this.img_path);
               URL.revokeObjectURL(file); // free memory
 
             } else {
@@ -624,10 +613,12 @@
             }  
           break;
           case 'bg':
-             if (file) {
+              if (file) {
                 this.checkFileBg = true
                 this.bg_path = URL.createObjectURL(file);
                 URL.revokeObjectURL(file); // free memory
+                console.log(this.bg_path);
+             
               } else {
                 this.bg_path =  null
               }
@@ -637,6 +628,7 @@
                 this.checkFileBtn = true
                 this.btn_path = URL.createObjectURL(file);
                 URL.revokeObjectURL(file); // free memoryeditedItem
+                console.log(this.btn_path);
               } else {
                 this.btn_path =  null
               }
@@ -646,7 +638,6 @@
       },
 
       removePreview(type){
-
         switch(type) {
           case 'img':
             this.img_path =  null
@@ -665,19 +656,55 @@
             this.checkFileBtn = false
           break;
           default:
-            // code block
         }
       },  
     
       previewItem(v){
         const routeData = this.$router.resolve({
-        name: "festivalPreview",
-        params: { id: v },
-      });
-      window.open(routeData.href, "_blank");
+          name: "festivalPreview",
+          params: { id: v },
+        });
+        window.open(routeData.href, "_blank");
 
 
       },
+
+      splitFile(v, type){
+        const arr_file      = v.name.split(".");
+        const filename      = `${type+this.editedItem.id+'.'+arr_file[1]}`  
+        return filename
+      },
+
+      async checkState(){
+        // const datas = await v
+        if(!this.checkbox){
+          const result = await this.datas.filter(data => data.state == 1);
+          this.check_datas = await JSON.parse(JSON.stringify(result));
+        }else{
+          this.check_datas = await JSON.parse(JSON.stringify(this.datas))
+        }
+
+      },
+
+      close () {
+        this.dialog = false
+        this.checkFileImg = false
+        this.checkFileBg  = false
+        this.checkFileBtn = false
+        if(this.editedIndex === -1){
+          this.$nextTick(() => {
+            this.editedItem = Object.assign({}, this.defaultItem)
+            
+          })
+        }else{
+          this.color        = '#1976D2FF'
+          this.img_path     = null
+          this.bg_path      = null
+          this.btn_path     = null
+        }
+
+      },
+   
       create (){
         this.$nextTick(() => {
             this.editedItem   = Object.assign({}, this.defaultItem)
@@ -685,6 +712,19 @@
             this.editedIndex  = -1
         })
       },
+
+      async getFestival () {
+        try {
+          let path = await `/api/getFestival`
+          let response = await axios.get(`${path}`)
+          this.datas = await response.data.data
+          await this.checkState()
+
+        } catch (error) {
+             console.log('error :' + error)
+        }
+      },
+
       async editItem (item) {
         this.editedItem             = await JSON.parse(JSON.stringify(item))
         this.editedItem.start_time  = await moment(item.start_date).format('HH:mm')
@@ -696,82 +736,32 @@
         this.dialog                 = await true
         this.editedIndex            = 1
       },
-      deleteItem (item) {
-        Swal.fire({
-            title: 'คำเตือน',
-            text: "คุณต้องการลบข้อมูลเทศกาลใช่หรือไม่ ?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'ลบ',
-            cancelButtonText: 'ยกเลิก',
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                const payload = { 
-                    id: item.id,
-                    state : item.state === 1 ? '0' : '1',
-                    status : item.state ===  1 ?  '0' : '0',
-                    user_id: this.userId
-                }
-                let path =  `/api/deleteFestival`
-                let response = await axios.post(`${path}`, payload)
+
+      async myUpload(path, file_name, files){
 
 
-                if(payload){
-                    Swal.fire({
-                        icon: 'success',
-                        text: 'ลบข้อมูลพนักงานสำเร็จ',
-                    }).then(function(){
-                        if(response){
-                            window.location.href = '/';
-                        }
-                    })
-                    
-                }else{
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'บันทึกไม่สำเร็จ',
-                        text: 'มีข้อผิดพลาดที่ไม่คาดคิดเกิดขึ้น โปรดลองใหม่อีกครั้ง'
-                    })
-                }  
-              
-            }
-        }) 
-      },
-      close () {
-        this.dialog = false
-        if(this.editedIndex === -1){
-          this.$nextTick(() => {
-            this.editedItem = Object.assign({}, this.defaultItem)
-            
-          })
-        }else{
-          this.color        = '#1976D2FF'
-          this.img_path     = null
-          this.bg_path      = null
-          this.btn_path     = null
-          this.checkFileImg = false
-          this.checkFileBg  = false
-          this.checkFileBtn = false
-        }
+        let fd2 =  new FormData();
+        await fd2.append('image_name', file_name);
+        await fd2.append('images', files);
+
+        // let path = await `/api/uploadFile`
+        let res2  = await axios.post(`/api/${path}`, fd2)
+        console.log(res2);
 
       },
-   
-      async getFestival () {
-        try {
-          let path = await `/api/getFestival`
-          let response = await axios.get(`${path}`)
-          this.datas = response.data.data
-          this.checkState(this.datas)
-
-        } catch (error) {
-             console.log('error :' + error)
-        }
-      },
+      
       async submit () {  
+
+        console.log('==================');
+        
+
+
         if(this.$refs.form.validate()){
        
           // แก้ไข
           if(this.editedIndex > -1){
+
+            console.log('edit');
 
             if(this.checkFileImg){
               var filename = await this.splitFile(this.editedItem.files, 'imgfid_')
@@ -779,7 +769,6 @@
 
             if(this.checkFileBg){
               var filename2 = await this.splitFile(this.editedItem.files_bg, 'bgfid_')
-  
             }
 
             if(this.checkFileBtn){
@@ -787,8 +776,6 @@
             }
 
 
-
-            // console.log(this.editedItem);
             let fd_edit = await {
               "fid"           : this.editedItem.id,
               "user_id"       : this.userId,
@@ -802,27 +789,33 @@
               "status"        : this.editedItem.status
             }
 
+
             try {
               let path = await `/api/updateFestival`
               let res = await axios.post(`${path}`, fd_edit)
+
               if(res){
 
+
                 if(this.checkFileImg){
+
                   // รูปภาพ
-                  let fd2 = new FormData();
-                  await fd2.append('image_name', filename);
-                  await fd2.append('image', this.editedItem.files);
+
+                  let fd2 =  new FormData()
+                  await fd2.append('image_name', filename)
+                  await fd2.append('images', this.editedItem.files)
 
                   let path2 = await `/api/uploadFile`
-                  let res2  = await axios.post(`${path2}`, fd2)
+                  let res2 = await axios.post(`${path2}`, fd2)
                   console.log(res2);
+
                 }
 
                 if(this.checkFileBg){
                   // พื้นหลัง
                   let fd3 = new FormData();
                   await fd3.append('image_name', filename2);
-                  await fd3.append('image', this.editedItem.files_bg);
+                  await fd3.append('images', this.editedItem.files_bg);
               
                   let path3 = await `/api/uploadFileBg`
                   let res3  = await axios.post(`${path3}`, fd3)
@@ -833,7 +826,7 @@
                   // ปุ่มลงนาม
                   let fd4 = new FormData();
                   await fd4.append('image_name', filename3);
-                  await fd4.append('image', this.editedItem.files_btn);
+                  await fd4.append('images', this.editedItem.files_btn);
               
                   let path4 = await `/api/uploadFileBtn`
                   let res4  = await axios.post(`${path4}`, fd4)
@@ -844,12 +837,12 @@
                   icon: 'success',
                   title: 'บันทึกสำเร็จ',
                   text: 'ระบบได้ทำการบันทึกข้อมูลของคุณแล้ว' 
-              }).then( function(){
+              })
+              this.dialog = await false
 
-              });
-              this.dialog = false
               await this.getFestival()
               await this.$store.dispatch('checkFestival')
+
 
             } catch (error) {
               Swal.fire({
@@ -875,39 +868,50 @@
               "status"        : this.editedItem.status ? this.editedItem.status : 0
             }
 
+
             try {
 
-                let path = await `/api/createFestival`
-                let res = await axios.post(`${path}`, fd)
+             
+              let path = await `/api/createFestival`
+              let res = await axios.post(`${path}`, fd)
 
                 if(res){
 
-                  //รูปภาพ
-                  let fd2 = await new FormData();
-                  await fd2.append('image_name', res.data.file_img);
-                  await fd2.append('image', this.editedItem.files);
+                  // รูปภาพ
 
-                  let path2 = await `/api/uploadFile`
-                  let res2  = await axios.post(`${path2}`, fd2)
-                  console.log(res2);
+                  await this.myUpload('uploadFile',res.data.file_img, this.editedItem.files);
 
-                  //พื้นหลัง
-                  let fd3 = await new FormData()
-                  await fd3.append('image_name', res.data.file_bg);
-                  await fd3.append('image', this.editedItem.files_bg);
+                  await this.myUpload('uploadFileBg',res.data.file_bg, this.editedItem.files_bg);
 
-                  let path3 = await `/api/uploadFileBg`
-                  let res3  = await axios.post(`${path3}`, fd3)
-                  console.log(res3);
+                  await this.myUpload('uploadFileBtn',res.data.file_btn, this.editedItem.files_btn);
 
-                  //ปุ่มลงนาม
-                  let fd4 = await new FormData()
-                  await fd4.append('image_name', res.data.file_btn);
-                  await fd4.append('image', this.editedItem.files_btn);
 
-                  let path4 = await `/api/uploadFileBtn`
-                  let res4  = await axios.post(`${path4}`, fd4)
-                  console.log(res4);
+
+                  // let fd2 =  new FormData();
+                  // await fd2.append('image_name', res.data.file_img);
+                  // await fd2.append('images', this.editedItem.files);
+
+                  // let path2 = await `/api/uploadFile`
+                  // let res2  = await axios.post(`${path2}`, fd2)
+                  // console.log(res2);
+
+                  // พื้นหลัง
+                  // let fd3 = new FormData();
+                  // await fd3.append('image_name', res.data.file_bg);
+                  // await fd3.append('images', this.editedItem.files_bg);
+
+                  // let path3 = await `/api/uploadFileBg`
+                  // let res3  = await axios.post(`${path3}`, fd3)
+                  // console.log(res3);
+
+                  // ปุ่มลงนาม
+                  // let fd4 = new FormData();
+                  // await fd4.append('image_name', res.data.file_btn);
+                  // await fd4.append('images', this.editedItem.files_btn);
+
+                  // let path4 = await `/api/uploadFileBtn`
+                  // let res4  = await axios.post(`${path4}`, fd4)
+                  // console.log(res4);
 
 
                 }
@@ -917,13 +921,13 @@
                     text: 'ระบบได้ทำการบันทึกข้อมูลของคุณแล้ว'
                 }).then( function(){
                 });
-                this.dialog   = await false
+                this.dialog   = false
                 this.img_path = null
                 this.bg_path  = null
                 this.btn_path = null
                 this.color    = '#1976D2FF'
                 await this.getFestival()
-                await this.$store.dispatch('checkFestival')
+                // await this.$store.dispatch('checkFestival')
                 console.log(res);
             } catch (error) {
               Swal.fire({
@@ -938,12 +942,6 @@
         }
       },
 
-      splitFile(v, type){
-        const arr_file      = v.name.split(".");
-        const filename      = `${type+this.editedItem.id+'.'+arr_file[1]}`  
-        return filename
-      },
-    
       async toggle(v){
         Swal.fire({
           title: 'คำเตือน',
@@ -986,15 +984,48 @@
         }) 
       },
 
-      checkState(v){
-        const datas = v
-        if(!this.checkbox){
-          const result = datas.filter(data => data.state == 1);
-          this.check_datas = result
-        }else{
-          this.check_datas = this.datas
-        }
+    
 
+      deleteItem (item) {
+        Swal.fire({
+            title: 'คำเตือน',
+            text: "คุณต้องการลบข้อมูลเทศกาลใช่หรือไม่ ?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'ลบ',
+            cancelButtonText: 'ยกเลิก',
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const payload = { 
+                    id: item.id,
+                    state : item.state === 1 ? '0' : '1',
+                    status : item.state ===  1 ?  '0' : '0',
+                    user_id: this.userId
+                }
+                let path =  `/api/deleteFestival`
+                let response = await axios.post(`${path}`, payload)
+
+
+                if(payload){
+                    Swal.fire({
+                        icon: 'success',
+                        text: 'ลบข้อมูลพนักงานสำเร็จ',
+                    }).then(function(){
+                        if(response){
+                            window.location.href = '/';
+                        }
+                    })
+                    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'บันทึกไม่สำเร็จ',
+                        text: 'มีข้อผิดพลาดที่ไม่คาดคิดเกิดขึ้น โปรดลองใหม่อีกครั้ง'
+                    })
+                }  
+              
+            }
+        }) 
       },
 
     },
