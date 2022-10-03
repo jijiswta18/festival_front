@@ -526,6 +526,7 @@
         filesRules: [
           v => !!v || 'กรุณาใส่ข้อมูล (ขนาดไม่เกิน 700px * 600px)',
           v => (v && v.size > 0) || 'File is required',
+          // v => !v || v.size < 2000000 || 'Avatar size should be less than 2 MB!',
         ],
         filesBgRules: [
           v => !!v || 'กรุณาใส่ข้อมูล (ขนาดไม่เกิน 900px * 900px)',
@@ -605,8 +606,7 @@
             if (file) {
               this.checkFileImg = true
               this.img_path = URL.createObjectURL(file);
-              console.log(this.img_path);
-              URL.revokeObjectURL(file); // free memory
+              URL.revokeObjectURL(file);
 
             } else {
               this.img_path =  null
@@ -616,9 +616,7 @@
               if (file) {
                 this.checkFileBg = true
                 this.bg_path = URL.createObjectURL(file);
-                URL.revokeObjectURL(file); // free memory
-                console.log(this.bg_path);
-             
+                URL.revokeObjectURL(file);
               } else {
                 this.bg_path =  null
               }
@@ -627,8 +625,7 @@
              if (file) {
                 this.checkFileBtn = true
                 this.btn_path = URL.createObjectURL(file);
-                URL.revokeObjectURL(file); // free memoryeditedItem
-                console.log(this.btn_path);
+                URL.revokeObjectURL(file);
               } else {
                 this.btn_path =  null
               }
@@ -752,16 +749,10 @@
       
       async submit () {  
 
-        console.log('==================');
-        
-
-
         if(this.$refs.form.validate()){
        
           // แก้ไข
           if(this.editedIndex > -1){
-
-            console.log('edit');
 
             if(this.checkFileImg){
               var filename = await this.splitFile(this.editedItem.files, 'imgfid_')
@@ -799,38 +790,47 @@
 
                 if(this.checkFileImg){
 
+                  await this.myUpload('uploadFile', filename, this.editedItem.files);
+
                   // รูปภาพ
 
-                  let fd2 =  new FormData()
-                  await fd2.append('image_name', filename)
-                  await fd2.append('images', this.editedItem.files)
+                  // let fd2 =  new FormData()
+                  // await fd2.append('image_name', filename)
+                  // await fd2.append('images', this.editedItem.files)
 
-                  let path2 = await `/api/uploadFile`
-                  let res2 = await axios.post(`${path2}`, fd2)
-                  console.log(res2);
+                  // let path2 = await `/api/uploadFile`
+                  // let res2 = await axios.post(`${path2}`, fd2)
+                  // console.log(res2);
 
                 }
 
                 if(this.checkFileBg){
+
+                  
+                  await this.myUpload('uploadFileBg', filename2, this.editedItem.files_bg);
+
                   // พื้นหลัง
-                  let fd3 = new FormData();
-                  await fd3.append('image_name', filename2);
-                  await fd3.append('images', this.editedItem.files_bg);
+                  // let fd3 = new FormData();
+                  // await fd3.append('image_name', filename2);
+                  // await fd3.append('images', this.editedItem.files_bg);
               
-                  let path3 = await `/api/uploadFileBg`
-                  let res3  = await axios.post(`${path3}`, fd3)
-                  console.log(res3);
+                  // let path3 = await `/api/uploadFileBg`
+                  // let res3  = await axios.post(`${path3}`, fd3)
+                  // console.log(res3);
                 }
 
                 if(this.checkFileBtn){
+
+                  await this.myUpload('uploadFileBtn', filename3, this.editedItem.files_btn);
+
                   // ปุ่มลงนาม
-                  let fd4 = new FormData();
-                  await fd4.append('image_name', filename3);
-                  await fd4.append('images', this.editedItem.files_btn);
+                  // let fd4 = new FormData();
+                  // await fd4.append('image_name', filename3);
+                  // await fd4.append('images', this.editedItem.files_btn);
               
-                  let path4 = await `/api/uploadFileBtn`
-                  let res4  = await axios.post(`${path4}`, fd4)
-                  console.log(res4);
+                  // let path4 = await `/api/uploadFileBtn`
+                  // let res4  = await axios.post(`${path4}`, fd4)
+                  // console.log(res4);
                 }
               }
               Swal.fire({
@@ -840,8 +840,8 @@
               })
               this.dialog = await false
 
-              await this.getFestival()
-              await this.$store.dispatch('checkFestival')
+              // await this.getFestival()
+              // await this.$store.dispatch('checkFestival')
 
 
             } catch (error) {
@@ -877,16 +877,14 @@
 
                 if(res){
 
-                  // รูปภาพ
-
+                  
                   await this.myUpload('uploadFile',res.data.file_img, this.editedItem.files);
 
                   await this.myUpload('uploadFileBg',res.data.file_bg, this.editedItem.files_bg);
 
                   await this.myUpload('uploadFileBtn',res.data.file_btn, this.editedItem.files_btn);
 
-
-
+                  // รูปภาพ
                   // let fd2 =  new FormData();
                   // await fd2.append('image_name', res.data.file_img);
                   // await fd2.append('images', this.editedItem.files);
@@ -927,7 +925,7 @@
                 this.btn_path = null
                 this.color    = '#1976D2FF'
                 await this.getFestival()
-                // await this.$store.dispatch('checkFestival')
+                await this.$store.dispatch('checkFestival')
                 console.log(res);
             } catch (error) {
               Swal.fire({
