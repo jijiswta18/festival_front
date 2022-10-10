@@ -37,376 +37,375 @@
         >
           <!-- สร้าง -->
           <v-card>
-              <v-card-title class="title-festival">
-              <span class="text-h5">{{ formTitle }}</span>
-              </v-card-title>
-              <v-card-text>
-                <v-form
-                  ref="form"
-                  v-model="valid"
-                  lazy-validation
-                  enctype="multipart/form-data"
-                >
-                  <v-container>
-                      <v-row>
-                        <v-col cols="12">
-                          <v-text-field
-                            v-model="editedItem.name"
-                            :rules="nameRules"
-                            label="ชื่อเทศกาล"
-                            required
-                          ></v-text-field>
-                        </v-col>
-                      </v-row>
+            <v-card-title class="title-festival">
+            <span class="text-h5">{{ formTitle }}</span>
+            </v-card-title>
+            <v-card-text>
+              <v-form
+                ref="form"
+                v-model="valid"
+                lazy-validation
+                enctype="multipart/form-data"
+              >
+                <v-container>
+                    <v-row>
+                      <v-col cols="12">
+                        <v-text-field
+                          v-model="editedItem.name"
+                          :rules="nameRules"
+                          label="ชื่อเทศกาล"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
 
-                      <v-row>
+                    <v-row>
 
-                        <v-col cols="12" md="6">
-                          <v-menu
-                            v-model="menu"
-                            :close-on-content-click="false"
-                            :nudge-right="40"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="auto"
-                          >
+                      <v-col cols="12" md="6">
+                        <v-menu
+                          v-model="menu"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                        >
+                      
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              :value="DateFormatStart"
+                              label="วันที่เริ่มต้น"
+                              prepend-icon="mdi-calendar"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            v-model="editedItem.start_date"
+                            no-title
+                            locale="th"
+                            :max="editedItem.end_date"
+                            @input="menu = false"
+                          ></v-date-picker>
+                        </v-menu>
+                      </v-col>
+
+                      <v-col cols="12" md="6">
+                        <v-menu
+                          v-model="menu2"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                        >
                         
-                            <template v-slot:activator="{ on, attrs }">
-                              <v-text-field
-                                :value="DateFormatStart"
-                                label="วันที่เริ่มต้น"
-                                prepend-icon="mdi-calendar"
-                                readonly
-                                v-bind="attrs"
-                                v-on="on"
-                              ></v-text-field>
-                            </template>
-                            <v-date-picker
-                              v-model="editedItem.start_date"
-                              no-title
-                              locale="th"
-                              :max="editedItem.end_date"
-                              @input="menu = false"
-                            ></v-date-picker>
-                          </v-menu>
-                        </v-col>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              :value="DateFormatEnd"
+                              clearable
+                              label="วันที่สิ้นสุด"
+                              prepend-icon="mdi-calendar"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                              @click:clear="editedItem.end_date = null"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            v-model="editedItem.end_date"
+                            no-title
+                            locale="th"
+                            :min="editedItem.start_date"
+                            @input="menu2 = false"
+                          ></v-date-picker>
+                        </v-menu>
+                      </v-col>
+                    </v-row>
 
-                        <v-col cols="12" md="6">
+                    <v-row>
+                      <v-col cols="12" md="6">
                           <v-menu
-                            v-model="menu2"
+                            ref="menu3"
+                            v-model="menu3"
                             :close-on-content-click="false"
                             :nudge-right="40"
+                            :return-value.sync="editedItem.start_time"
                             transition="scale-transition"
                             offset-y
-                            min-width="auto"
+                            max-width="290px"
+                            min-width="290px"
                           >
-                          
-                            <template v-slot:activator="{ on, attrs }">
-                              <v-text-field
-                                :value="DateFormatEnd"
-                                clearable
-                                label="วันที่สิ้นสุด"
-                                prepend-icon="mdi-calendar"
-                                readonly
-                                v-bind="attrs"
-                                v-on="on"
-                                @click:clear="editedItem.end_date = null"
-                              ></v-text-field>
-                            </template>
-                            <v-date-picker
-                              v-model="editedItem.end_date"
-                              no-title
-                              locale="th"
-                              :min="editedItem.start_date"
-                              @input="menu2 = false"
-                            ></v-date-picker>
-                          </v-menu>
-                        </v-col>
-                      </v-row>
-
-                      <v-row>
-                        <v-col cols="12" md="6">
-                            <v-menu
-                              ref="menu3"
-                              v-model="menu3"
-                              :close-on-content-click="false"
-                              :nudge-right="40"
-                              :return-value.sync="editedItem.start_time"
-                              transition="scale-transition"
-                              offset-y
-                              max-width="290px"
-                              min-width="290px"
-                            >
-                            <template v-slot:activator="{ on, attrs }">
-                              <v-text-field
-                                v-model="editedItem.start_time"
-                                :rules="startRules"
-                                clearable
-                                label="ตั้งเเต่เวลา"
-                                prepend-icon="mdi-clock-time-four-outline"
-                                readonly
-                                v-bind="attrs"
-                                v-on="on"
-                                @click:clear="editedItem.start_time = null"
-                              ></v-text-field>
-                            </template>
-                            <v-time-picker
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
                               v-model="editedItem.start_time"
-                              format="24hr"
-                              :max="editedItem.end_time"
-                              full-width
-                              @click:minute="$refs.menu3.save(editedItem.start_time)"
-                            ></v-time-picker>
-                          </v-menu>
-                        </v-col>  
+                              :rules="startRules"
+                              clearable
+                              label="ตั้งเเต่เวลา"
+                              prepend-icon="mdi-clock-time-four-outline"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                              @click:clear="editedItem.start_time = null"
+                            ></v-text-field>
+                          </template>
+                          <v-time-picker
+                            v-model="editedItem.start_time"
+                            format="24hr"
+                            :max="editedItem.end_time"
+                            full-width
+                            @click:minute="$refs.menu3.save(editedItem.start_time)"
+                          ></v-time-picker>
+                        </v-menu>
+                      </v-col>  
 
-                        <v-col cols="12" md="6">
-                            <v-menu
-                              ref="menu4"
-                              v-model="menu4"
-                              :close-on-content-click="false"
-                              :nudge-right="40"
-                              :return-value.sync="editedItem.end_time"
-                              transition="scale-transition"
-                              offset-y
-                              max-width="290px"
-                              min-width="290px"
-                            >
-                            <template v-slot:activator="{ on, attrs }">
-                              <v-text-field
-                                v-model="editedItem.end_time" 
-                                :rules="endRules"
-                                clearable
-                                label="ถึงเวลา"
-                                prepend-icon="mdi-clock-time-four-outline"
-                                readonly
-                                v-bind="attrs"
-                                v-on="on"
-                                @click:clear="editedItem.end_time = null"
-                              ></v-text-field>
-                            </template>
-                            <v-time-picker
+                      <v-col cols="12" md="6">
+                          <v-menu
+                            ref="menu4"
+                            v-model="menu4"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            :return-value.sync="editedItem.end_time"
+                            transition="scale-transition"
+                            offset-y
+                            max-width="290px"
+                            min-width="290px"
+                          >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
                               v-model="editedItem.end_time" 
-                              format="24hr"
-                              :min="editedItem.start_time"
-                              full-width
-                              @click:minute="$refs.menu4.save(editedItem.end_time)"
-                            ></v-time-picker>
-                          </v-menu>
-                        </v-col>  
-                      </v-row>
+                              :rules="endRules"
+                              clearable
+                              label="ถึงเวลา"
+                              prepend-icon="mdi-clock-time-four-outline"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                              @click:clear="editedItem.end_time = null"
+                            ></v-text-field>
+                          </template>
+                          <v-time-picker
+                            v-model="editedItem.end_time" 
+                            format="24hr"
+                            :min="editedItem.start_time"
+                            full-width
+                            @click:minute="$refs.menu4.save(editedItem.end_time)"
+                          ></v-time-picker>
+                        </v-menu>
+                      </v-col>  
+                    </v-row>
 
-                      <v-row>
-                        <v-col cols="12" md="6">
-                          <v-file-input
-                            v-if="!img_path"
-                            id="file"
-                            accept="image/png, image/jpeg"
-                            prepend-icon="mdi-camera"
-                            label="เเนบรูปเทศกาล"
-                            v-model="editedItem.files"
-                            :rules="rules.filesRules" 
-                            @change="onFileChange(editedItem.files, 'img')"
-                          ></v-file-input>
-
-                          <div v-if="img_path">
-                            <label for="img_path">เเนบรูปเทศกาล</label>
-                            <div class="d-flex flex-row align-center">
-                              <div class="preview" @click="overlayImg = !overlayImg">
-                                <img :src="img_path" />
-                              </div>    
-                              <v-btn
-                                class="mx-2 remove-icon"
-                                fab
-                                dark
-                                x-small
-                                color="pink"
-                                @click="removePreview('img')"
-                                
-                              >
-                                <v-icon dark>
-                                  fa-xmark
-                                </v-icon>
-                              </v-btn>
-                              <span class="text-img">ขนาดไม่เกิน 700px * 600px</span>
-
-                            </div>
-                            
-                            <v-overlay class="style-bg" :opacity="opacity"  :z-index="zIndex" :absolute="absolute" :value="overlayImg">
-                              <img :src="img_path" />
-                             
-                              <v-btn
-                                class="btn-overlay"
-                                icon
-                                @click="overlayImg = false"
-                              >
-                              <v-icon  dark>
+                    <v-row>
+                      <v-col cols="12" md="6">
+                        <v-file-input
+                          v-if="!img_path"
+                          id="file"
+                          accept="image/png, image/jpeg"
+                          prepend-icon="mdi-camera"
+                          label="เเนบรูปเทศกาล"
+                          v-model="editedItem.files"
+                          :rules="rules.filesRules" 
+                          @change="onFileChange(editedItem.files, 'img')"
+                        ></v-file-input>
+                        <div v-if="img_path">
+                          <label for="img_path">เเนบรูปเทศกาล</label>
+                          <div class="d-flex flex-row align-center">
+                            <div class="preview" @click="overlayImg = !overlayImg">
+                              <img :src="img_path" />                            
+                            </div>    
+                            <v-btn
+                              class="mx-2 remove-icon"
+                              fab
+                              dark
+                              x-small
+                              color="pink"
+                              @click="removePreview('img')"
+                              
+                            >
+                              <v-icon dark>
                                 fa-xmark
                               </v-icon>
-                              </v-btn>
-                            </v-overlay>
+                            </v-btn>
+                            <span class="text-img">ขนาดไม่เกิน 700px * 600px</span>
 
                           </div>
-                        
-                        </v-col>
-
-                        <v-col cols="12" md="6">
-                          <v-file-input
-                            v-if="!bg_path"
-                            accept="image/png, image/jpeg"
-                            prepend-icon="mdi-camera"
-                            label="เเนบรูปพื้นหลัง"
-                            v-model="editedItem.files_bg"
-                            :rules="rules.filesBgRules" 
-                            @change="onFileChange(editedItem.files_bg, 'bg')"
-                          ></v-file-input>
-
-
-                          <div v-if="bg_path">
-                            <label for="bg_path">เเนบรูปพื้นหลัง</label>
-                            <div class="d-flex flex-row align-center">
-                              <div class="preview" @click="overlayBg = !overlayBg">
-                                <img :src="bg_path"/> 
-                              </div> 
-                              <v-btn
-                                class="mx-2 remove-icon"
-                                fab
-                                dark
-                                x-small
-                                color="pink"
-                                @click="removePreview('bg')"
-                              >
-                                <v-icon dark>
-                                  fa-xmark
-                                </v-icon>
-                              </v-btn> 
-                              <span class="text-img">ขนาดไม่เกิน 900px * 900px</span>
-                            </div>
+                          
+                          <v-overlay class="style-bg" :opacity="opacity"  :z-index="zIndex" :absolute="absolute" :value="overlayImg">
+                            <img :src="img_path" />
                             
-                            <v-overlay class="style-bg" :opacity="opacity"  :z-index="zIndex" :value="overlayBg">
-                              <img :src="bg_path" />
-                             
-                              <v-btn
-                                class="btn-overlay"
-                                icon
-                                @click="overlayBg = false"
-                              >
-                              <v-icon  dark>
+                            <v-btn
+                              class="btn-overlay"
+                              icon
+                              @click="overlayImg = false"
+                            >
+                            <v-icon  dark>
+                              fa-xmark
+                            </v-icon>
+                            </v-btn>
+                          </v-overlay>
+
+                        </div>
+                      
+                      </v-col>
+
+                      <v-col cols="12" md="6">
+                        <v-file-input
+                          v-if="!bg_path"
+                          accept="image/png, image/jpeg"
+                          prepend-icon="mdi-camera"
+                          label="เเนบรูปพื้นหลัง"
+                          v-model="editedItem.files_bg"
+                          :rules="rules.filesBgRules" 
+                          @change="onFileChange(editedItem.files_bg, 'bg')"
+                        ></v-file-input>
+
+
+                        <div v-if="bg_path">
+                          <label for="bg_path">เเนบรูปพื้นหลัง</label>
+                          <div class="d-flex flex-row align-center">
+                            <div class="preview" @click="overlayBg = !overlayBg">
+                              <img :src="bg_path"/> 
+                            </div> 
+                            <v-btn
+                              class="mx-2 remove-icon"
+                              fab
+                              dark
+                              x-small
+                              color="pink"
+                              @click="removePreview('bg')"
+                            >
+                              <v-icon dark>
                                 fa-xmark
                               </v-icon>
-                              </v-btn>
-                            </v-overlay>
+                            </v-btn> 
+                            <span class="text-img">ขนาดไม่เกิน 900px * 900px</span>
                           </div>
-                        </v-col>
-                      </v-row>
+                          
+                          <v-overlay class="style-bg" :opacity="opacity"  :z-index="zIndex" :value="overlayBg">
+                            <img :src="bg_path" />
+                            
+                            <v-btn
+                              class="btn-overlay"
+                              icon
+                              @click="overlayBg = false"
+                            >
+                            <v-icon  dark>
+                              fa-xmark
+                            </v-icon>
+                            </v-btn>
+                          </v-overlay>
+                        </div>
+                      </v-col>
+                    </v-row>
 
-                      <v-row>
-                        <v-col cols="12" md="6">
-                          <v-file-input
-                            v-if="!btn_path"
-                            id="file"
-                            accept="image/png, image/jpeg"
-                            prepend-icon="mdi-camera"
-                            label="เเนบรูปปุ่มลงนาม"
-                            v-model="editedItem.files_btn"
-                            :rules="rules.filesBtnRules" 
-                            @change="onFileChange(editedItem.files_btn, 'btn')"
-                          ></v-file-input>
+                    <v-row>
+                      <v-col cols="12" md="6">
+                        <v-file-input
+                          v-if="!btn_path"
+                          id="file"
+                          accept="image/png, image/jpeg"
+                          prepend-icon="mdi-camera"
+                          label="เเนบรูปปุ่มลงนาม"
+                          v-model="editedItem.files_btn"
+                          :rules="rules.filesBtnRules" 
+                          @change="onFileChange(editedItem.files_btn, 'btn')"
+                        ></v-file-input>
 
-                          <div v-if="btn_path">
-                            <label for="bg_path">เเนบรูปปุ่มลงนาม</label>
-                            <div class="d-flex flex-row align-center">
-                              <div class="preview" @click="overlayBtn = !overlayBtn">
-                                <img :src="btn_path"/>
-                              </div>  
-                              <v-btn
-                                class="mx-2 remove-icon"
-                                fab
-                                dark
-                                x-small
-                                color="pink"
-                                @click="removePreview('btn')"
-                              >
-                                <v-icon dark>
-                                  fa-xmark
-                                </v-icon>
-                              </v-btn>
-                              <span class="text-img">ขนาดไม่เกิน 185px * 60px</span>
-                            </div>
-                           
-                            <v-overlay class="style-bg" :opacity="opacity"  :z-index="zIndex" :value="overlayBtn">
-                              <img :src="btn_path" />
-                             
-                              <v-btn
-                                class="btn-overlay"
-                                icon
-                                @click="overlayBtn = false"
-                              >
-                              <v-icon  dark>
+                        <div v-if="btn_path">
+                          <label for="bg_path">เเนบรูปปุ่มลงนาม</label>
+                          <div class="d-flex flex-row align-center">
+                            <div class="preview" @click="overlayBtn = !overlayBtn">
+                              <img :src="btn_path"/>
+                            </div>  
+                            <v-btn
+                              class="mx-2 remove-icon"
+                              fab
+                              dark
+                              x-small
+                              color="pink"
+                              @click="removePreview('btn')"
+                            >
+                              <v-icon dark>
                                 fa-xmark
                               </v-icon>
-                              </v-btn>
-                            </v-overlay>
+                            </v-btn>
+                            <span class="text-img">ขนาดไม่เกิน 185px * 60px</span>
                           </div>
-                        </v-col>
-
-                        <v-col cols="12" md="6">
-                          <v-text-field v-model="color" hide-details class="ma-0 pa-0" solo>
-                            <template v-slot:append>
-                              <v-menu v-model="color_menu" top nudge-bottom="105" nudge-left="16" :close-on-content-click="false">
-                                <template v-slot:activator="{ on }">
-                                  <div :style="swatchStyle" v-on="on" />
-                                </template>
-                                <v-card>
-                                
-                                  <v-card-text class="pa-0">
-                                    <v-color-picker   mode="hexa" v-model="color" show-swatches />
-                                  </v-card-text>
-                                </v-card>
-                              </v-menu>
-                            </template>
-                          </v-text-field>
-
-                        </v-col>
-                      </v-row>
-
-                      <v-row>
-                        <v-col cols="12">
-                            <v-select
-                              v-model="editedItem.status"
-                              :items="selectStatus"
-                              item-text="value"
-                              item-value="id"
-                              label="สถานะการใช้งาน"
-                              prepend-icon="fa-solid fa-gears"
-                              required
+                          
+                          <v-overlay class="style-bg" :opacity="opacity"  :z-index="zIndex" :value="overlayBtn">
+                            <img :src="btn_path" />
                             
-                              dense
-                          ></v-select>
-                        </v-col>
-                      </v-row>
-                  </v-container>
-                </v-form>
-              </v-card-text>
+                            <v-btn
+                              class="btn-overlay"
+                              icon
+                              @click="overlayBtn = false"
+                            >
+                            <v-icon  dark>
+                              fa-xmark
+                            </v-icon>
+                            </v-btn>
+                          </v-overlay>
+                        </div>
+                      </v-col>
 
-              <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                  class="btn btn-submit"
-                  text
-                  @click="submit"
-              >
-                  บันทึก
-              </v-btn>
-              <v-btn v-if="editedIndex > -1" color="error" @click="deleteItem(editedItem)"><i class="fa-solid fa-trash-can mr-1"></i>ลบ</v-btn>
-              <v-btn
-                  class="btn btn-cancel"
-                  text
-                  @click="close"
-              >
-                  ยกเลิก
-              </v-btn>
-              </v-card-actions>
+                      <v-col cols="12" md="6">
+                        <v-text-field v-model="color" hide-details class="ma-0 pa-0" solo>
+                          <template v-slot:append>
+                            <v-menu v-model="color_menu" top nudge-bottom="105" nudge-left="16" :close-on-content-click="false">
+                              <template v-slot:activator="{ on }">
+                                <div :style="swatchStyle" v-on="on" />
+                              </template>
+                              <v-card>
+                              
+                                <v-card-text class="pa-0">
+                                  <v-color-picker   mode="hexa" v-model="color" show-swatches />
+                                </v-card-text>
+                              </v-card>
+                            </v-menu>
+                          </template>
+                        </v-text-field>
+
+                      </v-col>
+                    </v-row>
+
+                    <v-row>
+                      <v-col cols="12">
+                          <v-select
+                            v-model="editedItem.status"
+                            :items="selectStatus"
+                            item-text="value"
+                            item-value="id"
+                            label="สถานะการใช้งาน"
+                            prepend-icon="fa-solid fa-gears"
+                            required
+                          
+                            dense
+                        ></v-select>
+                      </v-col>
+                    </v-row>
+                </v-container>
+              </v-form>
+            </v-card-text>
+
+            <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                class="btn btn-submit"
+                text
+                @click="submit"
+            >
+                บันทึก
+            </v-btn>
+            <v-btn v-if="editedIndex > -1" color="error" @click="deleteItem(editedItem)"><i class="fa-solid fa-trash-can mr-1"></i>ลบ</v-btn>
+            <v-btn
+                class="btn btn-cancel"
+                text
+                @click="close"
+            >
+                ยกเลิก
+            </v-btn>
+            </v-card-actions>
           </v-card>
 
         </v-dialog>
@@ -594,10 +593,6 @@
           return "";
         }            
       },
-      // openDialog(idx) {
-      //   this.currPic = this.img_path[idx]
-      //   return this.showDialog = true
-      // },
 
       onFileChange(payload, type) {
         const file = payload // in case vuetify file input
@@ -635,6 +630,7 @@
       },
 
       removePreview(type){
+        console.log(type);
         switch(type) {
           case 'img':
             this.img_path =  null
@@ -726,9 +722,9 @@
         this.editedItem             = await JSON.parse(JSON.stringify(item))
         this.editedItem.start_time  = await moment(item.start_date).format('HH:mm')
         this.editedItem.end_time    = await moment(item.end_date).format('HH:mm')
-        this.img_path               = await `${axios.defaults.baseURL}/uploads/${item.file_name}`;
-        this.bg_path                = await `${axios.defaults.baseURL}/uploads/${item.file_bg_name}`;
-        this.btn_path               = await `${axios.defaults.baseURL}/uploads/${item.file_btn_name}`;
+        this.img_path               = await `/api/getImageFestival?filename=${item.file_name}`
+        this.bg_path                = await `/api/getImageFestival?filename=${item.file_bg_name}`
+        this.btn_path               = await `/api/getImageFestival?filename=${item.file_btn_name}`
         this.color                  = await item.color
         this.dialog                 = await true
         this.editedIndex            = 1
@@ -736,12 +732,10 @@
 
       async myUpload(path, file_name, files){
 
-
         let fd2 =  new FormData();
         await fd2.append('image_name', file_name);
         await fd2.append('images', files);
 
-        // let path = await `/api/uploadFile`
         let res2  = await axios.post(`/api/${path}`, fd2)
         console.log(res2);
 
@@ -787,20 +781,9 @@
 
               if(res){
 
-
                 if(this.checkFileImg){
 
                   await this.myUpload('uploadFile', filename, this.editedItem.files);
-
-                  // รูปภาพ
-
-                  // let fd2 =  new FormData()
-                  // await fd2.append('image_name', filename)
-                  // await fd2.append('images', this.editedItem.files)
-
-                  // let path2 = await `/api/uploadFile`
-                  // let res2 = await axios.post(`${path2}`, fd2)
-                  // console.log(res2);
 
                 }
 
@@ -809,28 +792,12 @@
                   
                   await this.myUpload('uploadFileBg', filename2, this.editedItem.files_bg);
 
-                  // พื้นหลัง
-                  // let fd3 = new FormData();
-                  // await fd3.append('image_name', filename2);
-                  // await fd3.append('images', this.editedItem.files_bg);
-              
-                  // let path3 = await `/api/uploadFileBg`
-                  // let res3  = await axios.post(`${path3}`, fd3)
-                  // console.log(res3);
                 }
 
                 if(this.checkFileBtn){
 
                   await this.myUpload('uploadFileBtn', filename3, this.editedItem.files_btn);
 
-                  // ปุ่มลงนาม
-                  // let fd4 = new FormData();
-                  // await fd4.append('image_name', filename3);
-                  // await fd4.append('images', this.editedItem.files_btn);
-              
-                  // let path4 = await `/api/uploadFileBtn`
-                  // let res4  = await axios.post(`${path4}`, fd4)
-                  // console.log(res4);
                 }
               }
               Swal.fire({
@@ -840,8 +807,8 @@
               })
               this.dialog = await false
 
-              // await this.getFestival()
-              // await this.$store.dispatch('checkFestival')
+              await this.getFestival()
+              await this.$store.dispatch('checkFestival')
 
 
             } catch (error) {
@@ -981,8 +948,6 @@
             }
         }) 
       },
-
-    
 
       deleteItem (item) {
         Swal.fire({
