@@ -198,7 +198,8 @@
 
                     <v-row>
                       <v-col cols="12" md="6">
-                        <v-file-input
+                        <UploadImage ref="image" :files_path="image_path"/>
+                        <!-- <v-file-input
                           v-if="!img_path"
                           id="file"
                           accept="image/png, image/jpeg"
@@ -246,11 +247,12 @@
                           </v-overlay>
 
                         </div>
-                      
+                       -->
                       </v-col>
 
                       <v-col cols="12" md="6">
-                        <v-file-input
+                        <UploadImage ref="background" :files_path="background_path"/>
+                        <!-- <v-file-input
                           v-if="!bg_path"
                           accept="image/png, image/jpeg"
                           prepend-icon="mdi-camera"
@@ -295,13 +297,14 @@
                             </v-icon>
                             </v-btn>
                           </v-overlay>
-                        </div>
+                        </div> -->
                       </v-col>
                     </v-row>
 
                     <v-row>
                       <v-col cols="12" md="6">
-                        <v-file-input
+                        <UploadImage ref="button" :files_path="button_path"/>
+                        <!-- <v-file-input
                           v-if="!btn_path"
                           id="file"
                           accept="image/png, image/jpeg"
@@ -346,7 +349,7 @@
                             </v-icon>
                             </v-btn>
                           </v-overlay>
-                        </div>
+                        </div> -->
                       </v-col>
 
                       <v-col cols="12" md="6">
@@ -456,9 +459,13 @@
   import moment from 'moment';
   import Swal from 'sweetalert2';
   import store from '../../store/index.js';
+  import UploadImage from "@/components/uploadImage.vue";
   export default {
-  components: { },
+  components: { UploadImage },
     data: () => ({
+      image_path: '',
+      background_path: '',
+      button_path: '',
       overlayImg: false,
       overlayBg: false,
       overlayBtn: false,
@@ -502,6 +509,9 @@
       files: null,
       files_bg: null,
       files_btn: null,
+      image_name: '',
+      bg_name: '',
+      btn_name: '',
       color: '#1976D2FF',
       menu: false,
       menu2: false,
@@ -594,73 +604,73 @@
         }            
       },
 
-      onFileChange(payload, type) {
-        const file = payload // in case vuetify file input
-        switch(type) {
-          case 'img':
-            if (file) {
-              this.checkFileImg = true
-              this.img_path = URL.createObjectURL(file);
-              URL.revokeObjectURL(file);
+      // onFileChange(payload, type) {
+      //   const file = payload // in case vuetify file input
+      //   switch(type) {
+      //     case 'img':
+      //       if (file) {
+      //         this.checkFileImg = true
+      //         this.img_path = URL.createObjectURL(file);
+      //         URL.revokeObjectURL(file);
 
-            } else {
-              this.img_path =  null
-            }  
-          break;
-          case 'bg':
-              if (file) {
-                this.checkFileBg = true
-                this.bg_path = URL.createObjectURL(file);
-                URL.revokeObjectURL(file);
-              } else {
-                this.bg_path =  null
-              }
-          break;
-          case 'btn':
-             if (file) {
-                this.checkFileBtn = true
-                this.btn_path = URL.createObjectURL(file);
-                URL.revokeObjectURL(file);
-              } else {
-                this.btn_path =  null
-              }
-          break;
-          default:
-        }
-      },
+      //       } else {
+      //         this.img_path =  null
+      //       }  
+      //     break;
+      //     case 'bg':
+      //         if (file) {
+      //           this.checkFileBg = true
+      //           this.bg_path = URL.createObjectURL(file);
+      //           URL.revokeObjectURL(file);
+      //         } else {
+      //           this.bg_path =  null
+      //         }
+      //     break;
+      //     case 'btn':
+      //        if (file) {
+      //           this.checkFileBtn = true
+      //           this.btn_path = URL.createObjectURL(file);
+      //           URL.revokeObjectURL(file);
+      //         } else {
+      //           this.btn_path =  null
+      //         }
+      //     break;
+      //     default:
+      //   }
+      // },
 
-      removePreview(type){
-        console.log(type);
-        switch(type) {
-          case 'img':
-            this.img_path =  null
-            this.editedItem.files = null
-            this.checkFileImg = false
+      // removePreview(type){
+      //   console.log(type);
+      //   switch(type) {
+      //     case 'img':
+      //       this.img_path =  null
+      //       this.editedItem.files = null
+      //       this.checkFileImg = false
         
-          break;
-          case 'bg':
-            this.bg_path =  null
-            this.editedItem.files_bg = null
-            this.checkFileBg = false
-          break;
-          case 'btn':
-            this.btn_path =  null
-            this.editedItem.files_btn = null
-            this.checkFileBtn = false
-          break;
-          default:
-        }
-      },  
+      //     break;
+      //     case 'bg':
+      //       this.bg_path =  null
+      //       this.editedItem.files_bg = null
+      //       this.checkFileBg = false
+      //     break;
+      //     case 'btn':
+      //       this.btn_path =  null
+      //       this.editedItem.files_btn = null
+      //       this.checkFileBtn = false
+      //     break;
+      //     default:
+      //   }
+      // },  
     
-      previewItem(v){
-        const routeData = this.$router.resolve({
-          name: "festivalPreview",
-          params: { id: v },
-        });
-        window.open(routeData.href, "_blank");
+      // previewItem(v){
+      //   const routeData = this.$router.resolve({
+      //     name: "festivalPreview",
+      //     params: { id: v },
+      //   });
+      //   window.open(routeData.href, "_blank");
 
 
-      },
+      // },
 
       splitFile(v, type){
         const arr_file      = v.name.split(".");
@@ -680,20 +690,26 @@
       },
 
       close () {
+        this.image_path       = ''
+        this.background_path  = ''
+        this.button_path      = ''
         this.dialog = false
-        this.checkFileImg = false
-        this.checkFileBg  = false
-        this.checkFileBtn = false
+        // this.checkFileImg = false
+        // this.checkFileBg  = false
+        // this.checkFileBtn = false
         if(this.editedIndex === -1){
+        
           this.$nextTick(() => {
             this.editedItem = Object.assign({}, this.defaultItem)
             
           })
         }else{
-          this.color        = '#1976D2FF'
-          this.img_path     = null
-          this.bg_path      = null
-          this.btn_path     = null
+          console.log('edit');
+          this.color            = '#1976D2FF'
+          // this.img_path         = null
+          // this.bg_path          = null
+          // this.btn_path         = null
+        
         }
 
       },
@@ -722,12 +738,20 @@
         this.editedItem             = await JSON.parse(JSON.stringify(item))
         this.editedItem.start_time  = await moment(item.start_date).format('HH:mm')
         this.editedItem.end_time    = await moment(item.end_date).format('HH:mm')
-        this.img_path               = await `/api/getImageFestival?filename=${item.file_name}`
-        this.bg_path                = await `/api/getImageFestival?filename=${item.file_bg_name}`
-        this.btn_path               = await `/api/getImageFestival?filename=${item.file_btn_name}`
+        // this.img_path               = await `/api/getImageFestival?filename=${item.file_name}`
+        // this.bg_path                = await `/api/getImageFestival?filename=${item.file_bg_name}`
+        // this.btn_path               = await `/api/getImageFestival?filename=${item.file_btn_name}`
         this.color                  = await item.color
         this.dialog                 = await true
         this.editedIndex            = 1
+
+        this.image_path             = await `/api/getImageFestival?filename=${item.file_name}`
+        this.background_path        = await `/api/getImageFestival?filename=${item.file_bg_name}`
+        this.button_path            = await `/api/getImageFestival?filename=${item.file_btn_name}`
+        this.image_name             = item.file_name
+        this.bg_name                = item.file_bg_name
+        this.btn_name               = item.file_btn_name
+    
       },
 
       async myUpload(path, file_name, files){
@@ -748,17 +772,31 @@
           // แก้ไข
           if(this.editedIndex > -1){
 
-            if(this.checkFileImg){
-              var filename = await this.splitFile(this.editedItem.files, 'imgfid_')
+
+            if(this.$refs.image.files.name){
+              var filename = await this.splitFile(this.$refs.image.files, 'imgfid_')
             }
 
-            if(this.checkFileBg){
-              var filename2 = await this.splitFile(this.editedItem.files_bg, 'bgfid_')
+            if(this.$refs.background.files.name){
+              var filename2 = await this.splitFile(this.$refs.background.files, 'bgfid_')
             }
 
-            if(this.checkFileBtn){
-              var filename3 = await this.splitFile(this.editedItem.files_btn, 'btnfid_')
+            if(this.$refs.button.files.name){
+              var filename3 = await this.splitFile(this.$refs.button.files, 'btnfid_')
             }
+
+
+            // if(this.checkFileImg){
+            //   var filename = await this.splitFile(this.editedItem.files, 'imgfid_')
+            // }
+
+            // if(this.checkFileBg){
+            //   var filename2 = await this.splitFile(this.editedItem.files_bg, 'bgfid_')
+            // }
+
+            // if(this.checkFileBtn){
+            //   var filename3 = await this.splitFile(this.editedItem.files_btn, 'btnfid_')
+            // }
 
 
             let fd_edit = await {
@@ -768,11 +806,13 @@
               "color"         : this.color,
               "start_date"    : `${moment(this.editedItem.start_date).format('YYYY-MM-DD') + ' ' + this.editedItem.start_time}`,
               "end_date"      : `${moment(this.editedItem.end_date).format('YYYY-MM-DD') + ' ' + this.editedItem.end_time}`,
-              "file_name"     : this.editedItem.files ? filename : this.editedItem.file_name,
-              "file_bg_name"  : this.editedItem.files_bg ? filename2 : this.editedItem.file_bg_name,
-              "file_btn_name"  : this.editedItem.files_btn ? filename3 : this.editedItem.file_btn_name,
+              "file_name"     : this.$refs.image.files.name  ? filename : this.image_name,
+              "file_bg_name"  : this.$refs.background.files.name ? filename2 : this.bg_name,
+              "file_btn_name" : this.$refs.button.files.name  ? filename3 : this.btn_name,
               "status"        : this.editedItem.status
             }
+
+            console.log(fd_edit);
 
 
             try {
@@ -781,24 +821,30 @@
 
               if(res){
 
-                if(this.checkFileImg){
 
-                  await this.myUpload('uploadFile', filename, this.editedItem.files);
-
+                if(this.$refs.image.files.name){
+                  await this.myUpload('uploadFile', filename, this.$refs.image.files);
                 }
 
-                if(this.checkFileBg){
-
-                  
-                  await this.myUpload('uploadFileBg', filename2, this.editedItem.files_bg);
-
+                if(this.$refs.background.files.name){
+                  await this.myUpload('uploadFileBg', filename2, this.$refs.background.files);
                 }
 
-                if(this.checkFileBtn){
-
-                  await this.myUpload('uploadFileBtn', filename3, this.editedItem.files_btn);
-
+                if(this.$refs.button.files.name){
+                  await this.myUpload('uploadFileBtn', filename3, this.$refs.button.files);
                 }
+               
+                // if(this.checkFileImg){
+                //   await this.myUpload('uploadFile', filename, this.editedItem.files);
+                // }
+
+                // if(this.checkFileBg){
+                //   await this.myUpload('uploadFileBg', filename2, this.editedItem.files_bg);
+                // }
+
+                // if(this.checkFileBtn){
+                //   await this.myUpload('uploadFileBtn', filename3, this.editedItem.files_btn);
+                // }
               }
               Swal.fire({
                   icon: 'success',
@@ -828,9 +874,12 @@
               "name"          : this.editedItem.name,
               "start_date"    : this.editedItem.start_date ? `${this.editedItem.start_date + ' ' + this.editedItem.start_time}` : `${this.date + ' ' + this.editedItem.start_time}`,
               "end_date"      : this.editedItem.end_date ? `${this.editedItem.end_date + ' ' + this.editedItem.end_time}` : `${this.date + ' ' + this.editedItem.end_time}`,
-              "file_name"     : this.editedItem.files.name,
-              "file_bg_name"  : this.editedItem.files_bg.name,
-              "file_btn_name" : this.editedItem.files_btn.name,
+              "file_name"     : this.$refs.image.files.name,
+              "file_bg_name"  : this.$refs.background.files.name,
+              "file_btn_name" : this.$refs.button.files.name,
+              // "file_name"     : this.editedItem.files.name,
+              // "file_bg_name"  : this.editedItem.files_bg.name,
+              // "file_btn_name" : this.editedItem.files_btn.name,
               "color"         : this.color,
               "status"        : this.editedItem.status ? this.editedItem.status : 0
             }
@@ -845,11 +894,11 @@
                 if(res){
 
                   
-                  await this.myUpload('uploadFile',res.data.file_img, this.editedItem.files);
+                  await this.myUpload('uploadFile',res.data.file_img, this.$refs.image.files);
 
-                  await this.myUpload('uploadFileBg',res.data.file_bg, this.editedItem.files_bg);
+                  await this.myUpload('uploadFileBg',res.data.file_bg, this.$refs.background.files);
 
-                  await this.myUpload('uploadFileBtn',res.data.file_btn, this.editedItem.files_btn);
+                  await this.myUpload('uploadFileBtn',res.data.file_btn, this.$refs.button.files);
 
                   // รูปภาพ
                   // let fd2 =  new FormData();
@@ -887,9 +936,12 @@
                 }).then( function(){
                 });
                 this.dialog   = false
-                this.img_path = null
-                this.bg_path  = null
-                this.btn_path = null
+                this.image_path = ''
+                this.background_path  = ''
+                this.button_path = ''
+                // this.img_path = null
+                // this.bg_path  = null
+                // this.btn_path = null
                 this.color    = '#1976D2FF'
                 await this.getFestival()
                 await this.$store.dispatch('checkFestival')
