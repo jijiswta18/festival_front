@@ -3,12 +3,12 @@
     <div 
       v-if="data.file_bg_name"
       class="bg-page text-center"  
-      :style="{ 'background-image': 'url(' + avatar_url + data.file_bg_name + ')' }"
+      :style="{ 'background-image': 'url(' + avatar_url + ')' }"
     >
       <v-container>
         <div class="page">
             <div class="image">
-              <img v-if="data.file_name" class="w-100" :src="avatar_url+data.file_name" />
+              <img v-if="data.file_name" class="w-100" :src="image_path" />
             </div>
             <v-form 
               ref="form" 
@@ -36,7 +36,7 @@
               ></v-text-field>
           
               <div class="box-submit text-center">
-              <img :src="avatar_url + data.file_btn_name"   @click="submit"/>
+              <img :src="button_path"   @click="submit"/>
               </div>
             </v-form>
               <div v-if="checkSubmit" class="box-detail">
@@ -101,10 +101,14 @@
         item: {},
         count: '',
         data: [],
+        image_path: "",
+        button_path: "",
+        background_path: "",
     }),
     computed: {
         avatar_url : function(){
-          return axios.defaults.baseURL+'/uploads/' 
+          return this.background_path
+          // return axios.defaults.baseURL+'/uploads/' 
       }
     },
     created(){
@@ -116,11 +120,30 @@
       this.getFestivalSign()
     },
     methods: {
+      async getImgPath(){
+        let path = await `/api/getImageFestival?filename=${this.data.file_name}`
+        let res = await axios.get(`${path}`)
+        this.image_path = await res.data
+      },
+      async getBgPath(){
+        let path = await `/api/getImageFestival?filename=${this.data.file_bg_name}`
+        let res = await axios.get(`${path}`)
+        this.background_path = await res.data
+      },
+      async getBtnPath(){
+        let path = await `/api/getImageFestival?filename=${this.data.file_btn_name}`
+        let res = await axios.get(`${path}`)
+        this.button_path = await res.data
+      },
       async getFestivalSign () {
         try {
           let path      = await `/api/getFestivalSign`
           let response  = await axios.get(`${path}`)
-          this.data     = response.data.data[0]
+          this.data     = await response.data.data[0]
+
+          await this.getImgPath()
+          await this.getBgPath()
+          await this.getBtnPath()
 
         } catch (error) {
             console.log('error :' + error)
@@ -149,7 +172,6 @@
           }
         }
       },
-   
       getBrowserDetect(){        
         let userAgent = navigator.userAgent;
         let browserName;   

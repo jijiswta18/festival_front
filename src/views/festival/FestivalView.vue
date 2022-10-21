@@ -662,15 +662,15 @@
       //   }
       // },  
     
-      // previewItem(v){
-      //   const routeData = this.$router.resolve({
-      //     name: "festivalPreview",
-      //     params: { id: v },
-      //   });
-      //   window.open(routeData.href, "_blank");
+      previewItem(v){
+        const routeData = this.$router.resolve({
+          name: "festivalPreview",
+          params: { id: v },
+        });
+        window.open(routeData.href, "_blank");
 
 
-      // },
+      },
 
       splitFile(v, type){
         const arr_file      = v.name.split(".");
@@ -680,6 +680,7 @@
 
       async checkState(){
         // const datas = await v
+        
         if(!this.checkbox){
           const result = await this.datas.filter(data => data.state == 1);
           this.check_datas = await JSON.parse(JSON.stringify(result));
@@ -744,35 +745,43 @@
         this.color                  = await item.color
         this.dialog                 = await true
         this.editedIndex            = 1
-
         this.image_path             = await `/api/getImageFestival?filename=${item.file_name}`
         this.background_path        = await `/api/getImageFestival?filename=${item.file_bg_name}`
         this.button_path            = await `/api/getImageFestival?filename=${item.file_btn_name}`
-        this.image_name             = item.file_name
-        this.bg_name                = item.file_bg_name
-        this.btn_name               = item.file_btn_name
+        this.image_name             = await item.file_name
+        this.bg_name                = await item.file_bg_name
+        this.btn_name               = await item.file_btn_name
     
       },
 
       async myUpload(path, file_name, files){
 
-        let fd2 =  new FormData();
-        await fd2.append('image_name', file_name);
-        await fd2.append('images', files);
+        try {
 
-        let res2  = await axios.post(`/api/${path}`, fd2)
-        console.log(res2);
+          console.log(path);
+          console.log(file_name);
+          console.log(files);
+
+          let fd2 =  await new FormData();
+          await fd2.append('image_name', file_name);
+          await fd2.append('images', files);
+
+          let res2  = await axios.post(`/api/${path}`, fd2)
+          console.log(res2);
+          
+        } catch (error) {
+          console.log(error);
+        }
 
       },
-      
+     
       async submit () {  
 
         if(this.$refs.form.validate()){
        
           // แก้ไข
           if(this.editedIndex > -1){
-
-
+            
             if(this.$refs.image.files.name){
               var filename = await this.splitFile(this.$refs.image.files, 'imgfid_')
             }
@@ -784,19 +793,6 @@
             if(this.$refs.button.files.name){
               var filename3 = await this.splitFile(this.$refs.button.files, 'btnfid_')
             }
-
-
-            // if(this.checkFileImg){
-            //   var filename = await this.splitFile(this.editedItem.files, 'imgfid_')
-            // }
-
-            // if(this.checkFileBg){
-            //   var filename2 = await this.splitFile(this.editedItem.files_bg, 'bgfid_')
-            // }
-
-            // if(this.checkFileBtn){
-            //   var filename3 = await this.splitFile(this.editedItem.files_btn, 'btnfid_')
-            // }
 
 
             let fd_edit = await {
@@ -811,9 +807,6 @@
               "file_btn_name" : this.$refs.button.files.name  ? filename3 : this.btn_name,
               "status"        : this.editedItem.status
             }
-
-            console.log(fd_edit);
-
 
             try {
               let path = await `/api/updateFestival`
@@ -834,27 +827,18 @@
                   await this.myUpload('uploadFileBtn', filename3, this.$refs.button.files);
                 }
                
-                // if(this.checkFileImg){
-                //   await this.myUpload('uploadFile', filename, this.editedItem.files);
-                // }
-
-                // if(this.checkFileBg){
-                //   await this.myUpload('uploadFileBg', filename2, this.editedItem.files_bg);
-                // }
-
-                // if(this.checkFileBtn){
-                //   await this.myUpload('uploadFileBtn', filename3, this.editedItem.files_btn);
-                // }
+               
               }
               Swal.fire({
                   icon: 'success',
                   title: 'บันทึกสำเร็จ',
                   text: 'ระบบได้ทำการบันทึกข้อมูลของคุณแล้ว' 
-              })
+                }).then( function(){
+                });
               this.dialog = await false
 
-              await this.getFestival()
-              await this.$store.dispatch('checkFestival')
+              // await this.getFestival()
+              // await this.$store.dispatch('checkFestival')
 
 
             } catch (error) {
@@ -877,9 +861,6 @@
               "file_name"     : this.$refs.image.files.name,
               "file_bg_name"  : this.$refs.background.files.name,
               "file_btn_name" : this.$refs.button.files.name,
-              // "file_name"     : this.editedItem.files.name,
-              // "file_bg_name"  : this.editedItem.files_bg.name,
-              // "file_btn_name" : this.editedItem.files_btn.name,
               "color"         : this.color,
               "status"        : this.editedItem.status ? this.editedItem.status : 0
             }
@@ -935,14 +916,14 @@
                     text: 'ระบบได้ทำการบันทึกข้อมูลของคุณแล้ว'
                 }).then( function(){
                 });
-                this.dialog   = false
-                this.image_path = ''
-                this.background_path  = ''
-                this.button_path = ''
+                this.dialog   = await false
+                this.image_path = await ''
+                this.background_path  = await ''
+                this.button_path = await ''
                 // this.img_path = null
                 // this.bg_path  = null
                 // this.btn_path = null
-                this.color    = '#1976D2FF'
+                this.color  = await '#1976D2FF'
                 await this.getFestival()
                 await this.$store.dispatch('checkFestival')
                 console.log(res);

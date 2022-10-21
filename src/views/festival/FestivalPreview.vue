@@ -1,80 +1,80 @@
 <template>
     <div class="full-page">
         <div 
-        v-if="item.file_bg_name"
-        class="bg-page text-center"  
-        :style="{ 'background-image': 'url(' + avatar_url + item.file_bg_name + ')' }"
+          v-if="item.file_bg_name"
+          class="bg-page text-center"  
+          :style="{ 'background-image': 'url(' + avatar_url + item.file_bg_name + ')' }"
         >
-        <div v-if="!check_preview" class="next" >
-          <div class="box-display" @click="previewNext(true)" > <i class="fa-solid fa-arrow-right style-arrow"></i>ถัดไป</div>
-        </div>
-        <div v-if="check_preview" class="back">
-          <span class="box-display" @click="previewBack(false)" ><i class="fa-solid fa-arrow-left style-arrow"></i>ย้อนกลับ</span>
-        </div>
-        <v-container>
-            <div class="page">
-                <div class="image">
-                <img v-if="item.file_name" class="w-100" :src="avatar_url+item.file_name" />
-                </div>
-                <v-form v-if="!check_preview"
-                ref="form" 
-                class="sign-form"
-                >
-                    <v-text-field
-                      v-model="datas.p_name"
-                      :rules="nameRules"
-                      label="ชื่อ"
-                      required
-                      thai_engLanguage
-                      maxlength="30"
-                    ></v-text-field>
+          <div v-if="!check_preview" class="next" >
+            <div class="box-display" @click="previewNext(true)" > <i class="fa-solid fa-arrow-right style-arrow"></i>ถัดไป</div>
+          </div>
+          <div v-if="check_preview" class="back">
+            <span class="box-display" @click="previewBack(false)" ><i class="fa-solid fa-arrow-left style-arrow"></i>ย้อนกลับ</span>
+          </div>
+          <v-container>
+              <div class="page">
+                  <div class="image">
+                  <img v-if="item.file_name" class="w-100" :src="avatar_url+item.file_name" />
+                  </div>
+                  <v-form v-if="!check_preview"
+                    ref="form" 
+                    class="sign-form"
+                    >
+                      <v-text-field
+                        v-model="datas.p_name"
+                        :rules="nameRules"
+                        label="ชื่อ"
+                        required
+                        thai_engLanguage
+                        maxlength="30"
+                      ></v-text-field>
 
-                    <v-text-field
-                      v-model="datas.p_lastname"
-                      :rules="lastnameRules"
-                      label="นามสกุล"
-                      required
-                      thai_engLanguage
-                      maxlength="30"
-                    ></v-text-field>
-                
-                    <div class="box-submit text-center">
-                        <img :src="avatar_url + item.file_btn_name"  @click="previewSubmit"/>
-                    </div>
-                </v-form>
-                <div v-if="check_preview" class="box-detail">
-                    <h2 class="style-title" :style="{'color': item.color}">ด้วยเกล้าด้วยกระหม่อมขอเดชะ ข้าพระพุทธเจ้า</h2> 
-                    <div class="style-xs">
-                      <h2>ด้วยเกล้าด้วยกระหม่อมขอเดชะ</h2> 
-                      <h2>ข้าพระพุทธเจ้า</h2> 
-                    </div>
-                    <h3 v-if="datas.p_name" class="style-name" :style="{'color': item.color}">{{datas.p_name}} {{datas.p_lastname}}</h3> 
-                    <h3 v-else class="style-name" :style="{'color': item.color}">ชื่อ - สกุล</h3> 
-                    <p class="style-number" :style="{'color': item.color}">ผู้ร่วมลงนามลำดับที่ : 1</p>
-                    <div class="box-footer">
-                        <a href="https://www.cgd.go.th/">
-                        <v-btn
-                            rounded
-                            large
-                            class="btn btn-home"
-                            :style="{'background-color': item.color}"
-                            >
-                            กลับหน้าหลัก
-                        </v-btn>
-                        </a>
-                        <v-btn
-                        rounded
-                        large
-                        class="btn btn-print"
-                        @click="printDivContent"
-                        :style="{'border': '1px solid ' + item.color}"
-                        >
-                        <span  :style="{'color': item.color}"> พิมพ์คำถวายพระพร</span>
-                    </v-btn>    
-                    </div>
-                </div>
-            </div>
-        </v-container>
+                      <v-text-field
+                        v-model="datas.p_lastname"
+                        :rules="lastnameRules"
+                        label="นามสกุล"
+                        required
+                        thai_engLanguage
+                        maxlength="30"
+                      ></v-text-field>
+                  
+                      <div class="box-submit text-center">
+                          <img :src="avatar_url + item.file_btn_name"  @click="previewSubmit"/>
+                      </div>
+                  </v-form>
+                  <div v-if="check_preview" class="box-detail">
+                      <h2 class="style-title" :style="{'color': item.color}">ด้วยเกล้าด้วยกระหม่อมขอเดชะ ข้าพระพุทธเจ้า</h2> 
+                      <div class="style-xs">
+                        <h2>ด้วยเกล้าด้วยกระหม่อมขอเดชะ</h2> 
+                        <h2>ข้าพระพุทธเจ้า</h2> 
+                      </div>
+                      <h3 v-if="datas.p_name" class="style-name" :style="{'color': item.color}">{{datas.p_name}} {{datas.p_lastname}}</h3> 
+                      <h3 v-else class="style-name" :style="{'color': item.color}">ชื่อ - สกุล</h3> 
+                      <p class="style-number" :style="{'color': item.color}">ผู้ร่วมลงนามลำดับที่ : 1</p>
+                      <div class="box-footer">
+                          <a href="https://www.cgd.go.th/">
+                          <v-btn
+                              rounded
+                              large
+                              class="btn btn-home"
+                              :style="{'background-color': item.color}"
+                              >
+                              กลับหน้าหลัก
+                          </v-btn>
+                          </a>
+                          <v-btn
+                          rounded
+                          large
+                          class="btn btn-print"
+                          @click="printDivContent"
+                          :style="{'border': '1px solid ' + item.color}"
+                          >
+                          <span  :style="{'color': item.color}"> พิมพ์คำถวายพระพร</span>
+                      </v-btn>    
+                      </div>
+                  </div>
+              </div>
+          </v-container>
         </div>
   </div>
 </template>

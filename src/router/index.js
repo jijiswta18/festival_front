@@ -4,8 +4,8 @@ import store from '../store/index.js';
 
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
-import FestivalView from '../views/festival/FestivalView.vue'
-import FestivalPreview from '../views/festival/FestivalPreview.vue'
+import FestivalView from '../views/festival/FestivalViewNew.vue'
+import FestivalPreview from '../views/festival/FestivalPreviewNew.vue'
 import FestivalForm from '../views/FestivalForm.vue'
 import TestView from '../views/testView.vue'
 import UserView from '../views/user/UserView.vue'
@@ -53,13 +53,29 @@ const routes = [
   {
     path: '/festival',
     name: 'festivalForm',
-    component: FestivalForm
+    component: FestivalForm,
+    beforeEnter (to, from, next) {
+      store.dispatch('checkLogin')
+      if (store.state.user) {          
+          next()          
+      } else {
+          next('/login')
+      }
+    },
   },
 
   {
     path: '/festival/preview/:id',
     name: 'festivalPreview',
-    component: FestivalPreview
+    component: FestivalPreview,
+    beforeEnter (to, from, next) {
+      store.dispatch('checkLogin')
+      if (store.state.user) {          
+          next()          
+      } else {
+          next('/login')
+      }
+    },
   },
 
   {
