@@ -1027,7 +1027,7 @@
     },
   }
 </script>
-<style>
+<style scoped>
     .v-data-table-header{
         background-color: #0170c2;
     }

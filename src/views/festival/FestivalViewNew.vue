@@ -238,7 +238,12 @@
                             >
                             บันทึก
                             </v-btn>
-                            <v-btn  color="error" @click="deleteItem(item_datas)"><i class="fa-solid fa-trash-can mr-1"></i>ลบ</v-btn>
+                            <v-btn v-if="item_datas.state == 1" color="error" @click="deleteItem(item_datas, 'ลบ')">
+                                <i class="fa-solid fa-trash-can mr-1"></i>ลบ
+                            </v-btn>
+                            <v-btn v-else color="warning" @click="deleteItem(item_datas, 'ยกเลิกการลบ')">
+                                <i class="fa-solid fa-trash-can mr-1"></i>ยกเลิกการลบ
+                            </v-btn>
                             <v-btn
                                 class="btn btn-cancel"
                                 text
@@ -366,13 +371,14 @@ export default {
 
 
         },
-        deleteItem (item) {
+        deleteItem (item, text) {
         Swal.fire({
             title: 'คำเตือน',
-            text: "คุณต้องการลบข้อมูลเทศกาลใช่หรือไม่ ?",
+            text: `คุณต้องการ${text}ข้อมูลเทศกาลใช่หรือไม่ ?`,
+            // text:  `คุณต้องการลบข้อมูลเทศกาลใช่หรือไม่ ? `,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'ลบ',
+            confirmButtonText: 'ใช่',
             cancelButtonText: 'ยกเลิก',
         }).then(async (result) => {
             if (result.isConfirmed) {
@@ -389,7 +395,7 @@ export default {
                 if(payload){
                     Swal.fire({
                         icon: 'success',
-                        text: 'ลบข้อมูลพนักงานสำเร็จ',
+                        text: `${text}ข้อมูลสำเร็จ`,
                     }).then(function(){
                         if(response){
                             window.location.href = '/';
@@ -423,6 +429,7 @@ export default {
             }
         },
         async editItem(v) {
+            console.log(v);
             this.dialogEdit       = await true
             this.item_datas       = await JSON.parse(JSON.stringify(v))
             this.image_path       = await `/api/getImageFestival?filename=${v.file_name}`
@@ -469,7 +476,7 @@ export default {
                         }, 1000);
                         setTimeout(() => {
                             this.myUpload('uploadFileBg',res.data.file_bg, this.$refs.background.files);
-                        }, 1000);
+                        }, 2000);
                         setTimeout(() => {                            
                             this.myUpload('uploadFileBtn',res.data.file_btn, this.$refs.button.files);
                         }, 1000);
@@ -547,7 +554,7 @@ export default {
                         if(this.$refs.e_image.files.name){
                             setTimeout(() => {
                                 this.myUpload('uploadFile',filename, this.$refs.e_image.files);
-                            }, 2000);
+                            }, 1000);
                         }
 
                         if(this.$refs.e_background.files.name){
@@ -559,7 +566,7 @@ export default {
                         if(this.$refs.e_button.files.name){
                             setTimeout(() => {                            
                                 this.myUpload('uploadFileBtn',filename3, this.$refs.e_button.files);
-                            }, 2000);
+                            }, 1000);
                         }
 
 
@@ -681,7 +688,7 @@ export default {
     .btn-preview{
       cursor: pointer;
     }
-    .preview{
+    /* .preview{
       width: 70px;
       height: 70px;
       border: 1px solid #ddd;
@@ -719,7 +726,7 @@ export default {
 
     .red--text{
       font-size: 13px;
-    }
+    } */
 
     .v-input--checkbox .v-input__slot{
       margin-bottom: 0px!important;

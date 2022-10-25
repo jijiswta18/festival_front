@@ -110,7 +110,7 @@
                             }
                            
                             Swal.fire({
-                            position: 'top-end',
+                            position: 'center',
                             icon: 'success',
                             title: 'เข้าสู่ระบบสำเร็จ',
                             showConfirmButton: false,
