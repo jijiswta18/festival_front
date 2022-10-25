@@ -19,7 +19,7 @@
                 ></v-text-field>
             </v-toolbar>
         </template>
-        <template v-slot:[`item.number`]="{index}">{{index + 1}}</template>
+        <!-- <template v-slot:[`item.number`]="{index}">{{index + 1}}</template> -->
         <template v-slot:[`item.export`] ="{ item }">
             <ExportExcel :id="item.id"/>
         </template>
@@ -48,13 +48,13 @@
         return {
             search: "",
             headers: [
-                {
-                    text: "",
-                    align: "start",
-                    filterable: false,
-                    value: "number",
-                },
-                { text: "ลงนามถวายพระพร", value: "name" },
+                // {
+                //     text: "",
+                //     align: "start",
+                //     filterable: false,
+                //     value: "number",
+                // },
+                { text: "ชื่อเทศกาล", value: "name" },
                 { text: "จำนวน (คน)", align: "center", value: "totalCount" },
                 { text: "ดาวน์โหลด", align: "center", value: "export", sortable: false },
                 { text: "Actions", align: "center", value: "actions", sortable: false },

@@ -33,12 +33,12 @@
                     ></v-text-field>
                 </v-toolbar>
             </template>
-            <template v-slot:[`item.number`]="{index}">{{index + 1}}</template>
+            <!-- <template v-slot:[`item.number`]="{index}">{{index + 1}}</template> -->
+            <template v-slot:[`item.create_date`]="{ item }">{{getThaiDate(item.create_date)}}</template>
             <template v-slot:[`item.start_date`]="{ item }">{{getThaiDate(item.start_date)}}</template>
             <template v-slot:[`item.end_date`]="{ item }">{{getThaiDate(item.end_date)}}</template>
             <template v-slot:[`item.start_time`]="{ item }">{{timeFormat(item.start_date)}}</template>
             <template v-slot:[`item.end_time`]="{ item }">{{timeFormat(item.end_date)}}</template>
-            <template v-slot:[`item.create_date`]="{ item }">{{getThaiDate(item.create_date)}}</template>
             <template v-slot:[`item.status`]="{ item }">
                 <div class="d-flex flex-row align-center">
                     <v-switch
@@ -296,18 +296,18 @@ export default {
             { value: 'ไม่ใช้งาน', id: 0 },
         ],  
         headers: [
-            {
-                text: "",
-                align: "start",
-                sortable: false,
-                value: "number",
-            },
+            // {
+            //     text: "",
+            //     align: "start",
+            //     sortable: false,
+            //     value: "number",
+            // },
+            { text: "วันที่จัดทำ", value: "create_date" },
             { text: "ชื่อเทศกาล", value: "name" },
             { text: "วันที่เริ่มต้น", value: "start_date" },
             { text: "วันที่สิ้นสุด", value: "end_date" },
             { text: "ตั้งเเต่เวลา", value: "start_time" },
             { text: "ถึงเวลา", value: "end_time" },
-            { text: "วันที่สร้าง", value: "create_date" },
             { text: "สถานะ", value: "status", align: "center" },
             { text: "Preview", value: "preview", align: "center", sortable: false },
             { text: "Actions", value: "actions", align: "center", sortable: false },
