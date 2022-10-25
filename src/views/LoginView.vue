@@ -21,7 +21,7 @@
                             v-model="valid"
                             lazy-validation 
                             class="mt-9"
-                            @submit.prevent="submit"
+                            @submit.prevent="login"
                         >
                             <div class="card-text">                              
                                 <v-text-field
@@ -56,6 +56,9 @@
                                 <v-btn 
                                     class="btn-login text-center" 
                                     type="submit"
+                                    :disabled="disabled == true"
+                                    
+                                    
                                 
                                 >Login</v-btn>
                             </div>
@@ -73,6 +76,7 @@
     export default {
         name: 'LoginView',
         data: () => ({
+            disabled: false,
             valid: true,
             show1: false,
             username: '',
@@ -93,9 +97,10 @@
             },
         },
         methods:{
-            async submit(){
+            async login(){
                 if(this.$refs.form.validate()){
                     try {
+                        this.disabled =  await true
                         await this.$store.dispatch('login', {
                             username : this.username,
                             password : this.password
@@ -125,6 +130,9 @@
                             icon: 'error',
                             confirmButtonText: 'Ok'
                         })
+
+                        this.disabled =  await false
+
                         // Swal.fire({
                         //     title: 'Submit your Github username',
                         //     input: 'text',
