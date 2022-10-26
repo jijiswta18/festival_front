@@ -8,7 +8,7 @@ Vue.use(Vuex)
 const getDefaultState = () => {
   return {
     user: null,
-    festival: null
+    festival: null,
   }
 }
 export default new Vuex.Store({
@@ -23,6 +23,9 @@ export default new Vuex.Store({
     festival (state) {
       return state.festival
     },
+    // metaData (state) {
+    //   return state.metadata
+    // },
     isAuthenticated: state => !!state.user,  
 
    
@@ -32,6 +35,9 @@ export default new Vuex.Store({
       state.user = data
     },
     checkFestival (state, data) {
+      state.festival = data
+    },
+    metaData (state, data) {
       state.festival = data
     },
     clearAuthData (state) {
@@ -91,8 +97,8 @@ export default new Vuex.Store({
       let response =  await axios.get(path)
 
       const checkData = response.data.data[0]
-
       await commit('checkFestival', checkData)
+      await commit('metaData', checkData)
 
     },
 

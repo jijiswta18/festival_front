@@ -7,13 +7,16 @@
         sort-by="calories"
         class="elevation-1"
     >
+   
         <template v-slot:top>
+            <pre>{{datas}}</pre>
             <v-toolbar flat class="table-head">
                 <v-toolbar-title class="mr-2">ระบบลงนามถวายพระพร</v-toolbar-title>
                 <v-btn
                     depressed
                     color="success mb"
                 >
+                
                     <vue-excel-xlsx
                         class="btn btn-default "
                         :data="datas"
@@ -37,6 +40,7 @@
             </v-toolbar>
         </template>
         <template v-slot:[`item.number`]="{index}">{{index + 1}}</template>
+        
         <template v-slot:[`item.regis_date`]="{ item }">{{getThaiDate(item.regis_date)}}</template>
     </v-data-table>
 </template>
@@ -62,10 +66,6 @@ export default {
         datas: [],
         columns : [
             {
-                label: "ลำดับ",
-                field: "number",
-            },
-            {
                 label: "ชื่อ-สกุล",
                 field: "name",
             },
@@ -80,12 +80,18 @@ export default {
             {
                 label: "วันที่ลงนาม",
                 field: "regis_date",
-            }
+                dataFormat: this.getThaiDate
+            },
+            {
+                label: "IP",
+                field: "ip_user",
+            },
+
         ],
  
       }
     },
-    created(){
+    mounted(){
         this.getDetail()
     },
     methods: {
@@ -100,8 +106,9 @@ export default {
         async getDetail () {
             try {
                 let path = await `/api/export_ffuagvylst`
-                 let response = await axios.get(`${path}/`+this.$route.params.id)
+                let response = await axios.get(`${path}/`+this.$route.params.id)
                 this.datas = response.data.data
+            
             
             } catch (error) {
                 console.log('error :' + error)

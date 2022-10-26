@@ -16,17 +16,13 @@
 </template>
 
 <script>
-  import  axios  from "axios";
+    import  axios  from "axios";
 export default {
     props: ['id'],
     data(){
         return{
             datas: [],
             columns : [
-                {
-                    label: "ลำดับ",
-                    field: "number",
-                },
                 {
                     label: "ชื่อ-สกุล",
                     field: "name",
@@ -42,7 +38,12 @@ export default {
                 {
                     label: "วันที่ลงนาม",
                     field: "regis_date",
-                }
+                    dataFormat: this.getThaiDate
+                },
+                {
+                    label: "IP",
+                    field: "ip_user",
+                },
             ],
         }
     },
@@ -50,6 +51,14 @@ export default {
         this.getDetail()
     },
     methods: {
+        getThaiDate(item){
+            if (item){
+                var d = new Date(item);
+                return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
+                }else{
+                return "";
+            }            
+        },
         async getDetail () {
             try {
                 let path = await `/api/export_ffuagvylst`

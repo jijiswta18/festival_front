@@ -98,7 +98,16 @@
                                             required
                                         ></v-text-field>
                                     </v-col>
-
+                                    <v-col cols="12">
+                                        <v-textarea
+                                            name="input-7-1"
+                                            label="รายละเอียดเทศกาล"
+                                            rows="2"
+                                            v-model="item_datas.detail"
+                                            :rules="detailRules"
+                                            hint="Hint text"
+                                        ></v-textarea>
+                                    </v-col>
                                     <v-col cols="12" md="6">
                                         <DatePickers ref="startDate" label="เริ่มต้น" :show_date="item_datas.start_date" @change_date="change_start_date"/>
                                     </v-col>
@@ -186,6 +195,16 @@
                                             label="ชื่อเทศกาล"
                                             required
                                         ></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-textarea
+                                            name="input-7-1"
+                                            label="รายละเอียดเทศกาล"
+                                            rows="2"
+                                            v-model="item_datas.detail"
+                                            :rules="detailRules"
+                                            hint="Hint text"
+                                        ></v-textarea>
                                     </v-col>
                                     <v-col cols="12" md="6">
                                         <DatePickers ref="e_startDate" label="วันที่เริ่มต้น" :show_date="item_datas.start_date" @change_date="change_start_date"/>
@@ -313,6 +332,7 @@ export default {
             { text: "Actions", value: "actions", align: "center", sortable: false },
         ],
         nameRules: [v => !!v || 'กรุณาใส่ข้อมูล'],
+        detailRules: [v => !!v || 'กรุณาใส่ข้อมูล'],
     }),
     computed: {
         formTitle() {
@@ -418,6 +438,7 @@ export default {
             this.editedIndex = await -1
             this.item_datas = await {
                 "name"          : "",
+                "detail"        : "",
                 "start_date"    : new Date().toISOString(),
                 "end_date"      : new Date().toISOString(),
                 "start_time"    : null,
@@ -456,6 +477,7 @@ export default {
 
                 "user_id"       : this.userId,
                 "name"          : this.item_datas.name,
+                "detail"        : this.item_datas.detail,
                 "start_date"    : `${moment(this.get_start_date).format('YYYY-MM-DD') + ' ' + this.get_start_time}`,
                 "end_date"      : `${moment(this.get_end_date).format('YYYY-MM-DD') + ' ' + this.get_end_time}`,
                 "file_name"     : this.$refs.image.files.name,
@@ -524,6 +546,7 @@ export default {
                 "fid"           : this.item_datas.id,
                 "user_id"       : this.userId,
                 "name"          : this.item_datas.name,
+                "detail"          : this.item_datas.detail,
                 "start_date"    : `${moment(this.get_start_date).format('YYYY-MM-DD') + ' ' + this.get_start_time}`,
                 "end_date"      : `${moment(this.get_end_date).format('YYYY-MM-DD') + ' ' + this.get_end_time}`,
                 "file_name"     : this.$refs.e_image.files.name ? filename : this.item_datas.file_name,
@@ -532,7 +555,7 @@ export default {
                 "color"         : this.$refs.e_color.color,
                 "status"        : this.item_datas.status,
                 }
-
+                console.log(fd_edit);
                 try {
 
                     let path = await `/api/updateFestival`
