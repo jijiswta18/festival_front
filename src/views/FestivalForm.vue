@@ -3,7 +3,7 @@
     <div 
       v-if="data.file_bg_name"
       class="bg-page text-center"  
-      :style="{ 'background-image': 'url(' + avatar_url + ')' }"
+      :style="{ 'background-image': 'url(' + background_path + ')' }"
     >
       <v-container>
         <div class="page">
@@ -76,10 +76,12 @@
 </template>
 
 <script>
+
   import moment from 'moment'
   import  axios  from "axios";
   export default {
     name: 'festivalForm',
+   
     data: () => ({
         valid: true,
         checkSubmit: false,
@@ -105,6 +107,20 @@
         button_path: "",
         background_path: "",
     }),
+    metaInfo() {
+        return {
+            // title: `${this.data.name} - Epiloge`,
+            meta: [
+                { name: 'description', content: this.data.detail},
+                // { property: 'og:ttitle', content: this.userData.name + ' - Epiloge'},
+                // { property: 'og:sie_name', content: 'Epiloge'},
+                { property: 'og:description', content: this.data.detail},
+                // {property: 'og:type', content: 'profile'},
+                // {property: 'og:url', content: 'https://epiloge.com/@' + this.userData.username},
+                // {property: 'og:image', content: this.aws_url + '/users/' + this.userData.profileurl + '-main.jpg' }    
+            ]
+        }
+    },
     computed: {
         avatar_url : function(){
           return this.background_path
@@ -118,6 +134,7 @@
     },
     mounted(){
       this.getFestivalSign()
+    
     },
     methods: {
       async getImgPath(){
@@ -136,14 +153,19 @@
         this.button_path = await res.data
       },
       async getFestivalSign () {
+        // this.$store.dispatch('checkFestival') 
         try {
           let path      = await `/api/getFestivalSign`
           let response  = await axios.get(`${path}`)
           this.data     = await response.data.data[0]
+          
+
 
           await this.getImgPath()
           await this.getBgPath()
           await this.getBtnPath()
+
+
 
         } catch (error) {
             console.log('error :' + error)

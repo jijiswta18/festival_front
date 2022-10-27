@@ -331,8 +331,14 @@ export default {
             { text: "Preview", value: "preview", align: "center", sortable: false },
             { text: "Actions", value: "actions", align: "center", sortable: false },
         ],
-        nameRules: [v => !!v || 'กรุณาใส่ข้อมูล'],
-        detailRules: [v => !!v || 'กรุณาใส่ข้อมูล'],
+        nameRules: [
+            v => !!v || 'กรุณาใส่ข้อมูล',
+            v => v.length <= 255 || 'ใส่ข้อมูลเกินมูลเกิน 255 ตัวอักษร'
+        ],
+        detailRules: [
+            v => !!v || 'กรุณาใส่ข้อมูล',
+            v => v.length <= 512 || 'ใส่ข้อมูลเกินมูลเกิน 512 ตัวอักษร'
+        ],
     }),
     computed: {
         formTitle() {

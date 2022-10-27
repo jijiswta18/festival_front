@@ -5,13 +5,19 @@ import VueAxios from 'vue-axios'
 import router from './router'
 import vuetify from './plugins/vuetify'
 import store from './store'
-import VueExcelXlsx from "vue-excel-xlsx";
+import VueExcelXlsx from "vue-excel-xlsx"
+import VueMeta from 'vue-meta'
 
+// router.beforeEach ((to, from, next) => {
+//   window.document.title = to.meta.title;
+//     next() 
+// })
 
 Vue.use(VueAxios,axios)
 
 Vue.use(VueExcelXlsx);
 
+Vue.use(VueMeta)
 
 
 axios.defaults.baseURL = ''; //'http://10.100.90.23';

@@ -23,9 +23,6 @@ export default new Vuex.Store({
     festival (state) {
       return state.festival
     },
-    // metaData (state) {
-    //   return state.metadata
-    // },
     isAuthenticated: state => !!state.user,  
 
    
@@ -95,6 +92,8 @@ export default new Vuex.Store({
     async checkFestival({ commit }){
       let path = '/api/checkFestival'
       let response =  await axios.get(path)
+
+      console.log('============',response);
 
       const checkData = response.data.data[0]
       await commit('checkFestival', checkData)
