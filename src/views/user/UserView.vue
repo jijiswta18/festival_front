@@ -3,6 +3,8 @@
       :headers="headers"
       :items="check_datas"
       :search="search"
+      :loading="loadTable"
+      loading-text="Loading..."
       sort-by="calories"
       class="elevation-1"
   >
@@ -65,6 +67,7 @@
       dialog: false,
       dialogDelete: false,
       search: '',
+      loadTable: true,
       headers: [
         // {
         //   text: '',
@@ -102,9 +105,11 @@
         try {
           let path        = await `/api/getUser`
           let response    = await axios.get(`${path}`)
-          this.datas_user = response.data.data
+          this.datas_user = await response.data.data
 
-          this.checkState(this.datas_user)
+          await this.checkState(this.datas_user)
+          
+          this.loadTable = await false;
 
         } catch (error) {
           // console.log('error :' + error)

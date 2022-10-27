@@ -3,6 +3,8 @@
       :headers="headers"
       :items="datas"
       :search="search"
+      :loading="loadTable"
+      loading-text="Loading..."
       sort-by="calories"
       class="elevation-1"
     >
@@ -47,6 +49,7 @@
     data() {
         return {
             search: "",
+            loadTable: true,
             headers: [
                 // {
                 //     text: "",
@@ -86,7 +89,7 @@
             ],
         };
     },
-    created() {
+    mounted() {
         this.ReportFestival();
         // this.getExport()
     },
@@ -98,7 +101,8 @@
             try {
                 let path = await `/api/getReportFestival`;
                 let response = await axios.get(`${path}`);
-                this.datas = response.data.data;
+                this.datas = await response.data.data;
+                this.loadTable = await false;
             }
             catch (error) {
                 console.log("error :" + error);

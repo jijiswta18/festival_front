@@ -55,27 +55,6 @@ const routes = [
     path: '/festival',
     name: 'festivalForm',
     component: FestivalForm,
-    meta: {
-      title: store.getters.festival.name,
-      metaTags: [
-        {
-          name: 'description',
-          content: store.getters.festival.detail,
-        },
-        {
-          property: 'og:description',
-          content: store.getters.festival.detail,
-        }
-      ]
-    },
-    beforeEnter (to, from, next) {
-      store.dispatch('checkLogin')
-      if (store.state.user) {          
-          next()          
-      } else {
-          next('/login')
-      }
-    },
   },
 
   {

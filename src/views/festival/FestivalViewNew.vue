@@ -4,6 +4,8 @@
         :headers="headers"
         :items="check_datas"
         :search="search"
+        :loading="loadTable"
+        loading-text="Loading..."
         sort-by="calories"
         class="elevation-1"
     >
@@ -54,6 +56,7 @@
                     fab
                     x-small
                     dark
+                   
                     @click="editItem(item)"
                     >
                     <v-icon>mdi-pencil</v-icon>
@@ -300,6 +303,8 @@ export default {
         dialog: false,
         dialogEdit: false,
         editedIndex: -1,
+        loadTable: true,
+        loadDialog: false,
         datas: [],
         check_datas: [],
         item_datas: {},
@@ -333,13 +338,14 @@ export default {
         ],
         nameRules: [
             v => !!v || 'กรุณาใส่ข้อมูล',
-            v => v.length <= 255 || 'ใส่ข้อมูลเกินมูลเกิน 255 ตัวอักษร'
+            v => ( v && v.length <= 10 ) || "ห้ามใส่ข้อมูลเกินมูลเกิน 255 ตัวอักษร",
         ],
         detailRules: [
             v => !!v || 'กรุณาใส่ข้อมูล',
-            v => v.length <= 512 || 'ใส่ข้อมูลเกินมูลเกิน 512 ตัวอักษร'
+            v => ( v && v.length <= 512 ) || "ห้ามใส่ข้อมูลเกินมูลเกิน 512 ตัวอักษร",
         ],
     }),
+   
     computed: {
         formTitle() {
             return this.editedIndex === -1 ? "สร้างเทศกาล" : "แก้ไขเทศกาล";
@@ -468,8 +474,8 @@ export default {
                 let path = await `/api/getFestival`;
                 let response = await axios.get(`${path}`);
                 this.datas = await response.data.data;
-
                 await this.checkState();
+                this.loadTable = await false;
             }
             catch (error) {
                 console.log("error :" + error);
