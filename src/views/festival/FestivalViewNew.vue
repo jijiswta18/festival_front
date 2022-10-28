@@ -35,7 +35,6 @@
                     ></v-text-field>
                 </v-toolbar>
             </template>
-            <!-- <template v-slot:[`item.number`]="{index}">{{index + 1}}</template> -->
             <template v-slot:[`item.create_date`]="{ item }">{{getThaiDate(item.create_date)}}</template>
             <template v-slot:[`item.start_date`]="{ item }">{{getThaiDate(item.start_date)}}</template>
             <template v-slot:[`item.end_date`]="{ item }">{{getThaiDate(item.end_date)}}</template>
@@ -78,7 +77,7 @@
             <v-dialog
                 v-model="dialog"
                 persistent
-                max-width="600px"
+                max-width="700px"
                 >
                 <v-card>
                     <v-card-title class="title-festival">
@@ -108,7 +107,7 @@
                                             rows="2"
                                             v-model="item_datas.detail"
                                             :rules="detailRules"
-                                            hint="Hint text"
+                                         
                                         ></v-textarea>
                                     </v-col>
                                     <v-col cols="12" md="6">
@@ -124,13 +123,13 @@
                                         <TimePickers ref="endTime" label="ถึงเวลา" :show_time="item_datas.end_time" @change_time="change_end_time"/>
                                     </v-col>
                                     <v-col cols="12" md="6">
-                                        <UploadImage ref="image" :files_path="image_path"/>
+                                        <UploadImage ref="image" label="เเนบรูปเทศกาล" width="700" height="600" :files_path="image_path"/>
                                     </v-col>
                                     <v-col cols="12" md="6">
-                                        <UploadImage ref="background" :files_path="background_path"/>
+                                        <UploadImage ref="background" label="เเนบรูปพื้นหลังเทศกาล" width="3840" height="2160" :files_path="background_path"/>
                                     </v-col>
                                     <v-col cols="12" md="6">
-                                        <UploadImage ref="button" :files_path="button_path"/>
+                                        <UploadImage ref="button" label="เเนบรูปปุ่มลงนามถวายพระพร" width="186" height="58" :files_path="button_path"/>
                                     </v-col>
                                     <v-col cols="12" md="6">
                                         <ColorPickers ref="color" :show_color="item_datas.color"/>
@@ -176,7 +175,7 @@
             <v-dialog
                 v-model="dialogEdit"
                 persistent
-                max-width="600px"
+                max-width="700px"
                 >
                 <v-card>
                     <v-card-title class="title-festival">
@@ -206,7 +205,6 @@
                                             rows="2"
                                             v-model="item_datas.detail"
                                             :rules="detailRules"
-                                            hint="Hint text"
                                         ></v-textarea>
                                     </v-col>
                                     <v-col cols="12" md="6">
@@ -223,13 +221,13 @@
                                     <TimePickers ref="e_endTime" label="ถึงเวลา" :show_time="timeFormat(item_datas.end_date)" @change_time="change_end_time"/>
                                     </v-col>
                                     <v-col cols="12" md="6">
-                                        <UploadImage ref="e_image" :files_path="image_path"/>
+                                        <UploadImage ref="e_image" label="เเนบรูปเทศกาล" width="700" height="600" :files_path="image_path"/>
                                     </v-col>
                                     <v-col cols="12" md="6">
-                                        <UploadImage ref="e_background" :files_path="background_path"/>
+                                        <UploadImage ref="e_background" label="เเนบรูปพื้นหลังเทศกาล" width="3840" height="2160" :files_path="background_path"/>
                                     </v-col>
                                     <v-col cols="12" md="6">
-                                        <UploadImage ref="e_button" :files_path="button_path"/>
+                                        <UploadImage ref="e_button" label="เเนบรูปปุ่มลงนามถวายพระพร" width="186" height="58" :files_path="button_path"/>
                                     </v-col>
                                     <v-col cols="12" md="6">
                                         <ColorPickers ref="e_color" :show_color="item_datas.color"/>
@@ -320,12 +318,6 @@ export default {
             { value: 'ไม่ใช้งาน', id: 0 },
         ],  
         headers: [
-            // {
-            //     text: "",
-            //     align: "start",
-            //     sortable: false,
-            //     value: "number",
-            // },
             { text: "วันที่จัดทำ", value: "create_date" },
             { text: "ชื่อเทศกาล", value: "name" },
             { text: "วันที่เริ่มต้น", value: "start_date" },
@@ -338,11 +330,12 @@ export default {
         ],
         nameRules: [
             v => !!v || 'กรุณาใส่ข้อมูล',
-            v => ( v && v.length <= 10 ) || "ห้ามใส่ข้อมูลเกินมูลเกิน 255 ตัวอักษร",
+            v => ( v && v.length <= 255 ) || "ห้ามใส่ข้อมูลเกิน 255 ตัวอักษร",
         ],
+      
         detailRules: [
             v => !!v || 'กรุณาใส่ข้อมูล',
-            v => ( v && v.length <= 512 ) || "ห้ามใส่ข้อมูลเกินมูลเกิน 512 ตัวอักษร",
+            v => ( v && v.length <= 512 ) || "ห้ามใส่ข้อมูลเกิน 512 ตัวอักษร",
         ],
     }),
    
@@ -449,8 +442,8 @@ export default {
             this.dialog = await true
             this.editedIndex = await -1
             this.item_datas = await {
-                "name"          : "",
-                "detail"        : "",
+                // "name"          : "",
+                // "detail"        : "",
                 "start_date"    : new Date().toISOString(),
                 "end_date"      : new Date().toISOString(),
                 "start_time"    : null,
@@ -506,11 +499,11 @@ export default {
 
                     if(res){
                         setTimeout(() => {
-                            this.myUpload('uploadFile',res.data.file_img, this.$refs.image.files);
-                        }, 1000);
+                            this.myUpload('uploadFile',res.data.file_img,  this.$refs.image.files);
+                        }, 2000);
                         setTimeout(() => {
                             this.myUpload('uploadFileBg',res.data.file_bg, this.$refs.background.files);
-                        }, 2000);
+                        }, 4000);
                         setTimeout(() => {                            
                             this.myUpload('uploadFileBtn',res.data.file_btn, this.$refs.button.files);
                         }, 1000);
@@ -589,13 +582,13 @@ export default {
                         if(this.$refs.e_image.files.name){
                             setTimeout(() => {
                                 this.myUpload('uploadFile',filename, this.$refs.e_image.files);
-                            }, 1000);
+                            }, 2000);
                         }
 
                         if(this.$refs.e_background.files.name){
                             setTimeout(() => {
                                 this.myUpload('uploadFileBg', filename2, this.$refs.e_background.files);
-                            }, 2000);
+                            }, 4000);
                         }
 
                         if(this.$refs.e_button.files.name){
