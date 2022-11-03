@@ -23,7 +23,6 @@
                   label="ชื่อ"
                   required
                   thai_engLanguage
-                  maxlength="30"
               ></v-text-field>
 
                   <v-text-field
@@ -32,7 +31,6 @@
                   label="นามสกุล"
                   required
                   thai_engLanguage
-                  maxlength="30"
               ></v-text-field>
           
               <div class="box-submit text-center">
@@ -88,13 +86,15 @@
         p_name: '',
         nameRules: [
         v => !!v || 'กรุณากรอกข้อมูล',
-        v =>/^[a-zA-Zก-ฮะ-์\s]+$/.test(v) ||` ห้ามกรอกอักขระพิเศษ เเละตัวเลข`
+        v =>/^[a-zA-Zก-ฮะ-์\s]+$/.test(v) ||` ห้ามกรอกอักขระพิเศษ เเละตัวเลข`,
+        v => ( v && v.length <= 50 ) || "ห้ามใส่ข้อมูลเกิน 50 ตัวอักษร",
         ],
         p_lastname: '',
         lastname: '',
         lastnameRules: [
         v => !!v || 'กรุณากรอกข้อมูล',
-        v =>/^[a-zA-Zก-ฮะ-์\s]+$/.test(v) ||` ห้ามกรอกอักขระพิเศษ เเละตัวเลข`
+        v =>/^[a-zA-Zก-ฮะ-์\s]+$/.test(v) ||` ห้ามกรอกอักขระพิเศษ เเละตัวเลข`,
+        v => ( v && v.length <= 50 ) || "ห้ามใส่ข้อมูลเกิน 50 ตัวอักษร",
         ],
         p_festival: 'forqueen',
         regis_date: moment().format('YYYY-MM-DD HH:mm:ss'),

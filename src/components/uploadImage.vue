@@ -7,11 +7,10 @@
             accept="image/png, image/jpeg"
             prepend-icon="mdi-camera"
             :label="label"
-            hint="I am hint"
             @change="onFileChange"
             >
             </v-file-input>
-            <label class="text-size">ขนาดไม่เกิน {{width}}px * {{height}}px</label>
+            <label class="text-size">ขนาดตัวอย่าง {{width}}px * {{height}}px</label>
         </div>
         <div v-if="image_url">
             <label for="files_path">{{label}}</label>
@@ -30,7 +29,7 @@
                 >
                     <v-icon dark>fa-xmark</v-icon>
                 </v-btn>
-                <span class="text-img">ขนาดไม่เกิน {{width}}px * {{height}}px</span>
+                <span class="text-img">ขนาดตัวอย่าง {{width}}px * {{height}}px</span>
             </div>
         
             <v-overlay class="style-bg" :opacity="opacity"  :z-index="zIndex" :absolute="absolute" :value="overlayImg">
