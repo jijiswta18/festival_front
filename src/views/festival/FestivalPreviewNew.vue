@@ -197,11 +197,7 @@ export default {
     justify-content: center;
     align-items: center;
   }
-  .image{
-    width: 700px!important;
-    height: 600px!important;
-    display: inline-block;
-  }
+
   .image .w-100{
     width: 100%;
     height: auto;
@@ -280,6 +276,13 @@ export default {
   @media only screen and (max-width: 960px) {
     .btn-print{
       display: none;
+    }
+  }
+  @media only screen and (min-width: 992px) {
+    .image{
+      width: 700px!important;
+      height: 600px!important;
+      display: inline-block;
     }
   }
   @media print {

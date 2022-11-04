@@ -8,6 +8,7 @@
       sort-by="calories"
       class="elevation-1"
     >
+   
         <template v-slot:top>
             <v-toolbar flat class="table-head">
                 <v-toolbar-title>ระบบลงนามถวายพระพร</v-toolbar-title>
@@ -23,7 +24,7 @@
         </template>
         <!-- <template v-slot:[`item.number`]="{index}">{{index + 1}}</template> -->
         <template v-slot:[`item.export`] ="{ item }">
-            <ExportExcel :id="item.id"/>
+            <ExportExcel :id="item.id" :filename="item.name"/>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
             <v-btn
@@ -32,7 +33,7 @@
             fab
             dark
             color="primary"
-            @click="detail(item.id)"
+            @click="detail(item)"
             >
             <i class="fa-solid fa-magnifying-glass icon-style"></i>
             </v-btn>
@@ -58,7 +59,7 @@
                 //     value: "number",
                 // },
                 { text: "ชื่อเทศกาล", value: "name" },
-                { text: "จำนวน (คน)", align: "center", value: "totalCount" },
+                { text: "จำนวนคนละทะเบียน (คน)", align: "center", value: "totalCount" },
                 { text: "ดาวน์โหลด", align: "center", value: "export", sortable: false },
                 { text: "Actions", align: "center", value: "actions", sortable: false },
                
@@ -95,7 +96,7 @@
     },
     methods: {
         detail(v) {
-            this.$router.push({ name: "reportSign", params: { id: v } });
+            this.$router.push({ name: "reportSign",  params: { id: v.id } });
         },
         async ReportFestival() {
             try {

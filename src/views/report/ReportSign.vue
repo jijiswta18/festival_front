@@ -33,7 +33,7 @@
                 <v-text-field
                     v-model="search"
                     append-icon="mdi-magnify"
-                    label="Search"
+                    label="ค้นหา (ชื่อ-สกุล, Browser, Device)"
                     single-line
                     hide-details
                 ></v-text-field>
@@ -96,6 +96,7 @@ export default {
     },
     mounted(){
         this.getDetail()
+        // this.getNameFestival()
     },
     methods: {
         getThaiDate(item){
@@ -126,6 +127,17 @@ export default {
                 console.log('error :' + error)
             }
         },
+
+        // async getNameFestival(){
+        //     try {
+        //         let path = await `/api/getNameFestival`
+        //         let response = await axios.get(`${path}/`+this.$route.params.id)
+        //         this.filename = await response.data.data[0].name_festival
+        //         console.log(response);
+        //     } catch (error) {
+        //         console.log('error :' + error)
+        //     }
+        // }
     }
 
 }

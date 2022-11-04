@@ -4,9 +4,9 @@
         class="btn btn-export"
         :data="datas"
         :columns="columns"
-        :file-name="'festival'"
+        :file-name="`รายงานลงนามถวายพระพร เทศกาล${filename}`"
         :file-type="'xlsx'"
-        :sheet-name="'festival'"
+        :sheet-name="`เทศกาล${filename}`"
         >
         <i class="fa-solid fa-file-export icon-style"></i>
         export
@@ -17,7 +17,7 @@
 <script>
     import  axios  from "axios";
 export default {
-    props: ['id'],
+    props: ['id', 'filename'],
     data(){
         return{
             datas: [],

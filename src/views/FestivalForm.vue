@@ -293,11 +293,7 @@
    .box-footer{
     margin: 2rem 0;
   }
-  .image{
-    width: 700px!important;
-    height: 600px!important;
-    display: inline-block;
-  }
+
   .image .w-100{
     width: 100%;
     height: auto;
@@ -336,10 +332,18 @@
       display: none;
     }
   }
+  @media only screen and (min-width: 992px) {
+    .image{
+      width: 700px!important;
+      height: 600px!important;
+      display: inline-block;
+    }
+  }
    @media print {
     .box-footer{
       display: none;
     }
   }
+
 
 </style>
