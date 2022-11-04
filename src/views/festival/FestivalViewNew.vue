@@ -29,7 +29,7 @@
                     <v-text-field
                         v-model="search"
                         append-icon="mdi-magnify"
-                        label="Search"
+                        label="ค้นหา (ชื่อเทศกาล)"
                         single-line
                         hide-details
                     ></v-text-field>

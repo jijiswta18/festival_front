@@ -28,7 +28,7 @@
       <v-text-field
         v-model="search"
         append-icon="mdi-magnify"
-        label="Search"
+        label="ค้นหา (ชื่อ-สกุล, ตำแหน่ง, ระดับการใช้งาน)"
         single-line
         hide-details
       ></v-text-field>
