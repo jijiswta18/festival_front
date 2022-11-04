@@ -1,6 +1,5 @@
 <template>
   <div>
-    
     <vue-excel-xlsx
         class="btn btn-export"
         :data="datas"
@@ -38,13 +37,15 @@ export default {
                 {
                     label: "วันที่ลงนาม",
                     field: "regis_date",
-                    dataFormat: this.getThaiDate
+                    // dataFormat: this.getThaiDate
                 },
                 {
                     label: "IP",
                     field: "ip_user",
                 },
+               
             ],
+            
         }
     },
     mounted(){
@@ -62,8 +63,18 @@ export default {
         async getDetail () {
             try {
                 let path = await `/api/export_ffuagvylst`
-                 let response = await axios.get(`${path}/`+this.id)
-                this.datas = response.data.data
+                let response = await axios.get(`${path}/`+this.id)
+                // this.datas = response.data.data
+                response.data.data.forEach(item => {
+                    this.datas.push({ 
+                        'name'      : item.name + ' ' + item.lastname,
+                        'browser'   : item.browser,
+                        'device'    : item.device,
+                        'regis_date': this.getThaiDate(item.regis_date),
+                        'IP'        : item.ip_user
+                    })
+                })
+
             } catch (error) {
                 console.log('error :' + error)
             }

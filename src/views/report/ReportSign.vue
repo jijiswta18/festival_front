@@ -9,7 +9,6 @@
     >
    
         <template v-slot:top>
-            <pre>{{datas}}</pre>
             <v-toolbar flat class="table-head">
                 <v-toolbar-title class="mr-2">ระบบลงนามถวายพระพร</v-toolbar-title>
                 <v-btn
@@ -19,7 +18,7 @@
                 
                     <vue-excel-xlsx
                         class="btn btn-default "
-                        :data="datas"
+                        :data="export_datas"
                         :columns="columns"
                         :file-name="'festival'"
                         :file-type="'xlsx'"
@@ -27,7 +26,8 @@
                         >
                         <i class="fa-solid fa-file-export icon-style"></i>
                         Export
-                    </vue-excel-xlsx>
+    
+                </vue-excel-xlsx>
                 </v-btn>
                 <v-spacer></v-spacer>
                 <v-text-field
@@ -41,6 +41,7 @@
         </template>
         <template v-slot:[`item.number`]="{index}">{{index + 1}}</template>
         
+        <template v-slot:[`item.name`]="{ item }">{{item.name + ' ' + item.lastname}}</template>
         <template v-slot:[`item.regis_date`]="{ item }">{{getThaiDate(item.regis_date)}}</template>
     </v-data-table>
 </template>
@@ -64,10 +65,12 @@ export default {
           { text: 'วันที่ลงนาม', value: 'regis_date' },
         ],
         datas: [],
+        export_datas: [],
         columns : [
             {
                 label: "ชื่อ-สกุล",
                 field: "name",
+                
             },
             {
                 label: "Browser",
@@ -80,7 +83,7 @@ export default {
             {
                 label: "วันที่ลงนาม",
                 field: "regis_date",
-                dataFormat: this.getThaiDate
+                // dataFormat: this.getThaiDate
             },
             {
                 label: "IP",
@@ -107,8 +110,17 @@ export default {
             try {
                 let path = await `/api/export_ffuagvylst`
                 let response = await axios.get(`${path}/`+this.$route.params.id)
-                this.datas = response.data.data
-            
+                this.datas = await response.data.data
+                
+                response.data.data.forEach(item => {
+                    this.export_datas.push({ 
+                        'name'      : item.name + ' ' + item.lastname,
+                        'browser'   : item.browser,
+                        'device'    : item.device,
+                        'regis_date': this.getThaiDate(item.regis_date),
+                        'IP'        : item.ip_user
+                    })
+                })
             
             } catch (error) {
                 console.log('error :' + error)
