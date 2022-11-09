@@ -160,10 +160,11 @@
                             >
                             บันทึก
                             </v-btn>
+                           
                             <v-btn
                                 class="btn btn-cancel"
                                 text
-                                @click="dialog = false"
+                                @click="close"
                             >
                                 ยกเลิก
                             </v-btn>
@@ -268,7 +269,6 @@
                                 class="btn btn-cancel"
                                 text
                                 @click="closeEdit"
-                              
                             >
                                 ยกเลิก
                             </v-btn>
@@ -338,15 +338,13 @@ export default {
             v => ( v && v.length <= 512 ) || "ห้ามใส่ข้อมูลเกิน 512 ตัวอักษร",
         ],
     }),
-   
+    mounted() {
+        this.getFestival();
+    },
     computed: {
         formTitle() {
             return this.editedIndex === -1 ? "สร้างเทศกาล" : "แก้ไขเทศกาล";
         },
-    },
-
-    mounted() {
-        this.getFestival();
     },
     methods: {
         change_start_date(date){
@@ -361,12 +359,16 @@ export default {
         change_end_time(time){
             this.get_end_time = time
         },
+        close(){
+            this.dialog = false
+            this.$refs.form.resetValidation()
+        },
         closeEdit () {
             this.dialogEdit         = false
-            // this.item_datas         = {}
             this.image_path         = ""
             this.background_path    = ""
             this.button_path        = ""
+            this.$refs.editForm.resetValidation()
            
         },
 

@@ -13,7 +13,8 @@
                         <!-- <v-toolbar-title class="title-form">Login</v-toolbar-title> -->
                         </div>
                         <div class="text-head text-center mt-7">
-                              <h2>ระบบลงนาม กรมบัญชีกลาง</h2>
+                              <h2>ระบบลงนามถวายพระพร</h2>
+                              <h2>กรมบัญชีกลาง</h2>
                         </div>
                          
                         <v-form    
