@@ -7,6 +7,7 @@ import LoginView from '../views/LoginView.vue'
 import FestivalView from '../views/festival/FestivalViewNew.vue'
 import FestivalPreview from '../views/festival/FestivalPreviewNew.vue'
 import FestivalForm from '../views/FestivalForm.vue'
+import ReferenceView from '../views/reference/ReferenceView.vue'
 import TestView from '../views/testView.vue'
 import UserView from '../views/user/UserView.vue'
 import UserForm from '../views/user/UserForm.vue'
@@ -88,6 +89,11 @@ const routes = [
         path: '',
         name: 'festival',
         component: FestivalView
+      },
+      {
+        path: '/reference',
+        name: 'reference',
+        component: ReferenceView
       },
 
       {

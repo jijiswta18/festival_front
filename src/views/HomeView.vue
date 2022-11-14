@@ -40,6 +40,22 @@
           v-if="check_roles.roles === 'admin'"
           class="d-flex align-center menu-link"
           active-class="activemenu"
+          to="/reference"
+        >
+          <v-list-item link>
+              <i class="fa-solid fa-users menu-icon"></i>
+            <v-list-item-content>
+              <v-list-item-title class="menu-text">
+              รายการคำอวยพร
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </router-link>
+
+        <router-link
+          v-if="check_roles.roles === 'admin'"
+          class="d-flex align-center menu-link"
+          active-class="activemenu"
           to="/user"
         >
           <v-list-item link>
