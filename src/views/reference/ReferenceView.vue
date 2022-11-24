@@ -3,6 +3,7 @@
         <v-data-table
             :headers="headers"
             :items="datas"
+            :search="search"
             sort-by="calories"
             class="elevation-1"
         >
@@ -17,6 +18,13 @@
                         เพิ่มรายการใหม่
                     </v-btn>
                     <v-spacer></v-spacer>
+                    <v-text-field
+                        v-model="search"
+                        append-icon="mdi-magnify"
+                        label="ค้นหา"
+                        single-line
+                        hide-details
+                    ></v-text-field>
                 </v-toolbar>
             </template>
             <template v-slot:[`item.create_date`]="{ item }">{{getThaiDate(item.create_date)}}</template>
@@ -59,6 +67,9 @@
                                             label="คำอวยพร"
                                             v-model="item_datas.name"
                                             :rules="nameRules"
+                                            auto-grow
+                                            row-height="15"
+                                            hide-details
                                         ></v-textarea>
                                     </v-col>
                                     <v-col cols="12">
@@ -71,6 +82,7 @@
                                             label="เลือกรายการเทศกาล"
                                             multiple
                                             outlined
+                                            hide-details
                                         ></v-select>
                                     </v-col>
                                 </v-row>
@@ -109,6 +121,7 @@
     export default {
         data: () => ({
         userId: store.getters.user.id,
+        search: "",
         dialog: false,
         valid: true,
         editedIndex: -1,
@@ -116,9 +129,10 @@
         datas: [],
         selectFestival: [],
         headers: [
-            { text: "วันที่จัดทำ", value: "create_date" },
+            { text: "วันที่จัดทำ", value: "create_date", width: "10%" },
             { text: "คำอวยพร", value: "name" },
-            { text: "Actions", value: "actions", align: "center", sortable: false },
+            { text: "เทศกาล", value: "tag_festival" , width: "10%" },
+            { text: "Actions", value: "actions", align: "center",  width: "20%", sortable: false },
         ],
         nameRules: [
                 v => !!v || 'กรุณาใส่ข้อมูล',
@@ -157,13 +171,18 @@
                 this.dialog = await true
                 this.editedIndex = await this.datas.indexOf(v)
                 this.item_datas = await JSON.parse(JSON.stringify(v))
-                this.item_datas.festival = await JSON.parse(v.tag_festival);
+                let temp = v.tag_festival.replace(/['"]+/g, '');
+                this.item_datas.festival = await JSON.parse(temp);
+             
+                console.log(v);
             },
             async getFestival(){
 
                 let path = await `/api/get/Festival`;
 
                 let response = await axios.get(`${path}`);
+
+                console.log(response);
 
                 response.data.data.forEach(item => {
 
@@ -177,6 +196,7 @@
                     let path        = await `/api/get/reference`;
                     let response    = await axios.get(`${path}`);
                     this.datas      = await response.data.data;
+
         
                 } catch (error) {
                     console.log(error);
@@ -191,13 +211,16 @@
 
                         if (this.editedIndex > -1) {
 
+                            
+                            let str = this.item_datas.festival.map(String)
+
                             let fd_edit = await {
                                 "user_id"       : this.userId,
                                 "id"            : this.item_datas.id,
                                 "name"          : this.item_datas.name,
-                                "tag_festival"  : JSON.stringify(this.item_datas.festival),
+                                // "tag_festival"  : JSON.stringify(this.item_datas.festival),
+                                "tag_festival"  : JSON.stringify(str),
                             }
-
 
                             let path_edit   = await `api/edit/reference`
                             let res_edit    = await axios.post(`${path_edit}`, fd_edit)
@@ -206,10 +229,13 @@
 
                         } else {
 
+                            let str = this.item_datas.festival.map(String)
+
                             let fd = await {
                                 "user_id"       : this.userId,
                                 "name"          : this.item_datas.name,
-                                "tag_festival"  : JSON.stringify(this.item_datas.festival),
+                                // "tag_festival"  : JSON.stringify(this.item_datas.festival),
+                                "tag_festival"  : JSON.stringify(str),
                             }
 
                             let path        = await `api/create/reference`
