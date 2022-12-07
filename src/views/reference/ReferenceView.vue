@@ -40,6 +40,18 @@
                     <v-icon>mdi-pencil</v-icon>
                 </v-btn>
             </template>
+            <template v-slot:[`item.tag_festival`]="{ item }">
+                <v-btn
+                    color="primary"
+                    fab
+                    x-small
+                    dark
+                   
+                    @click="detailItem(item)"
+                    >
+                    <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+            </template>
         </v-data-table>
         <v-row justify="center">
             <v-dialog
@@ -62,7 +74,13 @@
                             <v-container>
                                 <v-row>
                                     <v-col cols="12">
-                                        <v-textarea
+                                        <v-text-field
+                                            label="คำอวยพร"
+                                            v-model="item_datas.name"
+                                            solo
+                                            clearable
+                                        ></v-text-field>
+                                        <!-- <v-textarea
                                             outlined
                                             label="คำอวยพร"
                                             v-model="item_datas.name"
@@ -70,10 +88,10 @@
                                             auto-grow
                                             row-height="15"
                                             hide-details
-                                        ></v-textarea>
+                                        ></v-textarea> -->
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-select
+                                        <!-- <v-select
                                             v-model="item_datas.festival"
                                             :items="selectFestival"
                                             item-text="value"
@@ -83,7 +101,31 @@
                                             multiple
                                             outlined
                                             hide-details
-                                        ></v-select>
+                                        ></v-select> -->
+
+                                        <v-select
+                                            v-model="item_datas.festival"
+                                            :items="selectFestival"
+                                            item-text="value"
+                                            item-value="id"
+                                            item-disabled="disable"
+                                            solo
+                                            label="เลือกรายการคำอวยพร"
+                                            multiple
+                                            clearable
+                                        >
+                                        <template v-slot:selection="{ item, index }">
+                                            <v-chip v-if="index === 0">
+                                            <span>{{ item.value }}</span>
+                                            </v-chip>
+                                            <span
+                                            v-if="index === 1"
+                                            class="grey--text text-caption"
+                                            >
+                                            (+{{ item_datas.festival.length - 1 }} รายการ)
+                                            </span>
+                                        </template>
+                                    </v-select>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -110,6 +152,20 @@
                 </v-card>
             </v-dialog>
 
+            <v-dialog
+                v-model="dialog_detail"
+                persistent
+                max-width="700px"
+                >
+                <v-card>
+                    <v-card-title class="title-festival">
+                        <span class="text-h5">เทศกาลที่ใช้คำอวยพร</span>
+                    </v-card-title>
+                    aaaa
+                </v-card>
+            </v-dialog>
+
+
        
         </v-row>
     </div>
@@ -123,6 +179,7 @@
         userId: store.getters.user.id,
         search: "",
         dialog: false,
+        dialog_detail: false,
         valid: true,
         editedIndex: -1,
         item_datas : {},
@@ -162,6 +219,10 @@
                 this.dialog = false
                 this.$refs.form.resetValidation()
                 this.$refs.form.reset()
+            },
+            async detailItem(v){
+                this.dialog_detail = await true
+                console.log(v);
             },
             async create(){
                 this.dialog         = await true
@@ -210,9 +271,10 @@
                     try {
 
                         if (this.editedIndex > -1) {
-
                             
                             let str = this.item_datas.festival.map(String)
+
+                          
 
                             let fd_edit = await {
                                 "user_id"       : this.userId,
@@ -221,6 +283,10 @@
                                 // "tag_festival"  : JSON.stringify(this.item_datas.festival),
                                 "tag_festival"  : JSON.stringify(str),
                             }
+
+                            
+                            console.log(fd_edit);
+                            
 
                             let path_edit   = await `api/edit/reference`
                             let res_edit    = await axios.post(`${path_edit}`, fd_edit)

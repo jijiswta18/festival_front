@@ -1,14 +1,14 @@
 <template>
     <div>
         <v-data-table
-        :headers="headers"
-        :items="check_datas"
-        :search="search"
-        :loading="loadTable"
-        loading-text="Loading..."
-        sort-by="calories"
-        class="elevation-1"
-    >
+            :headers="headers"
+            :items="check_datas"
+            :search="search"
+            :loading="loadTable"
+            loading-text="Loading..."
+            sort-by="calories"
+            class="elevation-1"
+        >
             <template v-slot:top>
                 <v-toolbar flat class="table-head">
                     <v-toolbar-title class="mr-2">รายการเทศกาล</v-toolbar-title>
@@ -49,18 +49,6 @@
                     ></v-switch><span v-if="item.state == 0" class="red--text ml-2 ">(ยกเลิก)</span>
                 </div>
             </template>
-            <template v-slot:[`item.actions`]="{ item }">
-                <v-btn
-                    color="primary"
-                    fab
-                    x-small
-                    dark
-                   
-                    @click="editItem(item)"
-                    >
-                    <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-            </template>
             <template v-slot:[`item.preview`]="{ item }">
                 <v-btn
                     color="purple"
@@ -70,6 +58,30 @@
                     @click="previewItem(item.id)"
                     >
                     <i class="fa-solid fa-arrow-up-right-from-square icon-style"></i>
+                </v-btn>
+            </template>
+            <template v-slot:[`item.actions`]="{ item }">
+                <v-btn
+                    color="primary"
+                    fab
+                    x-small
+                    dark
+                    
+                    @click="editItem(item)"
+                    >
+                    <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+            </template>
+            <template v-slot:[`item.reference`]="{ item }">
+                <v-btn
+                    color="primary"
+                    fab
+                    x-small
+                    dark
+                    
+                    @click="referenceItem(item)"
+                    >
+                    <v-icon>mdi-note</v-icon>
                 </v-btn>
             </template>
         </v-data-table>
@@ -107,7 +119,7 @@
                                             rows="2"
                                             v-model="item_datas.detail"
                                             :rules="detailRules"
-                                         
+                                            
                                         ></v-textarea>
                                     </v-col>
                                     <v-col cols="12" md="6">
@@ -160,7 +172,7 @@
                             >
                             บันทึก
                             </v-btn>
-                           
+                            
                             <v-btn
                                 class="btn btn-cancel"
                                 text
@@ -214,7 +226,7 @@
                                     <v-col cols="12" md="6">
                                         <DatePickers ref="e_endDate" label="วันที่สิ้นสุด" :show_date="item_datas.end_date" @change_date="change_end_date"/>
                                     </v-col>
-                                 
+                                    
                                     <v-col cols="12" md="6">
                                     <TimePickers  ref="e_startTime" label="ตั้งเเต่เวลา" :show_time="timeFormat(item_datas.start_date)" @change_time="change_start_time"/>
                                     </v-col>
@@ -276,8 +288,133 @@
                     </v-form>
                 </v-card>
             </v-dialog>
-        </v-row>
+            
+            <v-dialog
+                v-model="dialogReference"
+                persistent
+                max-width="900px"
+                >
+                <v-card>
+                    <v-toolbar class="title-festival">
+                        <v-toolbar-title>คำอวยพร</v-toolbar-title>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            icon
+                            dark
+                            color="cyan"
+                            colored-border
+                            @click="closeReference"
+                        >
+                            <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                    </v-toolbar>
 
+
+                    <v-tabs v-model='tab' vertical>
+
+                        <v-tab class="justify-start" href='#tab-1'>
+                            <i class="fa-solid fa-list mr-2"></i>
+                            รายการคำอวยพร
+                        </v-tab>
+
+                        <v-tab class="justify-start" href='#tab-2'>
+                            <i class="fa-solid fa-plus icon-style mr-2"></i>
+                            เพิ่มคำอวยพร
+                        </v-tab>
+
+                        <v-tab class="justify-start" href='#tab-3'>
+                            <i class="fa-solid fa-list-check mr-2"></i>
+                            เลือกคำอวยพร
+                        </v-tab>
+
+                        <v-tab-item value='tab-1'>
+                            <v-card flat>
+                            <v-card-text>
+                                <v-list-item
+                                    v-for="(refDetail, i) in refDetails" 
+                                    :key="i"
+                                >
+                                    <v-list-item-content>
+                                        <span v-text="refDetail.name"></span>  
+                                    </v-list-item-content>
+                                    <v-list-item-icon>
+                                        <v-btn
+                                        class="mx-2"
+                                        fab
+                                        dark
+                                        x-small
+                                        color="primary"
+                                        @click="deleteReference(refDetail)"
+                                        >
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </v-btn>
+                                    </v-list-item-icon>
+                                </v-list-item>
+                            </v-card-text>
+                            </v-card>
+                        </v-tab-item>
+
+                        <v-tab-item value='tab-2'>
+                            <v-card flat>
+                                <v-card-text>
+                                    <v-text-field
+                                        label="เพิ่มคำอวยพร"
+                                        v-model="reference_name"
+                                        solo
+                                        clearable
+                                    ></v-text-field>
+                                </v-card-text>
+                                <v-card-actions class="justify-center">
+                                    <v-btn 
+                                        class="btn btn-submit"
+                                        text 
+                                        @click="addReference"
+                                    >บันทึก</v-btn>
+                                 
+                                </v-card-actions>
+                            </v-card>
+                        </v-tab-item>
+
+                        <v-tab-item value='tab-3'>
+                            <v-card flat>
+                                <v-card-text>
+                                  
+                                    <v-select
+                                    v-model="reference"
+                                    :items="selectReference"
+                                    item-text="value"
+                                    item-value="id"
+                                    item-disabled="disable"
+                                    solo
+                                    label="เลือกรายการคำอวยพร"
+                                    multiple
+                                    >
+                                    <template v-slot:selection="{ item, index }">
+                                        <v-chip v-if="index === 0">
+                                        <span>{{ item.value }}</span>
+                                        </v-chip>
+                                        <span
+                                        v-if="index === 1"
+                                        class="grey--text text-caption"
+                                        >
+                                        (+{{ reference.length - 1 }} รายการ)
+                                        </span>
+                                    </template>
+                                    </v-select>
+                                </v-card-text>
+                                <v-card-actions class="justify-center">
+                                    <v-btn    
+                                        @click="addSelectReference"
+                                        class="btn btn-submit"
+                                        text 
+                                    >บันทึก</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-tab-item>
+                    </v-tabs>
+                </v-card>
+            </v-dialog>
+        </v-row>
     </div>
 </template>
 
@@ -300,6 +437,8 @@ export default {
         valid: true,
         dialog: false,
         dialogEdit: false,
+        dialogReference: false,
+        tab: 'tab-1',
         editedIndex: -1,
         loadTable: true,
         loadDialog: false,
@@ -316,7 +455,13 @@ export default {
         selectStatus: [
             { value: 'ใช้งาน', id: 1 },
             { value: 'ไม่ใช้งาน', id: 0 },
-        ],  
+        ],
+        festival_id: '', 
+        reference_name: '',
+        refDetails: [],
+        reference: [],
+        selectReference: [], 
+        listFestival: [],
         headers: [
             { text: "วันที่จัดทำ", value: "create_date" },
             { text: "ชื่อเทศกาล", value: "name" },
@@ -327,6 +472,7 @@ export default {
             { text: "สถานะ", value: "status", align: "center" },
             { text: "Preview", value: "preview", align: "center", sortable: false },
             { text: "Actions", value: "actions", align: "center", sortable: false },
+            { text: "คำอวยพร", value: "reference", align: "center", sortable: false },
         ],
         nameRules: [
             v => !!v || 'กรุณาใส่ข้อมูล',
@@ -337,9 +483,12 @@ export default {
             v => !!v || 'กรุณาใส่ข้อมูล',
             v => ( v && v.length <= 512 ) || "ห้ามใส่ข้อมูลเกิน 512 ตัวอักษร",
         ],
+
     }),
     mounted() {
         this.getFestival();
+
+        
     },
     computed: {
         formTitle() {
@@ -369,9 +518,13 @@ export default {
             this.background_path    = ""
             this.button_path        = ""
             this.$refs.editForm.resetValidation()
-           
         },
-
+        async closeReference(){
+            this.dialogReference = await false
+            this.reference = [],
+            this.selectReference = [], 
+            this.tab = await 'tab-1'
+        },
         timeFormat: function (d) {
             return moment(d).format("HH:mm");
         },
@@ -395,51 +548,215 @@ export default {
             params: { id: v },
             });
             window.open(routeData.href, "_blank");
-
-
         },
         deleteItem (item, text) {
-        Swal.fire({
-            title: 'คำเตือน',
-            text: `คุณต้องการ${text}ข้อมูลเทศกาลใช่หรือไม่ ?`,
-            // text:  `คุณต้องการลบข้อมูลเทศกาลใช่หรือไม่ ? `,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'ใช่',
-            cancelButtonText: 'ยกเลิก',
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                const payload = { 
-                    id: item.id,
-                    state : item.state === 1 ? '0' : '1',
-                    status : item.state ===  1 ?  '0' : '0',
-                    user_id: this.userId
+            Swal.fire({
+                title: 'คำเตือน',
+                text: `คุณต้องการ${text}ข้อมูลเทศกาลใช่หรือไม่ ?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'ใช่',
+                cancelButtonText: 'ยกเลิก',
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const payload = { 
+                        id: item.id,
+                        state : item.state === 1 ? '0' : '1',
+                        status : item.state ===  1 ?  '0' : '0',
+                        user_id: this.userId
+                    }
+                    let path =  `/api/deleteFestival`
+                    let response = await axios.post(`${path}`, payload)
+
+
+                    if(payload){
+                        Swal.fire({
+                            icon: 'success',
+                            text: `${text}ข้อมูลสำเร็จ`,
+                        }).then(function(){
+                            if(response){
+                                window.location.href = '/';
+                            }
+                        })
+                        
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'บันทึกไม่สำเร็จ',
+                            text: 'มีข้อผิดพลาดที่ไม่คาดคิดเกิดขึ้น โปรดลองใหม่อีกครั้ง'
+                        })
+                    }  
+                
                 }
-                let path =  `/api/deleteFestival`
-                let response = await axios.post(`${path}`, payload)
+            }) 
+        },
+        async mapselectReference(){
+          
+            // this.reference = this.refDetails.map(item => 
+        
+            //     this.selectReference.find(g => g.id == item.id)
+
+            // );
+            this.reference = await []
+            await this.refDetails.forEach(x=>{
+                this.reference.push(x.id)
+            })
+
+            console.log('========',this.selectReference);
+            
+        },
+
+        // async fnReference(type_tab){
+        //     switch(type_tab) {
+        //         case 'tab-1':
+        //           await this.getReference()
+        //         break;
+        //         case 'tab-2':
+        //             console.log('2');
+        //         break;
+        //         case 'tab-3':
+        //             await this.getReference()
+        //             await this.getSelectReference();
+        //             await this.mapselectReference();
+                
+        //         break;
+        //     default:
+        //     }
+
+        // },
+
+       
+
+        async deleteReference(v){
+            Swal.fire({
+                title: 'คำเตือน',
+                text: "คุณต้องการลบคำอวยพรใช่หรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'ใช่',
+                cancelButtonText: 'ยกเลิก',
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+
+                    let arr = JSON.parse(v.tag_festival)
+                    arr.splice(arr.indexOf(v), 1)
+                    const payload = {
+                        id : v.id,
+                        tag_festival : JSON.stringify(arr),
+                        user_id : this.userId,
+                    }
 
 
-                if(payload){
-                    Swal.fire({
-                        icon: 'success',
-                        text: `${text}ข้อมูลสำเร็จ`,
-                    }).then(function(){
-                        if(response){
-                            window.location.href = '/';
-                        }
-                    })
+                    let path =  await `/api/update/deleteReference`
+                    let response = await axios.post(`${path}`, payload)
                     
-                }else{
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'บันทึกไม่สำเร็จ',
-                        text: 'มีข้อผิดพลาดที่ไม่คาดคิดเกิดขึ้น โปรดลองใหม่อีกครั้ง'
-                    })
-                }  
-              
+                    if(response){
+                        await Swal.fire({
+                            icon: 'success',
+                            text: 'ลบข้อมูลสำเร็จ',
+                        })
+
+                        await this.getReference()
+                        await this.getSelectReference()
+                        await this.mapselectReference()
+
+ 
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'บันทึกไม่สำเร็จ',
+                            text: 'มีข้อผิดพลาดที่ไม่คาดคิดเกิดขึ้น โปรดลองใหม่อีกครั้ง'
+                        })
+                    }    
+                }
+            })
+            
+        },
+        async addSelectReference(){
+
+            try {
+      
+                this.reference.forEach(async (value) =>  {
+
+                    const items = await this.listFestival.find((x => x.id == value))
+                    
+                    const json = await JSON.parse(items.tag_festival)
+
+                    if(!json.includes(`${this.festival_id}`)){
+
+                        await json.push(`${this.festival_id}`)
+                   
+                    }
+
+                    var obj = await {};
+                    obj["user_id"]      =   await this.userId;
+                    obj["id"]           =   await value
+                    obj["tag_festival"] =   await JSON.stringify(json)
+
+                    let path_edit   = await `api/update/selectreference`
+                    let res_edit    = await axios.post(`${path_edit}`, obj)
+                    
+                    console.log(res_edit);
+
+                })
+
+             
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'บันทึกสำเร็จ',
+                    text: 'ระบบได้ทำการบันทึกข้อมูลของคุณแล้ว'
+                }).then(function(){    
+                   
+                });
+
+                    await this.getReference()
+                    await this.getSelectReference()
+                    await this.mapselectReference()
+                    // this.tab = await 'tab-1'         
+
+
+            } catch (error) {
+                console.log('addReference' + error);
             }
-        }) 
-      },
+        
+        },
+        async addReference(){
+
+            try {
+
+                let fd_refernce = await {
+                    "user_id"       : this.userId,
+                    "name"          : this.reference_name,
+                    "tag_festival"  : JSON.stringify([new String(this.festival_id)])
+                }
+
+                let path            = await `api/create/reference`
+                let res_refernce    = await axios.post(`${path}`, fd_refernce)
+
+                console.log(res_refernce);
+
+              
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'บันทึกสำเร็จ',
+                        text: 'ระบบได้ทำการบันทึกข้อมูลของคุณแล้ว'
+                    }).then(async function(){
+                    
+                    });
+
+                    await this.getReference()
+
+                    await this.mapselectReference()
+                    await this.getSelectReference()
+                    // this.tab = await 'tab-1'        
+
+            } catch (error) {
+                console.log('addReference' + error);
+            }
+        
+        },
         async create() {
             this.dialog = await true
             this.editedIndex = await -1
@@ -457,12 +774,22 @@ export default {
             }
         },
         async editItem(v) {
-            console.log(v);
             this.dialogEdit       = await true
             this.item_datas       = await JSON.parse(JSON.stringify(v))
             this.image_path       = await `/api/getImageFestival?filename=${v.file_name}`
             this.background_path  = await `/api/getImageFestival?filename=${v.file_bg_name}`
             this.button_path      = await `/api/getImageFestival?filename=${v.file_btn_name}`
+        },
+        async referenceItem(v){
+            this.dialogReference = await true
+            this.festival_id = await v.id
+
+            await this.getReference()
+            await this.getSelectReference();
+            await this.mapselectReference();
+
+            // await this.fnReference('tab-1')
+
         },
         async getFestival() {
             try {
@@ -476,6 +803,59 @@ export default {
                 console.log("error :" + error);
             }
         },
+
+        async getReference(){
+            try {
+                let path = await `/api/get/detailReference`;
+                let response = await axios.get(`${path}/`+ this.festival_id) 
+                this.refDetails = await response.data.data
+
+                await this.mapselectReference()
+                // await this.getSelectReference();
+
+            }
+            catch (error) {
+                console.log("error :" + error);
+            }
+        },
+
+        async getSelectReference(){
+
+
+            let path = await `/api/get/listReference`;
+
+            let response = await axios.get(`${path}`);
+            
+            this.listFestival = await response.data.data
+
+            this.selectReference = await []
+
+            await response.data.data.forEach(async item => {
+
+
+                let check_disabled = await false
+
+                if(!item.tag_festival.includes(`${this.festival_id}`)){
+
+                    check_disabled = await false
+                 
+                }else{
+
+                    check_disabled = await true
+
+                }
+
+                await this.selectReference.push({'id':item.id, 'value':item.name, 'disable': check_disabled})
+           
+            })
+
+            // await this.mapselectReference()
+
+            console.log(this.selectReference);
+
+  
+        },
+       
         async submit(){
 
             if(this.$refs.form.validate()){
@@ -548,8 +928,6 @@ export default {
                 }
 
                 let fd_edit = await {
-
-                    
                 "fid"           : this.item_datas.id,
                 "user_id"       : this.userId,
                 "name"          : this.item_datas.name,
@@ -562,7 +940,6 @@ export default {
                 "color"         : this.$refs.e_color.color,
                 "status"        : this.item_datas.status,
                 }
-                console.log(fd_edit);
                 try {
 
                     let path = await `/api/updateFestival`
@@ -622,6 +999,7 @@ export default {
 
 
         },
+
 
         async toggle(v){
             Swal.fire({
@@ -708,7 +1086,7 @@ export default {
            color: white!important;
     }
     .title-festival{
-        border-bottom: 2px solid #0170c2;
+        border-bottom: 2px solid #0170c2!important;
     }
     .btn-create{
         background-color: #213862!important;
@@ -717,6 +1095,14 @@ export default {
     }
     .btn-preview{
       cursor: pointer;
+    }
+    .v-tab.v-tab--active {
+        background: #0170c2!important;
+        color: white!important;
+    }
+    .v-tabs-slider {
+        background-color: #213862!important;
+      
     }
     /* .preview{
       width: 70px;
@@ -764,4 +1150,7 @@ export default {
     .v-input--checkbox .v-messages{
       min-height: inherit!important;
     }
+    [aria-selected="true"] :disabled {
+  background: red;
+}
 </style>
