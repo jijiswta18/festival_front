@@ -147,19 +147,18 @@
                                         <ColorPickers ref="color" :show_color="item_datas.color"/>
                                     </v-col>
                                 <v-col cols="12">
-                                <v-select
-                                    v-model="item_datas.status"
-                                    :items="selectStatus"
-                                    item-text="value"
-                                    item-value="id"
-                                    label="สถานะการใช้งาน"
-                                    prepend-icon="fa-solid fa-gears"
-                                    required
-                                
-                                    dense
-                                ></v-select>
-                            </v-col>
-                                
+                                    <v-select
+                                        v-model="item_datas.status"
+                                        :items="selectStatus"
+                                        item-text="value"
+                                        item-value="id"
+                                        label="สถานะการใช้งาน"
+                                        prepend-icon="fa-solid fa-gears"
+                                        required
+                                        dense
+                                    ></v-select>
+                                </v-col>
+                                    
                                 </v-row>
                             </v-container>
                         </v-card-text>
@@ -591,41 +590,13 @@ export default {
             }) 
         },
         async mapselectReference(){
-          
-            // this.reference = this.refDetails.map(item => 
-        
-            //     this.selectReference.find(g => g.id == item.id)
 
-            // );
             this.reference = await []
             await this.refDetails.forEach(x=>{
                 this.reference.push(x.id)
             })
-
-            console.log('========',this.selectReference);
-            
+   
         },
-
-        // async fnReference(type_tab){
-        //     switch(type_tab) {
-        //         case 'tab-1':
-        //           await this.getReference()
-        //         break;
-        //         case 'tab-2':
-        //             console.log('2');
-        //         break;
-        //         case 'tab-3':
-        //             await this.getReference()
-        //             await this.getSelectReference();
-        //             await this.mapselectReference();
-                
-        //         break;
-        //     default:
-        //     }
-
-        // },
-
-       
 
         async deleteReference(v){
             Swal.fire({
@@ -641,13 +612,18 @@ export default {
                 if (result.isConfirmed) {
 
                     let arr = JSON.parse(v.tag_festival)
-                    arr.splice(arr.indexOf(v), 1)
+
+                  
+                    arr.splice(arr.indexOf(`${this.festival_id}`), 1)
+
+
                     const payload = {
                         id : v.id,
                         tag_festival : JSON.stringify(arr),
                         user_id : this.userId,
                     }
 
+                    console.log(payload);
 
                     let path =  await `/api/update/deleteReference`
                     let response = await axios.post(`${path}`, payload)
@@ -737,7 +713,6 @@ export default {
 
                 console.log(res_refernce);
 
-              
                     await Swal.fire({
                         icon: 'success',
                         title: 'บันทึกสำเร็จ',
@@ -746,11 +721,12 @@ export default {
                     
                     });
 
+                    this.reference_name = await ''
                     await this.getReference()
-
                     await this.mapselectReference()
                     await this.getSelectReference()
-                    // this.tab = await 'tab-1'        
+
+                    
 
             } catch (error) {
                 console.log('addReference' + error);
@@ -788,8 +764,6 @@ export default {
             await this.getSelectReference();
             await this.mapselectReference();
 
-            // await this.fnReference('tab-1')
-
         },
         async getFestival() {
             try {
@@ -809,10 +783,7 @@ export default {
                 let path = await `/api/get/detailReference`;
                 let response = await axios.get(`${path}/`+ this.festival_id) 
                 this.refDetails = await response.data.data
-
                 await this.mapselectReference()
-                // await this.getSelectReference();
-
             }
             catch (error) {
                 console.log("error :" + error);
@@ -848,11 +819,6 @@ export default {
                 await this.selectReference.push({'id':item.id, 'value':item.name, 'disable': check_disabled})
            
             })
-
-            // await this.mapselectReference()
-
-            console.log(this.selectReference);
-
   
         },
        
@@ -1064,8 +1030,7 @@ export default {
         },
 
         async checkState(){
-            // const datas = await v
-            
+
             if(!this.checkbox){
                 const result = await this.datas.filter(data => data.state == 1);
                 this.check_datas = await JSON.parse(JSON.stringify(result));

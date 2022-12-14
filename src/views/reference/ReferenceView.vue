@@ -4,7 +4,9 @@
             :headers="headers"
             :items="datas"
             :search="search"
+            :loading="loadTable"
             sort-by="calories"
+            loading-text="Loading..."
             class="elevation-1"
         >
             <template v-slot:top>
@@ -40,18 +42,6 @@
                     <v-icon>mdi-pencil</v-icon>
                 </v-btn>
             </template>
-            <template v-slot:[`item.tag_festival`]="{ item }">
-                <v-btn
-                    color="primary"
-                    fab
-                    x-small
-                    dark
-                   
-                    @click="detailItem(item)"
-                    >
-                    <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-            </template>
         </v-data-table>
         <v-row justify="center">
             <v-dialog
@@ -80,15 +70,6 @@
                                             solo
                                             clearable
                                         ></v-text-field>
-                                        <!-- <v-textarea
-                                            outlined
-                                            label="คำอวยพร"
-                                            v-model="item_datas.name"
-                                            :rules="nameRules"
-                                            auto-grow
-                                            row-height="15"
-                                            hide-details
-                                        ></v-textarea> -->
                                     </v-col>
                                     <v-col cols="12">
                                         <!-- <v-select
@@ -109,12 +90,12 @@
                                             item-text="value"
                                             item-value="id"
                                             item-disabled="disable"
-                                            solo
-                                            label="เลือกรายการคำอวยพร"
+                                            chips
+                                            label="เลือกรายการเทศกาล"
                                             multiple
                                             clearable
                                         >
-                                        <template v-slot:selection="{ item, index }">
+                                        <!-- <template v-slot:selection="{ item, index }">
                                             <v-chip v-if="index === 0">
                                             <span>{{ item.value }}</span>
                                             </v-chip>
@@ -124,7 +105,7 @@
                                             >
                                             (+{{ item_datas.festival.length - 1 }} รายการ)
                                             </span>
-                                        </template>
+                                        </template> -->
                                     </v-select>
                                     </v-col>
                                 </v-row>
@@ -178,6 +159,7 @@
         data: () => ({
         userId: store.getters.user.id,
         search: "",
+        loadTable: true,
         dialog: false,
         dialog_detail: false,
         valid: true,
@@ -188,7 +170,6 @@
         headers: [
             { text: "วันที่จัดทำ", value: "create_date", width: "10%" },
             { text: "คำอวยพร", value: "name" },
-            { text: "เทศกาล", value: "tag_festival" , width: "10%" },
             { text: "Actions", value: "actions", align: "center",  width: "20%", sortable: false },
         ],
         nameRules: [
@@ -197,7 +178,6 @@
             ],
         }),
         mounted() {
-            this.getFestival();
             this.getReference();
         },
         computed: {
@@ -219,23 +199,20 @@
                 this.dialog = false
                 this.$refs.form.resetValidation()
                 this.$refs.form.reset()
-            },
-            async detailItem(v){
-                this.dialog_detail = await true
-                console.log(v);
+                this.getFestival();
             },
             async create(){
                 this.dialog         = await true
                 this.editedIndex    = await -1   
+                await this.getFestival();
             },
             async editItem(v){
                 this.dialog = await true
                 this.editedIndex = await this.datas.indexOf(v)
                 this.item_datas = await JSON.parse(JSON.stringify(v))
-                let temp = v.tag_festival.replace(/['"]+/g, '');
-                this.item_datas.festival = await JSON.parse(temp);
-             
-                console.log(v);
+                let id_festival = await v.tag_festival.replace(/['"]+/g, '');
+                this.item_datas.festival = await JSON.parse(id_festival);
+                await this.getFestival();
             },
             async getFestival(){
 
@@ -243,13 +220,12 @@
 
                 let response = await axios.get(`${path}`);
 
-                console.log(response);
-
                 response.data.data.forEach(item => {
 
-                    this.selectFestival.push({'id':item.id,'value':item.name})
+                    this.selectFestival.push({'id':item.id, 'value':item.name})
 
                 })
+
             },
             async getReference(){
 
@@ -257,7 +233,7 @@
                     let path        = await `/api/get/reference`;
                     let response    = await axios.get(`${path}`);
                     this.datas      = await response.data.data;
-
+                    this.loadTable  = await false;
         
                 } catch (error) {
                     console.log(error);
@@ -274,19 +250,14 @@
                             
                             let str = this.item_datas.festival.map(String)
 
-                          
-
                             let fd_edit = await {
                                 "user_id"       : this.userId,
                                 "id"            : this.item_datas.id,
                                 "name"          : this.item_datas.name,
-                                // "tag_festival"  : JSON.stringify(this.item_datas.festival),
                                 "tag_festival"  : JSON.stringify(str),
                             }
 
-                            
-                            console.log(fd_edit);
-                            
+
 
                             let path_edit   = await `api/edit/reference`
                             let res_edit    = await axios.post(`${path_edit}`, fd_edit)
@@ -300,7 +271,6 @@
                             let fd = await {
                                 "user_id"       : this.userId,
                                 "name"          : this.item_datas.name,
-                                // "tag_festival"  : JSON.stringify(this.item_datas.festival),
                                 "tag_festival"  : JSON.stringify(str),
                             }
 
@@ -317,6 +287,7 @@
                         }).then( function(){
                         });
                         this.dialog = await false
+                        this.item_datas = await {},
                         await this.getReference()
                      
                     } catch (error) {
