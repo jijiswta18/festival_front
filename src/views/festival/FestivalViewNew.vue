@@ -49,6 +49,15 @@
                     ></v-switch><span v-if="item.state == 0" class="red--text ml-2 ">(ยกเลิก)</span>
                 </div>
             </template>
+            <template v-slot:[`item.status_reference`]="{ item }">
+                <div class="d-flex flex-row align-center">
+                    <v-switch
+                    @click="toggleReference(item)"
+                    v-model="item.status_reference"
+                    :label="`${item.status_reference == 1 ? 'ใช้งาน' : 'ไม่ใช้งาน'}`"
+                    ></v-switch>
+                </div>
+            </template>
             <template v-slot:[`item.preview`]="{ item }">
                 <v-btn
                     color="purple"
@@ -209,7 +218,7 @@
                                             label="ชื่อเทศกาล"
                                             required
                                         ></v-text-field>
-                                    </v-col>
+                                    </v-col>startDate
                                     <v-col cols="12">
                                         <v-textarea
                                             name="input-7-1"
@@ -469,6 +478,7 @@ export default {
             { text: "ตั้งเเต่เวลา", value: "start_time" },
             { text: "ถึงเวลา", value: "end_time" },
             { text: "สถานะ", value: "status", align: "center" },
+            { text: "สถานะคำอวยพร", value: "status_reference", align: "center" },
             { text: "Preview", value: "preview", align: "center", sortable: false },
             { text: "Actions", value: "actions", align: "center", sortable: false },
             { text: "คำอวยพร", value: "reference", align: "center", sortable: false },
@@ -828,16 +838,17 @@ export default {
 
                 let fd = await {
 
-                "user_id"       : this.userId,
-                "name"          : this.item_datas.name,
-                "detail"        : this.item_datas.detail,
-                "start_date"    : `${moment(this.get_start_date).format('YYYY-MM-DD') + ' ' + this.get_start_time}`,
-                "end_date"      : `${moment(this.get_end_date).format('YYYY-MM-DD') + ' ' + this.get_end_time}`,
-                "file_name"     : this.$refs.image.files.name,
-                "file_bg_name"  : this.$refs.background.files.name,
-                "file_btn_name" : this.$refs.button.files.name,
-                "color"         : this.$refs.color.color,
-                "status"        : this.item_datas.status ? this.item_datas.status : 0
+                "user_id"           : this.userId,
+                "name"              : this.item_datas.name,
+                "detail"            : this.item_datas.detail,
+                "start_date"        : `${moment(this.get_start_date).format('YYYY-MM-DD') + ' ' + this.get_start_time}`,
+                "end_date"          : `${moment(this.get_end_date).format('YYYY-MM-DD') + ' ' + this.get_end_time}`,
+                "file_name"         : this.$refs.image.files.name,
+                "file_bg_name"      : this.$refs.background.files.name,
+                "file_btn_name"     : this.$refs.button.files.name,
+                "color"             : this.$refs.color.color,
+                "status"            : this.item_datas.status ? this.item_datas.status : 0,
+                "status_reference"  : 0
                 
                 }
 
@@ -983,6 +994,49 @@ export default {
                         status     : v.status ? 1 : 0
                     }
                     let path      = `/api/updateFestivalStatus`
+                    let response = await axios.post(`${path}`, payload)
+
+                    this.$store.dispatch('checkFestival')
+
+                    if(payload){
+                        Swal.fire({
+                            icon: 'success',
+                            text: 'บันทึกข้อมูลเรีบร้อยเเล้ว',
+                        })
+
+                        if(response){
+                        await this.getFestival()
+                        }
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'บันทึกไม่สำเร็จ',
+                            text: 'มีข้อผิดพลาดที่ไม่คาดคิดเกิดขึ้น โปรดลองใหม่อีกครั้ง'
+                        })
+                    }    
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                v.status == 1 ? v.status = 0 : v.status = 1
+                }
+            }) 
+        },
+        async toggleReference(v){
+
+            console.log(v);
+            Swal.fire({
+            title: 'คำเตือน',
+            text: "คุณต้องการเปลี่ยนสถานะรายการคำอวยพรใช่หรือไม่ ?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'ตกลง',
+            cancelButtonText: 'ยกเลิก',
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const payload = { 
+                        fid                 : v.id,
+                        user_id             : this.userId,
+                        status_reference    : v.status_reference ? 1 : 0
+                    }
+                    let path      = `/api/updateReferenceStatus`
                     let response = await axios.post(`${path}`, payload)
 
                     this.$store.dispatch('checkFestival')

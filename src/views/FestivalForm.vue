@@ -32,8 +32,20 @@
                   required
                   thai_engLanguage
               ></v-text-field>
-          
-              <div class="box-submit text-center">
+
+              <div v-if="data.status_reference == 1" class=" mt-3 text-center">
+                <div v-if="get_reference.name" class="d-flex justify-space-between">
+                  <p >{{get_reference.name}}</p>
+                  <span class="cursor-pointer"  @click="editSelectReference">  
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  </span>
+                </div>
+       
+                <select-reference v-else ref="nameReference" :festival_id="data.id" :color="data.color" @change_reference="change_reference"/>
+
+              </div>
+              
+              <div class="box-submit mt-5 text-center">
               <img :src="button_path"   @click="submit"/>
               </div>
             </v-form>
@@ -43,6 +55,7 @@
                   <h2>ด้วยเกล้าด้วยกระหม่อมขอเดชะ</h2> 
                   <h2>ข้าพระพุทธเจ้า</h2> 
                 </div>
+                <h2 class="style-reference" :style="{'color': data.color}">{{item.name_reference}}</h2> 
                 <h3 class="style-name" :style="{'color': data.color}">{{item.name}} {{item.lastname}}</h3> 
                 <p class="style-number" :style="{'color': data.color}">ผู้ร่วมลงนามลำดับที่ : {{count}}</p>
                 <div class="box-footer">
@@ -77,9 +90,10 @@
 
   import moment from 'moment'
   import  axios  from "axios";
+  import selectReference from '@/components/dialog/selectReference.vue';
   export default {
     name: 'festivalForm',
-   
+    components: { selectReference },
     data: () => ({
         valid: true,
         checkSubmit: false,
@@ -106,6 +120,7 @@
         image_path: "",
         button_path: "",
         background_path: "",
+        get_reference : [],
     }),
     metaInfo() {
         return {
@@ -137,6 +152,12 @@
     
     },
     methods: {
+      change_reference(v){
+        this.get_reference = v
+      },
+      editSelectReference(){
+        this.get_reference = ''
+      },
       async getImgPath(){
         let path = await `/api/getImageFestival?filename=${this.data.file_name}`
         let res = await axios.get(`${path}`)
@@ -158,6 +179,8 @@
           let path      = await `/api/getFestivalSign`
           let response  = await axios.get(`${path}`)
           this.data     = await response.data.data[0]
+
+          console.log(this.data);
           
 
 
@@ -175,18 +198,23 @@
         if(this.$refs.form.validate()){
           this.checkSubmit = true
           let fd = {
-            "id_festival" : this.data.id,
-            "name"        : this.p_name,
-            "lastname"    : this.p_lastname,
-            "p_festival"  : this.p_festival,
-            "regis_date"  : this.regis_date,
-            "browser"     : this.browser,
-            "device"      : this.device,
+            "id_festival"     : this.data.id,
+            "name"            : this.p_name,
+            "lastname"        : this.p_lastname,
+            "p_festival"      : this.p_festival,
+            "regis_date"      : this.regis_date,
+            "browser"         : this.browser,
+            "device"          : this.device,
+            "id_reference"    : this.get_reference.id,
+            "name_reference"  : this.get_reference.name
           }
+
           try {
             let path      = await `/api/createFestivalSign`
             let response  = await axios.post(`${path}`, fd)
             this.item     = response.data.data[0]
+
+            console.log(this.item );
             this.count    = response.data.counter
 
           } catch (error) {
@@ -322,6 +350,9 @@
     }
     .style-xs h2{
      font-weight: 400;
+    }
+    .cursor-pointer{
+      cursor: pointer;
     }
     /* .btn-print{
       display: none;

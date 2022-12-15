@@ -93,8 +93,6 @@ export default new Vuex.Store({
       let path = '/api/checkFestival'
       let response =  await axios.get(path)
 
-      console.log('============',response);
-
       const checkData = response.data.data[0]
       await commit('checkFestival', checkData)
       await commit('metaData', checkData)

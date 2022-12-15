@@ -1,5 +1,4 @@
 <template>
- 
   <div class="full-page">
     <div 
       v-if="item.file_bg_name"
@@ -38,7 +37,18 @@
               thai_engLanguage
               maxlength="30"
             ></v-text-field>
-            <div class="box-submit text-center">
+            <div v-if="item.status_reference == 1" class=" mt-3 text-center">
+              <div v-if="get_reference.name" class="d-flex justify-space-between">
+                <p >{{get_reference.name}}</p>
+                <span class="cursor-pointer"  @click="editSelectReference">  
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </span>
+              </div>
+        
+              <select-reference v-else ref="nameReference" :festival_id="$route.params.id"  :color="item.color" @change_reference="change_reference"/>
+            </div>
+    
+            <div class="box-submit mt-5 text-center">
                 <img :src="button_path"  @click="previewSubmit"/>
             </div>
           </v-form>
@@ -79,8 +89,11 @@
   </div>
 </template>
 <script>
-    import  axios  from "axios";
+  import  axios  from "axios";
+  import selectReference from '@/components/dialog/selectReference.vue';
 export default {
+  components: { selectReference },
+
   data: () => ({
     check: false,
     item: {},
@@ -91,6 +104,7 @@ export default {
     image_path: "",
     background_path: "",
     button_path: "",
+    get_reference : [],
     nameRules: [
       v => !!v || 'กรุณากรอกข้อมูล',
       v =>/^[a-zA-Zก-ฮะ-์\s]+$/.test(v) ||` ห้ามกรอกอักขระพิเศษ เเละตัวเลข`
@@ -102,6 +116,7 @@ export default {
   }),
   mounted(){
     this.getFestivalPreview()
+    console.log(this.$refs.nameReference);
   },
   computed: {
     avatar_url : function(){
@@ -111,9 +126,16 @@ export default {
   },
   
   methods:{
+    change_reference(v){
+        this.get_reference = v
+    },
+    editSelectReference(){
+      this.get_reference = ''
+    },
     previewSubmit(){
       if(this.$refs.form.validate()){
         this.check = !this.check
+        console.log(this.$refs.nameReference);
       }
     },
     printDivContent () {
@@ -146,6 +168,8 @@ export default {
         await this.getBgPath()
         await this.getBtnPath()
     },
+
+    
   }
 
 }
@@ -250,6 +274,9 @@ export default {
     background-color: white!important;
     color: #0099dc;
     font-weight: 400;
+  }
+  .cursor-pointer{
+    cursor: pointer;
   }
   @media only screen and (max-width: 600px) {
     .box-sign{
