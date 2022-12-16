@@ -23,7 +23,7 @@
                     <v-text-field
                         v-model="search"
                         append-icon="mdi-magnify"
-                        label="ค้นหา"
+                        label="ค้นหา (คำอวยพร)"
                         single-line
                         hide-details
                     ></v-text-field>

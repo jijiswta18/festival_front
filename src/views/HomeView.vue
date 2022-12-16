@@ -43,7 +43,7 @@
           to="/reference"
         >
           <v-list-item link>
-              <i class="fa-solid fa-users menu-icon"></i>
+            <i class="fa-solid fa-list menu-icon"></i>
             <v-list-item-content>
               <v-list-item-title class="menu-text">
               รายการคำอวยพร
