@@ -46,15 +46,17 @@
             <img :src="button_path"   @click="submit"/>
           </div>
         </v-form>
-        <div v-if="checkSubmit" class="box-detail">
-          <h2 class="style-title" :style="{'color': data.color}">ด้วยเกล้าด้วยกระหม่อมขอเดชะ ข้าพระพุทธเจ้า</h2> 
-          <div class="style-xs">
-            <h2>ด้วยเกล้าด้วยกระหม่อมขอเดชะ</h2> 
-            <h2>ข้าพระพุทธเจ้า</h2> 
+        <div v-if="checkSubmit" class="box-detail mt-5">
+          <div v-if="get_reference.name" class="style-h2" :style="{'color': data.color}">ขอถวายพระพร</div>
+          <p v-if="get_reference.name" class=" mt-1" :style="{'color': data.color}">{{item.name_reference}}</p> 
+          <div class="style-title style-h2" :style="{'color': data.color}">ด้วยเกล้าด้วยกระหม่อมขอเดชะ ข้าพระพุทธเจ้า</div> 
+          <div class="style-xs" :style="{'color': data.color}">
+            <div>ด้วยเกล้าด้วยกระหม่อมขอเดชะ</div> 
+            <div>ข้าพระพุทธเจ้า</div> 
           </div>
-          <h2 class="style-reference" :style="{'color': data.color}">{{item.name_reference}}</h2> 
-          <h3 class="style-name" :style="{'color': data.color}">{{item.name}} {{item.lastname}}</h3> 
-          <p class="style-number" :style="{'color': data.color}">ผู้ร่วมลงนามลำดับที่ : {{count}}</p>
+          <!-- <h2 class="style-reference" :style="{'color': data.color}">{{item.name_reference}}</h2>  -->
+          <p class="mt-1" :style="{'color': data.color}">{{item.name}} {{item.lastname}}</p> 
+          <p :style="{'color': data.color}">ผู้ร่วมลงนามลำดับที่ : {{count}}</p>
           <div class="box-footer">
               <a href="https://www.cgd.go.th/">
                 <v-btn

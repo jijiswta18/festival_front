@@ -52,15 +52,17 @@
                 <img :src="button_path"  @click="previewSubmit"/>
             </div>
           </v-form>
-          <div v-if="check" class="box-detail">
-            <h2 class="style-title" :style="{'color': item.color}">ด้วยเกล้าด้วยกระหม่อมขอเดชะ ข้าพระพุทธเจ้า</h2> 
-            <div class="style-xs">
-              <h2>ด้วยเกล้าด้วยกระหม่อมขอเดชะ</h2> 
-              <h2>ข้าพระพุทธเจ้า</h2> 
+          <div v-if="check" class="box-detail mt-5">
+            <div v-if="get_reference.name" class="style-h2" :style="{'color': item.color}">ขอถวายพระพร</div>
+            <p v-if="get_reference.name" class=" mt-1" :style="{'color': item.color}">{{get_reference.name}}</p> 
+            <div class="style-title style-h2" :style="{'color': item.color}">ด้วยเกล้าด้วยกระหม่อมขอเดชะ ข้าพระพุทธเจ้า</div> 
+            <div class="style-xs" :style="{'color': item.color}">
+              <div>ด้วยเกล้าด้วยกระหม่อมขอเดชะ</div> 
+              <div>ข้าพระพุทธเจ้า</div> 
             </div>
-            <h3 v-if="datas.p_name" class="style-name" :style="{'color': item.color}">{{datas.p_name}} {{datas.p_lastname}}</h3> 
-            <h3 v-else class="style-name" :style="{'color': item.color}">ชื่อ - สกุล</h3> 
-            <p class="style-number" :style="{'color': item.color}">ผู้ร่วมลงนามลำดับที่ : 1</p>
+            <p v-if="datas.p_name" class="mt-1" :style="{'color': item.color}">{{datas.p_name}} {{datas.p_lastname}}</p> 
+            <p v-else class="mt-1" :style="{'color': item.color}">ชื่อ - สกุล</p> 
+            <p :style="{'color': item.color}">ผู้ร่วมลงนามลำดับที่ : 1</p>
             <div class="box-footer">
               <a href="https://www.cgd.go.th/">
                 <v-btn
@@ -245,20 +247,11 @@ export default {
     height: auto;
     object-fit: contain;
   }
-  .style-title{
-    font-weight: 400;
-    margin: 2rem 0 1rem 0;
-  }
+
   .style-xs{
     display: none;
   }
-  .style-name{
-    margin: 2rem 0 1rem 0;
-    font-weight: 400;
-  }
-  .style-number{
-    font-size: 20px;
-  }
+
   .box-footer{
     margin: 2rem 0;
   }
@@ -278,6 +271,15 @@ export default {
   .cursor-pointer{
     cursor: pointer;
   }
+  .style-h2{
+    font-weight: 200;
+    font-size: 26px;
+  }
+  .box-detail{
+    max-width: 700px;
+    text-align: center;
+    margin: auto;
+  }
   @media only screen and (max-width: 600px) {
     .box-sign{
       position: relative;
@@ -293,8 +295,8 @@ export default {
     }
     .style-xs{
       display: block;
-      color: #060a7c;
-      margin: 2rem 0 1rem 0;
+      font-weight: 200;
+      font-size: 26px;
     }
     .style-xs h2{
      font-weight: 400;
@@ -314,6 +316,9 @@ export default {
   }
   @media print {
     .box-footer{
+      display: none;
+    }
+    .back{
       display: none;
     }
   }

@@ -72,17 +72,6 @@
                                         ></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
-                                        <!-- <v-select
-                                            v-model="item_datas.festival"
-                                            :items="selectFestival"
-                                            item-text="value"
-                                            item-value="id"
-                                            chips
-                                            label="เลือกรายการเทศกาล"
-                                            multiple
-                                            outlined
-                                            hide-details
-                                        ></v-select> -->
 
                                         <v-select
                                             v-model="item_datas.festival"
@@ -95,17 +84,6 @@
                                             multiple
                                             clearable
                                         >
-                                        <!-- <template v-slot:selection="{ item, index }">
-                                            <v-chip v-if="index === 0">
-                                            <span>{{ item.value }}</span>
-                                            </v-chip>
-                                            <span
-                                            v-if="index === 1"
-                                            class="grey--text text-caption"
-                                            >
-                                            (+{{ item_datas.festival.length - 1 }} รายการ)
-                                            </span>
-                                        </template> -->
                                     </v-select>
                                     </v-col>
                                 </v-row>
