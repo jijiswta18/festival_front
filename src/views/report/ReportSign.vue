@@ -4,6 +4,8 @@
         :headers="headers"
         :items="datas"
         :search="search"
+        :loading="loadTable"
+        loading-text="Loading..."
         sort-by="calories"
         class="elevation-1"
     >
@@ -52,6 +54,7 @@ export default {
     data () {
       return {
         search: '',
+        loadTable: true,
         headers: [
           {
               text: '',
@@ -122,6 +125,7 @@ export default {
                         'IP'        : item.ip_user
                     })
                 })
+                this.loadTable = await false;
             
             } catch (error) {
                 console.log('error :' + error)

@@ -16,7 +16,7 @@
                         class="btn-create mb"
                         @click="create"
                         >
-                        <i class="fa-solid fa-plus icon-style"></i>
+                        <i class="fa-solid fa-plus icon-style mr-1"></i>
                         เพิ่มรายการใหม่
                     </v-btn>
                     <v-spacer></v-spacer>
@@ -90,7 +90,7 @@
                     
                     @click="referenceItem(item)"
                     >
-                    <v-icon>mdi-note</v-icon>
+                    <i class="fa-solid fa-list-check f-18"></i>
                 </v-btn>
             </template>
         </v-data-table>
@@ -100,7 +100,7 @@
                 persistent
                 max-width="700px"
                 >
-                <v-card>
+                <v-card class="style-front">
                     <v-card-title class="title-festival">
                         <span class="text-h5">สร้างเทศกาล</span>
                     </v-card-title>
@@ -198,7 +198,7 @@
                 persistent
                 max-width="700px"
                 >
-                <v-card>
+                <v-card class="style-front">
                     <v-card-title class="title-festival">
                         <span class="text-h5">แก้ไขเทศกาล</span>
                     </v-card-title>
@@ -218,7 +218,7 @@
                                             label="ชื่อเทศกาล"
                                             required
                                         ></v-text-field>
-                                    </v-col>startDate
+                                    </v-col>
                                     <v-col cols="12">
                                         <v-textarea
                                             name="input-7-1"
@@ -302,7 +302,7 @@
                 persistent
                 max-width="900px"
                 >
-                <v-card>
+                <v-card class="style-front">
                     <v-toolbar class="title-festival">
                         <v-toolbar-title>คำอวยพร</v-toolbar-title>
                         <v-spacer></v-spacer>
@@ -321,17 +321,17 @@
                     <v-tabs v-model='tab' vertical>
 
                         <v-tab class="justify-start" href='#tab-1'>
-                            <i class="fa-solid fa-list mr-2"></i>
+                            <i class="fa-solid fa-list mr-2  f-18"></i>
                             รายการคำอวยพร
                         </v-tab>
 
                         <v-tab class="justify-start" href='#tab-2'>
-                            <i class="fa-solid fa-plus icon-style mr-2"></i>
+                            <i class="fa-solid fa-plus icon-style mr-2 f-18"></i>
                             เพิ่มคำอวยพร
                         </v-tab>
 
                         <v-tab class="justify-start" href='#tab-3'>
-                            <i class="fa-solid fa-list-check mr-2"></i>
+                            <i class="fa-solid fa-list-check mr-2 f-18"></i>
                             เลือกคำอวยพร
                         </v-tab>
 
@@ -343,7 +343,7 @@
                                     :key="i"
                                 >
                                     <v-list-item-content>
-                                        <span v-text="refDetail.name"></span>  
+                                        <span class="line-height" v-text="refDetail.name"></span>  
                                     </v-list-item-content>
                                     <v-list-item-icon>
                                         <v-btn
@@ -354,7 +354,7 @@
                                         color="primary"
                                         @click="deleteReference(refDetail)"
                                         >
-                                            <i class="fa-solid fa-trash-can"></i>
+                                            <i class="fa-solid fa-trash-can f-14"></i>
                                         </v-btn>
                                     </v-list-item-icon>
                                 </v-list-item>
@@ -479,9 +479,9 @@ export default {
             { text: "ถึงเวลา", value: "end_time" },
             { text: "สถานะ", value: "status", align: "center" },
             { text: "สถานะคำอวยพร", value: "status_reference", align: "center" },
-            { text: "Preview", value: "preview", align: "center", sortable: false },
-            { text: "Actions", value: "actions", align: "center", sortable: false },
+            { text: "แก้ไข", value: "actions", align: "center", sortable: false },
             { text: "คำอวยพร", value: "reference", align: "center", sortable: false },
+            { text: "Preview", value: "preview", align: "center", sortable: false },
         ],
         nameRules: [
             v => !!v || 'กรุณาใส่ข้อมูล',
@@ -1122,6 +1122,15 @@ export default {
     .v-tabs-slider {
         background-color: #213862!important;
       
+    }
+    .line-height{
+        line-height: inherit!important;
+    }
+    .f-14{
+        font-size: 14px;
+    }
+    .f-18{
+        font-size: 18px;
     }
     /* .preview{
       width: 70px;

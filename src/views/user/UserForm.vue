@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card class="mx-auto">
+        <v-card class="mx-auto style-front">
             <v-toolbar flat>
                 <v-toolbar-title>สร้างผู้ใช้งาน</v-toolbar-title>
             </v-toolbar>
@@ -159,6 +159,7 @@
             userId: store.getters.user.id,
             roles: { value: '', id: null },
             selectRoles: [
+                { value: 'ทั่วไป', id: 'general' },
                 { value: 'ผู้ดูเเลระบบ', id: 'admin' },
                 { value: 'ผู้ใช้งานระดับสูง', id: 'vip' },
             ],

@@ -15,7 +15,7 @@
         class="btn-create mb"
         @click="create"
       >
-        <i class="fa-solid fa-plus icon-style"></i>
+        <i class="fa-solid fa-plus icon-style mr-1"></i>
         เพิ่มรายการใหม่
       </v-btn>
       <v-spacer></v-spacer>
@@ -81,7 +81,7 @@
 
         { text: 'ระดับการใช้งาน', value: 'roles', align: 'center'},
         { text: 'สถานะ', value: 'status', align: 'center'},
-        { text: 'Actions', value: 'actions', align: 'center', sortable: false },
+        { text: 'แก้ไข', value: 'actions', align: 'center', sortable: false },
       ],
       datas_user: [],
       checkbox: false,

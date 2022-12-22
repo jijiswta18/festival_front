@@ -16,7 +16,7 @@
                         class="btn-create mb"
                         @click="create"
                         >
-                        <i class="fa-solid fa-plus icon-style"></i>
+                        <i class="fa-solid fa-plus icon-style mr-1"></i>
                         เพิ่มรายการใหม่
                     </v-btn>
                     <v-spacer></v-spacer>
@@ -49,7 +49,7 @@
                 persistent
                 max-width="700px"
                 >
-                <v-card>
+                <v-card class="style-front">
                     <v-card-title class="title-festival">
                         <span class="text-h5">{{formTitle}}</span>
                     </v-card-title>
@@ -116,7 +116,7 @@
                 persistent
                 max-width="700px"
                 >
-                <v-card>
+                <v-card class="style-front">
                     <v-card-title class="title-festival">
                         <span class="text-h5">เทศกาลที่ใช้คำอวยพร</span>
                     </v-card-title>
@@ -148,7 +148,7 @@
         headers: [
             { text: "วันที่จัดทำ", value: "create_date", width: "10%" },
             { text: "คำอวยพร", value: "name" },
-            { text: "Actions", value: "actions", align: "center",  width: "20%", sortable: false },
+            { text: "แก้ไข", value: "actions", align: "center",  width: "20%", sortable: false },
         ],
         nameRules: [
                 v => !!v || 'กรุณาใส่ข้อมูล',

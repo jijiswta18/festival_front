@@ -59,9 +59,9 @@
                 //     value: "number",
                 // },
                 { text: "ชื่อเทศกาล", value: "name" },
-                { text: "จำนวนคนละทะเบียน (คน)", align: "center", value: "totalCount" },
+                { text: "จำนวนคนลงนาม (คน)", align: "center", value: "totalCount" },
                 { text: "ดาวน์โหลด", align: "center", value: "export", sortable: false },
-                { text: "Actions", align: "center", value: "actions", sortable: false },
+                { text: "รายชื่อคนลงนาม", align: "center", value: "actions", sortable: false },
                
             ],
             datas: [],

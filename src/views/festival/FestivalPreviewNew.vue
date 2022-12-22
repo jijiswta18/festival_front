@@ -272,7 +272,7 @@ export default {
     cursor: pointer;
   }
   .style-h2{
-    font-weight: 200;
+    /* font-weight: 200; */
     font-size: 26px;
   }
   .box-detail{

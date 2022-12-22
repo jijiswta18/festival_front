@@ -22,7 +22,7 @@
       >
 
         <router-link
-          v-if="check_roles.roles === 'admin'"
+          v-if="check_roles.roles === 'admin' || 'general'"
           class="d-flex align-center menu-link"
           to="/"
         >
@@ -37,13 +37,14 @@
         </router-link>
 
         <router-link
-          v-if="check_roles.roles === 'admin'"
+          v-if="check_roles.roles === 'admin' || 'general'"
           class="d-flex align-center menu-link"
           active-class="activemenu"
           to="/reference"
         >
           <v-list-item link>
-            <i class="fa-solid fa-list menu-icon"></i>
+            <i class="fa-solid fa-list-check menu-icon"></i>
+            <!-- <i class="fa-solid fa-list menu-icon"></i> -->
             <v-list-item-content>
               <v-list-item-title class="menu-text">
               รายการคำอวยพร
@@ -89,7 +90,7 @@
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
         <div class="align-center d-flex">
-          <span class="mr-2">{{check_roles.name}}</span>
+          <span class="mr-2 color-primary">{{check_roles.name}} {{ check_roles.lastname }}</span>
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
               <div 
@@ -110,7 +111,7 @@
           <!-- <div  :class="!check_festival?'isdisabled':''"> -->
           <div
             v-if="this.$store.getters.festival"
-            color="back"
+            class="color-primary"
             @click="previewItem"
 
             >
@@ -180,8 +181,12 @@
   }
 </script>
 <style>
-  body{
+  .v-application{
     font-family: 'Prompt', sans-serif !important;
+  }
+  table,
+  .style-front{
+    font-family: "Roboto", sans-serif;
   }
   .style-navbar{
     width: 100%;
@@ -247,6 +252,10 @@
   }
   .v-main{
     background-color: #eef0f8;
+  }
+
+  .color-primary{
+    color: #213862;
   }
 
   .activemenu,
