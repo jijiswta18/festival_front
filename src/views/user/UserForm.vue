@@ -159,7 +159,7 @@
             userId: store.getters.user.id,
             roles: { value: '', id: null },
             selectRoles: [
-                { value: 'ทั่วไป', id: 'general' },
+                { value: 'ผู้ใช้งานทั่วไป', id: 'general' },
                 { value: 'ผู้ดูเเลระบบ', id: 'admin' },
                 { value: 'ผู้ใช้งานระดับสูง', id: 'vip' },
             ],

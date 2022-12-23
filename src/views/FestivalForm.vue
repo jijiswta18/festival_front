@@ -33,7 +33,7 @@
           ></v-text-field>
           <div v-if="data.status_reference == 1" class=" mt-3 text-center">
             <div v-if="get_reference.name" class="d-flex justify-space-between">
-              <p >{{get_reference.name}}</p>
+              <p class="pr-1">{{get_reference.name}}</p>
               <span class="cursor-pointer"  @click="editSelectReference">  
                 <i class="fa-solid fa-pen-to-square"></i>
               </span>

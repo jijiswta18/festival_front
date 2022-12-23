@@ -22,7 +22,7 @@
       >
 
         <router-link
-          v-if="check_roles.roles === 'admin' || 'general'"
+          v-if="check_roles.roles === 'admin' || check_roles.roles === 'general'"
           class="d-flex align-center menu-link"
           to="/"
         >
@@ -37,7 +37,7 @@
         </router-link>
 
         <router-link
-          v-if="check_roles.roles === 'admin' || 'general'"
+          v-if="check_roles.roles === 'admin' || check_roles.roles === 'general'"
           class="d-flex align-center menu-link"
           active-class="activemenu"
           to="/reference"

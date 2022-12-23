@@ -44,7 +44,8 @@
   <!-- <template v-slot:[`item.number`]="{index}">{{index + 1}}</template> -->
   <template v-slot:[`item.create_date`]="{ item }">{{getThaiDate(item.create_date)}}</template>
   <template v-slot:[`item.name`]="{ item }">{{item.name + ' ' + item.lastname}}</template>
-  <template v-slot:[`item.roles`]="{ item }">{{item.roles == 'admin' ? 'ผู้ดูเเลระบบ' : 'ผู้ใช้งานระดับสูง'}}</template>
+  <template v-slot:[`item.roles`]="{ item }">{{typeRoles(item.roles)}}</template>
+  <!-- <template v-slot:[`item.roles`]="{ item }">{{item.roles == 'admin' ? 'ผู้ดูเเลระบบ' : 'ผู้ใช้งานระดับสูง'}}</template> -->
   <template v-slot:[`item.status`]="{ item }"><span :class="item.status == 0 ?'red--text':''">{{item.status == 1 ? 'ใช้งาน' : 'ไม่ใช้งาน'}}</span></template>
   <template v-slot:[`item.actions`]="{ item }">
     <v-btn
@@ -101,6 +102,19 @@
           return "";
         }            
       },
+      typeRoles(type){
+        if(type == 'general'){
+          return 'ผู้ใช้งานทั่วไป';
+        }else if(type == 'admin'){
+          return 'ผู้ดูเเลระบบ';
+        }else if(type == 'vip'){
+          return 'ผู้ใช้งานระดับสูง';
+        }else{
+          return "";
+        }
+        
+      },
+        
       async getUser () {
         try {
           let path        = await `/api/getUser`
