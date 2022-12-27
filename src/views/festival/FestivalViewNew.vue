@@ -322,7 +322,7 @@
 
                         <v-tab class="justify-start" href='#tab-1'>
                             <i class="fa-solid fa-list mr-2  f-18"></i>
-                            รายการคำอวยพร
+                            คำอวยพร
                         </v-tab>
 
                         <v-tab class="justify-start" href='#tab-2'>

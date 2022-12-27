@@ -492,7 +492,7 @@
         { text: 'วันที่สร้าง', value: 'create_date' },
         { text: 'สถานะ', value: 'status', align: 'center' },
         { text: 'Preview', value: 'preview', align: 'center', sortable: false },
-        { text: 'Actions', value: 'actions', align: 'center', sortable: false },
+        { text: 'แก้ไข', value: 'actions', align: 'center', sortable: false },
       ],
       search: '',
       checkbox: false,
@@ -533,16 +533,16 @@
       endRules: [v => !!v || "กรุณาใส่ข้อมูล"],
       rules:{
         filesRules: [
-          v => !!v || 'กรุณาใส่ข้อมูล (ขนาดไม่เกิน 700px * 600px)',
+          v => !!v || 'กรุณาใส่ข้อมูล (ขนาดตัวอย่าง 700px * 600px)',
           v => (v && v.size > 0) || 'File is required',
           // v => !v || v.size < 2000000 || 'Avatar size should be less than 2 MB!',
         ],
         filesBgRules: [
-          v => !!v || 'กรุณาใส่ข้อมูล (ขนาดไม่เกิน 900px * 900px)',
+          v => !!v || 'กรุณาใส่ข้อมูล (ขนาดตัวอย่าง 900px * 900px)',
           v => (v && v.size > 0) || 'File is required',
         ],
         filesBtnRules: [
-          v => !!v || 'กรุณาใส่ข้อมูล (ขนาดไม่เกิน 185px * 60px)',
+          v => !!v || 'กรุณาใส่ข้อมูล (ขนาดตัวอย่าง 185px * 60px)',
           v => (v && v.size > 0) || 'File is required',
         ],
 

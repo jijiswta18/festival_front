@@ -31,6 +31,31 @@
             required
             thai_engLanguage
           ></v-text-field>
+
+
+          <!-- <div v-if="data.status_reference == 1" class=" mt-3 text-center"> -->
+            <div v-if="get_reference.name" class="d-flex justify-space-between mt-4">
+              <p class="pr-1 mb-0">{{get_reference.name}}</p>
+              <span class="cursor-pointer"  @click="editSelectReference">  
+                <i class="fa-solid fa-pen-to-square"></i>
+              </span>
+            </div>
+    
+            <!-- <select-reference v-else ref="nameReference" :festival_id="data.id" :color="data.color" @change_reference="change_reference"/> -->
+
+          <!-- </div>   -->
+
+          <div class="d-flex justify-space-evenly align-center mt-4">
+            <div v-if="data.status_reference == 1" class="text-center">
+              <select-reference ref="nameReference" :festival_id="data.id" :color="data.color" @change_reference="change_reference"/>
+            </div>
+            <div class="text-center d-contents">
+              <img :src="button_path"   @click="submit"/>
+            </div>
+          </div>
+
+
+<!-- 
           <div v-if="data.status_reference == 1" class=" mt-3 text-center">
             <div v-if="get_reference.name" class="d-flex justify-space-between">
               <p class="pr-1">{{get_reference.name}}</p>
@@ -40,11 +65,10 @@
             </div>
     
             <select-reference v-else ref="nameReference" :festival_id="data.id" :color="data.color" @change_reference="change_reference"/>
-
           </div>  
           <div class="box-submit mt-5 text-center">
             <img :src="button_path"   @click="submit"/>
-          </div>
+          </div> -->
         </v-form>
         <div v-if="checkSubmit" class="box-detail mt-5">
           <div v-if="get_reference.name" class="style-h2" :style="{'color': data.color}">ขอถวายพระพร</div>
@@ -236,5 +260,10 @@ export default {
 </script>
 
 <style>
-
+  .justify-space-evenly{
+    justify-content: space-evenly;
+  }
+  .d-contents{
+    display: contents;
+  }
 </style>

@@ -109,7 +109,7 @@
 
                         if (this.$store.getters.user){
 
-                            if(this.$store.getters.user.roles == 'admin'){
+                            if(this.$store.getters.user.roles === 'admin' || this.$store.getters.user.roles === 'general'){
                                 this.$router.push({name:"festival"});
                             }else{
                                 this.$router.push({name:"report"});

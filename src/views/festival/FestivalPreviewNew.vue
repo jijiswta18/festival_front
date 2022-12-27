@@ -37,7 +37,25 @@
               thai_engLanguage
               maxlength="30"
             ></v-text-field>
-            <div v-if="item.status_reference == 1" class=" mt-3 text-center">
+
+
+            <div v-if="get_reference.name" class="d-flex justify-space-between mt-4">
+              <p class="pr-1 mb-0">{{get_reference.name}}</p>
+              <span class="cursor-pointer"  @click="editSelectReference">  
+                <i class="fa-solid fa-pen-to-square"></i>
+              </span>
+            </div>
+
+            <div class="d-flex justify-space-evenly align-center mt-4">
+              <div v-if="item.status_reference == 1" class="text-center">
+                <select-reference ref="nameReference" :festival_id="$route.params.id"  :color="item.color" @change_reference="change_reference"/>
+              </div>
+              <div class="text-center d-contents">
+                <img :src="button_path"   @click="previewSubmit"/>
+              </div>
+            </div>
+    
+            <!-- <div v-if="item.status_reference == 1" class=" mt-3 text-center">
               <div v-if="get_reference.name" class="d-flex justify-space-between">
                 <p class="pr-1">{{get_reference.name}}</p>
                 <span class="cursor-pointer"  @click="editSelectReference">  
@@ -50,7 +68,7 @@
     
             <div class="box-submit mt-5 text-center">
                 <img :src="button_path"  @click="previewSubmit"/>
-            </div>
+            </div> -->
           </v-form>
           <div v-if="check" class="box-detail mt-5">
             <div v-if="get_reference.name" class="style-h2" :style="{'color': item.color}">ขอถวายพระพร</div>
@@ -279,6 +297,12 @@ export default {
     max-width: 700px;
     text-align: center;
     margin: auto;
+  }
+  .justify-space-evenly{
+    justify-content: space-evenly;
+  }
+  .d-contents{
+    display: contents;
   }
   @media only screen and (max-width: 600px) {
     .box-sign{
